@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import Terminal from '../components/Terminal.jsx'
-import LiveTerminal from '../components/LiveTerminal.jsx'
+import Terminal from '../../components/Terminal.jsx'
+import LiveTerminal from './LiveTerminal.jsx'
 import './Home.css'
 
 const taglines = [

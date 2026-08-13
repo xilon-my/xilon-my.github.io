@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import articles from '../data/blog-articles.js'
+import articles from './articles.js'
 import './Blog.css'
 
 const categories = ['all', ...new Set(articles.map(p => p.category).filter(Boolean))]

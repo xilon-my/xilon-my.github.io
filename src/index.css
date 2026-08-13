@@ -43,6 +43,12 @@ html { scroll-behavior: smooth; }
   --max-w: 820px;
   --font: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
   --mono: 'JetBrains Mono Web', 'JetBrainsMono Nerd Font Mono', 'JetBrains Mono', 'KaiTi Web', '楷体', 'STKaiti', 'KaiTi', serif;
+  /* ── Activity-map tag colors (Mocha) ── */
+  --tag-rag: #89B4FA;
+  --tag-rl: #A6E3A1;
+  --tag-framework: #F5C2E7;
+  --tag-platform: #94E2D5;
+  --tag-standard: #F9E2AF;
 }
 
 [data-theme="light"] {
@@ -61,6 +67,12 @@ html { scroll-behavior: smooth; }
   --nav-bg: rgba(239, 241, 245, 0.85);
   --code-bg: #DCE0E8;
   --code-text: #4C4F69;
+  /* ── Activity-map tag colors (Latte) ── */
+  --tag-rag: #1E66F5;
+  --tag-rl: #40A02B;
+  --tag-framework: #EA76CB;
+  --tag-platform: #04A5E5;
+  --tag-standard: #DF8E1D;
 }
 
 @media (min-width: 1400px) {

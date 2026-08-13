@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import BlogList, { BlogFilter } from '../components/BlogList.jsx'
-import Terminal from '../components/Terminal.jsx'
-import './../components/Blog.css'
+import BlogList, { BlogFilter } from './BlogList.jsx'
+import Terminal from '../../components/Terminal.jsx'
+import './Blog.css'
 
 export default function BlogPage() {
   const [category, setCategory] = useState('all')

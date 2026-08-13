@@ -5,7 +5,7 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 import hljs from 'highlight.js'
-import articles from '../data/blog-articles.js'
+import articles from './articles.js'
 import './Blog.css'
 
 function CodeBlock({ className, children }) {

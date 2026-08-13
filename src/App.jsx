@@ -2,12 +2,12 @@ import { useState, useEffect } from 'react'
 import { Routes, Route } from 'react-router-dom'
 import Nav from './components/Nav.jsx'
 import Footer from './components/Footer.jsx'
-import Home from './pages/Home.jsx'
-import BlogPage from './pages/Blog.jsx'
-import BlogPost from './components/BlogPost.jsx'
-import CV from './pages/CV.jsx'
-import Discover from './pages/Discover.jsx'
-import DiscoverDetail from './pages/DiscoverDetail.jsx'
+import Home from './pages/Home/Home.jsx'
+import BlogPage from './pages/Blog/Blog.jsx'
+import BlogPost from './pages/Blog/BlogPost.jsx'
+import CV from './pages/CV/CV.jsx'
+import Discover from './pages/Discover/Discover.jsx'
+import DiscoverDetail from './pages/Discover/DiscoverDetail.jsx'
 
 export default function App() {
   const [theme, setTheme] = useState(() => {

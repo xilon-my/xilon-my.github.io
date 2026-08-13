@@ -5,8 +5,8 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 import hljs from 'highlight.js'
-import Terminal from '../components/Terminal.jsx'
-import projects from '../data/discover-projects.js'
+import Terminal from '../../components/Terminal.jsx'
+import projects from './projects.js'
 import './Discover.css'
 
 function CodeBlock({ className, children }) {

@@ -1,5 +1,5 @@
-import Experience from '../components/Experience.jsx'
-import Skills from '../components/Skills.jsx'
+import Experience from './Experience.jsx'
+import Skills from './Skills.jsx'
 import './CV.css'
 
 export default function CV() {

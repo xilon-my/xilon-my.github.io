@@ -219,6 +219,155 @@
   }
 }
 
+/* ── Activity Timeline ── */
+.activity-map {
+  margin: 8px 0 28px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-command {
+  margin-bottom: 12px;
+}
+
+.activity-cmd {
+  color: var(--text);
+}
+
+.activity-timeline {
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+
+/* ── Day columns (dots stack up from the baseline) ── */
+.activity-cols {
+  display: flex;
+  gap: 4px;
+  width: max-content;
+  border-bottom: 1px solid var(--border);
+}
+
+.activity-day {
+  width: 16px;
+  height: 52px; /* reserves up to 4 dots — no layout shift */
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 3px;
+}
+
+.activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  opacity: 0.85;
+  transition: opacity 0.15s, transform 0.15s;
+}
+
+.activity-dot:hover,
+.activity-dot:focus-visible {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.activity-dot:focus-visible {
+  outline: 1px solid var(--accent);
+  outline-offset: 1px;
+}
+
+/* ── Date labels ── */
+.activity-datelabels {
+  display: flex;
+  gap: 4px;
+  width: max-content;
+  margin-top: 4px;
+  font-family: var(--mono);
+}
+
+.activity-datelabel {
+  width: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.activity-month {
+  height: 12px;
+  font-size: 9px;
+  line-height: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.activity-daynum {
+  height: 16px;
+  font-size: 10px;
+  line-height: 16px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.activity-datelabel.has .activity-daynum {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ── Legend ── */
+.activity-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 12px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--text-secondary);
+}
+
+.activity-legend-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.activity-legend-swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+}
+
+/* ── Readout line (fixed height — never shifts layout) ── */
+.activity-readout {
+  margin-top: 10px;
+  height: 22px;
+  line-height: 22px;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: color 0.15s;
+}
+
+@media (max-width: 700px) {
+  .activity-day,
+  .activity-datelabel {
+    width: 14px;
+  }
+  .activity-dot {
+    width: 9px;
+    height: 9px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .activity-dot,
+  .activity-readout {
+    transition: none;
+  }
+}
+
 /* ── Detail Page ── */
 .discover-detail-back {
   display: inline-flex;

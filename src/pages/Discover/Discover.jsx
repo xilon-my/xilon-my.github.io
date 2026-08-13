@@ -1,7 +1,8 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import Terminal from '../components/Terminal.jsx'
-import projects from '../data/discover-projects.js'
+import Terminal from '../../components/Terminal.jsx'
+import ActivityMap from './ActivityMap.jsx'
+import projects from './projects.js'
 import './Discover.css'
 
 export default function Discover() {
@@ -42,6 +43,8 @@ export default function Discover() {
               <p className="discover-count">{filtered.length} items</p>
             </div>
           </div>
+
+          <ActivityMap projects={projects} />
 
           {filtered.length === 0 ? (
             <div className="discover-empty">
