@@ -476,6 +476,42 @@
   margin: 24px auto;
 }
 
+/* ── KaTeX 公式 ──
+   字号对齐正文;字体保留 KaTeX 默认:KaTeX 的分数/上下标垂直定位
+   按自家字体度量算死,强制换字体(如等宽)会直接导致分数错位,
+   所以这里不覆盖 font-family。 */
+.discover-detail-content .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 6px 0;
+  margin: 16px 0;
+}
+.discover-detail-content .katex-display > .katex {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  white-space: nowrap;
+}
+.discover-detail-content .katex {
+  font-size: 1em;
+}
+
+/* ── Grid World 配图 ── */
+.discover-detail-content img[src*="gridworld-map"] {
+  width: auto;
+  max-width: 380px;
+  display: block;
+  margin: 24px auto;
+}
+.discover-detail-content img[src*="vpi-heatmap"],
+.discover-detail-content img[src*="vstar-policy"],
+.discover-detail-content img[src*="qstar-argmax"] {
+  width: auto;
+  max-width: 560px;
+  display: block;
+  margin: 24px auto;
+}
+
 /* ── Tables ── */
 .discover-detail-content table {
   width: calc(100% - 48px);

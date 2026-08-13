@@ -1,6 +1,9 @@
 import { useParams, Link } from 'react-router-dom'
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import 'katex/dist/katex.min.css'
 import hljs from 'highlight.js'
 import Terminal from '../components/Terminal.jsx'
 import projects from '../data/discover-projects.js'
@@ -110,7 +113,7 @@ export default function DiscoverDetail() {
             <p className="discover-detail-desc">{project.description}</p>
 
             <div className="discover-detail-content">
-              <Markdown remarkPlugins={[remarkGfm]} components={{ code: CodeBlock }}>{project.detail}</Markdown>
+              <Markdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]} components={{ code: CodeBlock }}>{project.detail}</Markdown>
             </div>
 
             {project.takeaway && (
