@@ -39,6 +39,7 @@ export default function Discover() {
                   </span>
                 ))}
               </p>
+              <p className="discover-count">{filtered.length} items</p>
             </div>
           </div>
 
@@ -47,21 +48,17 @@ export default function Discover() {
               <p>No projects with tag &lsquo;{activeTag}&rsquo;.</p>
             </div>
           ) : (
-            <div className="discover-grid" key={activeTag || 'all'}>
-              {filtered.map((p, i) => (
-                <Link key={p.slug} to={`/discover/${p.slug}`} className="discover-card-link">
-                  <article className={`discover-card fade-in fade-in-${Math.min(i + 1, 5)}`}>
-                    <div className="discover-card-header">
-                      <span className="discover-card-name">
-                        {p.name}
-                        <span className="discover-card-arrow">↗</span>
-                      </span>
-                    </div>
-                    <div className="discover-card-tags">
-                      {p.tags.map(t => <span key={t}>{t}</span>)}
-                    </div>
-                    <p className="discover-card-desc">{p.description}</p>
-                  </article>
+            <div className="discover-list" key={activeTag || 'all'}>
+              {filtered.map(p => (
+                <Link key={p.slug} to={`/discover/${p.slug}`} className="discover-row">
+                  <div className="discover-row-line">
+                    <span className="discover-row-index">❯ {String(projects.indexOf(p) + 1).padStart(2, '0')}</span>
+                    <span className="discover-row-name">{p.name}</span>
+                    <span className="discover-row-arrow">→</span>
+                    <span className="discover-row-tags">{p.tags.map(t => <span key={t}>[{t}]</span>)}</span>
+                    <span className="discover-row-date">{p.date.slice(5, 10)}</span>
+                  </div>
+                  <p className="discover-row-desc">{p.description}</p>
                 </Link>
               ))}
             </div>
