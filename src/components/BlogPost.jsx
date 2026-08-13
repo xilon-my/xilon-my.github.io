@@ -56,16 +56,11 @@ export default function BlogPost() {
         <h1>{post.name}</h1>
         <div className="blog-post-meta">
           <time>{post.date}</time>
-          {post.tags?.map(t => <span key={t} className="blog-card-tags" style={{ display: 'inline' }}>
-            <span style={{
-              background: 'var(--accent-light)',
-              color: 'var(--accent-dark)',
-              fontSize: '0.7rem',
-              fontWeight: 500,
-              padding: '2px 10px',
-              borderRadius: 999,
-            }}>{t}</span>
-          </span>)}
+          {post.tags?.length > 0 && (
+            <div className="blog-card-tags">
+              {post.tags.map(t => <span key={t}>{t}</span>)}
+            </div>
+          )}
         </div>
       </header>
       <div className="blog-post-content">
