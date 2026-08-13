@@ -1,6 +1,6 @@
 const project = {
   slug: 'langgraph',
-  date: '2026-07-30 20:30',
+  date: '2026-07-31 20:30',
   name: 'LangGraph',
   url: 'https://github.com/langchain-ai/langgraph',
   description: '用图定义 Agent 行为的框架。节点就是函数，边就是逻辑，编译后是确定性的执行拓扑——不是"建议"Agent 怎么走，是它只能这么走。',
