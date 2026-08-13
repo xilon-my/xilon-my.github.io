@@ -1,14 +1,12 @@
----
-title: NJU OS by Jyy
-date: 2026-07-26 04:03
-tags: [Reward hecking]
-category: Course Review
-slug: os-course-reflection
----
-
-我完全可以理解，'分数就是一切'的那种感觉。但忽然有一天分数不作为评价标准的时候，人生是否就失去动力？
-
-一张保研/大厂/公务员的船票只是起点。
+const article = {
+  slug: 'os-course-reflection',
+  date: '2026-07-26 04:03',
+  name: 'NJU OS by Jyy',
+  description: '我完全可以理解，\'分数就是一切\'的那种感觉。但忽然有一天分数不作为评价标准的时候，人生是否就失去动力？',
+  tags: ['Reward hecking'],
+  category: 'Course Review',
+  author: 'shannon',
+  detail: `一张保研/大厂/公务员的船票只是起点。
 
 回顾过去二十三年，分数、保研都只是奖励信号，不是目的本身。但Reward hacking是无法逃开的社会规则，生活正在不断告诉我这一点。
 
@@ -18,4 +16,7 @@ slug: os-course-reflection
 
 诚朴雄伟
 
-我第一次了解到南大的校训。我与南大没什么缘分，但也可以不是草台班子的一部分！
+我第一次了解到南大的校训。我与南大没什么缘分，但也可以不是草台班子的一部分！`,
+}
+
+export default article

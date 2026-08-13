@@ -299,3 +299,63 @@
   background: var(--surface);
   font-weight: 600;
 }
+
+/* ── 引导段(description)── */
+.blog-post-desc {
+  text-indent: 0;
+  font-weight: 500;
+  font-size: 1.1rem;
+  color: var(--text);
+}
+
+/* ── 图片 ── */
+.blog-post-content img {
+  width: 100%;
+  height: auto;
+  margin: 24px 0;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+}
+
+/* ── KaTeX 公式 ──
+   对齐正文;字体保留 KaTeX 默认(分数/上下标按自家字体度量算死,
+   强制换字体会导致错位,所以不覆盖 font-family)。 */
+.blog-post-content .katex-display {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 6px 0;
+  margin: 16px 0;
+}
+.blog-post-content .katex-display > .katex {
+  display: block;
+  width: fit-content;
+  margin-inline: auto;
+  white-space: nowrap;
+}
+.blog-post-content .katex {
+  font-size: 1em;
+}
+
+/* ── Takeaway ── */
+.blog-post-takeaway {
+  margin-top: 32px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border);
+}
+
+.blog-takeaway-prompt {
+  font-size: 0.85rem;
+  color: var(--green);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.blog-takeaway-text {
+  margin-top: 6px;
+  font-size: 0.92rem;
+  line-height: 1.8;
+  color: var(--text-secondary);
+  text-indent: 0;
+}

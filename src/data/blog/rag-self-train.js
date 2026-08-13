@@ -1,14 +1,12 @@
----
-title: 我自己训了两个检索模型
-date: 2026-08-06
-tags: [RAG, Retrieval, LLM, PyTorch]
-category: Project
-slug: rag-self-train
----
-
-一直用的是现成的检索模型:embedding 拿来就用,reranker 拿来就用。这次试着自己训了两个,一个检索器(bi-encoder),一个重排器(reranker),用在金融文档问答上。过程有意思,踩了几个坑,记一下。
-
-**数据**:最省心的部分。用 FinRAGBench-V,一个开源金融 RAG 基准,带了 855 条真人标注的问题,每条对应哪一页都标好了。训检索模型最贵的就是数据,拿到现成、真人标的,最麻烦的步骤直接跳过。评测也用它:留出 99 条查询,按文档切分,保证训练和评测不在同一份文档上。
+const article = {
+  slug: 'rag-self-train',
+  date: '2026-08-06',
+  name: '我自己训了两个检索模型',
+  description: '一直用的是现成的检索模型:embedding 拿来就用,reranker 拿来就用。这次试着自己训了两个,一个检索器(bi-encoder),一个重排器(reranker),用在金融文档问答上。过程有意思,踩了几个坑,记一下。',
+  tags: ['RAG', 'Retrieval', 'LLM', 'PyTorch'],
+  category: 'Project',
+  author: 'shannon',
+  detail: `**数据**:最省心的部分。用 FinRAGBench-V,一个开源金融 RAG 基准,带了 855 条真人标注的问题,每条对应哪一页都标好了。训检索模型最贵的就是数据,拿到现成、真人标的,最麻烦的步骤直接跳过。评测也用它:留出 99 条查询,按文档切分,保证训练和评测不在同一份文档上。
 
 这个项目的检索单位是**一页**——每份 PDF 的一页,就是一个可检索的块(编号就叫"文档名_页码")。为什么这么切?
 
@@ -89,4 +87,7 @@ slug: rag-self-train
 
 做法是用 Margin-MSE 损失,让检索器的"问题-答案页相似度 减去 问题-负样本相似度"去逼近老师的分数差。训完一测:**没用,反而比纯对比微调还差**(0.879 vs 0.909)。可能的原因有两个:一是数据太少(618 条),Margin-MSE 在这么点数据上把检索器的向量带离了对比微调学到的信号——它优化的是"复现分数差",不是"检索排序";二是前面也看到了,对比微调后的检索器已经够接近重排器的水平(前两行数字),留给蒸馏的提升空间本来就小。
 
-代码、权重、数据都开源了:github.com/xilon-my/rag-self-train
+代码、权重、数据都开源了:github.com/xilon-my/rag-self-train`,
+}
+
+export default article
