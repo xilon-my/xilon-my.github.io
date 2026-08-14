@@ -4,7 +4,7 @@ const project = {
   name: 'Finding the Code to Change: From Grep to Agentic RAG in a Large Codebase',
   url: 'https://github.com/xilon-my/agentic-code-rag',
   description: '让编码 agent 在大型存量代码仓里找到"自己要改的那段代码"。从一个具体的改支付重试的任务讲起,看 agent 怎么靠三种检索一步步定位:词法(grep 找名字)、结构(调用图找关系)、语义(嵌入找意图),最后用 OpenAI Agents SDK 把这条"按成本排序的漏斗"落成一个能跑的 agent。',
-  tags: ['RAG', 'Agent'],
+  tags: ['RAG'],
   author: 'Shannon',
   takeaway: 'agent 改代码之前,先要找到那行要改的代码。找名字靠 grep——代码的标识符几乎不重名,词法就够可靠;弄懂"改了影响谁"靠调用图——这是修改场景独有、也最重要的一层;匹配"代码里没有的词"这种意图靠嵌入——从 transformer 推导、按函数切块。三者按成本从便宜到贵组合成一条漏斗:先搜名字、再翻关系、最后才对意图。词法搜错是假阳性,扫一眼能排除;语义搜错是假阴性,agent 根本不知道漏了——所以便宜的先用,贵的放后面。Claude Code、Codex 默认不建向量库,不是 RAG 没用,而是多数任务词法这一层就够;等仓库变大、意图零重叠、要跨文件枚举影响面时,才把更深的一层接进来。',
   detail: `改代码之前,agent 得先回答一个问题:**那行要改的代码,到底在哪?**
