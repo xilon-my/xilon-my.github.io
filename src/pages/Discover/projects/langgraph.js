@@ -4,7 +4,7 @@ const project = {
   name: 'LangGraph',
   url: 'https://github.com/langchain-ai/langgraph',
   description: '用图定义 Agent 行为的框架。节点就是函数，边就是逻辑，编译后是确定性的执行拓扑——不是"建议"Agent 怎么走，是它只能这么走。',
-  tags: ['Framework'],
+  tags: ['agent'],
   stars: '60k+',
   author: 'LangChain',
   detail:

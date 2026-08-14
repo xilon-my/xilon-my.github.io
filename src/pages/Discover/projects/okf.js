@@ -4,7 +4,7 @@ const project = {
   name: 'Open Knowledge Format (OKF)',
   url: 'https://github.com/GoogleCloudPlatform/knowledge-catalog',
   description: '开放知识格式，用 Markdown 文件加 YAML 前置元数据来表示知识。设计为人可读、AI 代理也可消费。',
-  tags: ['Standard'],
+  tags: ['RAG'],
   stars: '7.8k+',
   author: 'Google Cloud',
   takeaway: 'OKF 本质上不是什么新技术，就是个文件组织规范。它的核心观点是：软件工程里管代码的那套（Markdown + Git + PR）直接拿来管知识就够了，不需要给 AI 搞特权格式。如果你发现你的 Agent 每次都要重新搞清楚同一个东西，可能就是缺了一个 kb/ 目录。',

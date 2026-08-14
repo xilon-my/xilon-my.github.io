@@ -4,7 +4,7 @@ const project = {
   name: 'OpenAI Agents SDK',
   url: 'https://github.com/openai/openai-agents-python',
   description: 'OpenAI 官方发布的 Python SDK，用于构建多智能体工作流。支持 100+ 大语言模型，提供 Agent 编排、沙箱、护栏、追踪等基础设施。',
-  tags: ['Framework'],
+  tags: ['agent'],
   stars: '28k+',
   author: 'OpenAI',
   detail:

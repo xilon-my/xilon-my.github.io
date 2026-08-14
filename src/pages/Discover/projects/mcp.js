@@ -4,7 +4,7 @@ const project = {
   name: 'Model Context Protocol (MCP)',
   url: 'https://claude.com/blog/bringing-mcp-2026-07-28-to-claude',
   description: 'AI Agent 与外部工具之间的开放标准协议。由 Anthropic 创建，现由 Linux 基金会旗下的 AAIF 管理，让模型以统一的方式调用工具、读取数据、执行操作。',
-  tags: ['Standard'],
+  tags: ['agent'],
   author: 'Anthropic / AAIF',
   detail:
 `在 MCP 出现之前，给 AI 模型接工具是一个工具一套写法。你要让 Claude 能查数据库，写一个 database tool；让 ChatGPT 也能查同一个数据库，再写一个。每个模型都有自己的 tool calling 格式——OpenAI 的是 function calling，Anthropic 的是 tool use，参数怎么传、错误怎么返回，全不一样。N 个模型 × M 个工具 = N×M 个适配器。
