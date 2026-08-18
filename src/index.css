@@ -51,6 +51,7 @@ html { scroll-behavior: smooth; }
   --tag-standard: #F9E2AF;
   --tag-agent: #89DCEB;
   --tag-architecture: #FAB387;
+  --tag-inference: #CBA6F7;
 }
 
 [data-theme="light"] {
@@ -77,6 +78,7 @@ html { scroll-behavior: smooth; }
   --tag-standard: #DF8E1D;
   --tag-agent: #04A5E5;
   --tag-architecture: #FE640B;
+  --tag-inference: #8839EF;
 }
 
 @media (min-width: 1400px) {

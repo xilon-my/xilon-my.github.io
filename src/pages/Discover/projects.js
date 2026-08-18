@@ -14,7 +14,8 @@ import bellmanGridworld from './projects/bellman-gridworld.js'
 import findingCodeToChange from './projects/finding-code-to-change.js'
 import dddAnd3a from './projects/ddd-and-3a.js'
 import mineru from './projects/mineru.js'
+import llamaCpp from './projects/llama-cpp.js'
 
-const projects = [multica, symphony, okf, openaiAgentsPython, pi, mcp, superpowersOpenspec, langgraph, embodiedAi, vla, rag, embeddingsRerankers, bellmanGridworld, findingCodeToChange, dddAnd3a, mineru].sort((a, b) => b.date.localeCompare(a.date))
+const projects = [multica, symphony, okf, openaiAgentsPython, pi, mcp, superpowersOpenspec, langgraph, embodiedAi, vla, rag, embeddingsRerankers, bellmanGridworld, findingCodeToChange, dddAnd3a, mineru, llamaCpp].sort((a, b) => b.date.localeCompare(a.date))
 
 export default projects
