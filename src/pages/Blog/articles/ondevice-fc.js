@@ -1,14 +1,37 @@
 const article = {
   slug: 'ondevice-fc',
   date: '2026-08-18',
-  name: '我自己训了一个会调函数的 3B 小模型',
+  name: '我自己微调了一个的 3B 小模型',
   description: '手机上的 agent 得会调函数:用户说"定个闹钟",小模型要输出一个 JSON 调用。我用 DroidCall 数据,在一张 RTX 5090 上把 Qwen2.5-3B 的函数调用准确率从 21% 训到 51%。SFT 只涨了 4 个点,GRPO 直接翻倍——功夫全在奖励函数上。',
   tags: ['RL', 'Agent', 'Function-Calling', 'LLM'],
   category: 'Project',
   author: 'shannon',
   detail: `**这次做的是手机上跑 agent 的前置问题:小模型会不会调函数。** 场景是这样的:用户说一句"帮我定明天早上 7 点半的闹钟",模型要输出一个函数调用——\`{"ACTION_SET_ALARM": {"EXTRA_HOUR": 7, "EXTRA_MINUTES": 30}}\`——系统拿到 JSON 再去执行。要求模型小(3B 级别,手机内存才装得下),而且不能全靠云端:隐私、流量、离线都要能跑。那么问题来了,这么小的模型,能不能把"一句人话"变成"一次准确的函数调用"?这次试了试,过程有点意思,记一下。
 
-任务和数据用的是 **DroidCall**,一个把安卓 intent 调用抽象成函数调用的基准:预定义了 24 个函数(定闹钟、发邮件、搜网页……),约 1 万条样本,每条是一个三元组:(用户请求, 函数定义, 标准调用)。评测留出 200 条,不参与训练。
+**数据集长什么样。** 任务和数据用的是 **DroidCall**,一个把安卓 intent 调用抽象成函数调用的基准。它预定义了 24 个函数(定闹钟、发邮件、搜网页、挑联系人……),每个函数是这样一份定义——名字、一段描述、参数表(每个参数标了类型、是否必填、默认值)。比如答案里会反复出现的定闹钟,摘自真实的 api.jsonl:
+
+\`\`\`
+ACTION_SET_ALARM
+  EXTRA_HOUR:    int,  必填  闹钟小时,24 小时制
+  EXTRA_MINUTES: int,  必填  分钟
+  EXTRA_MESSAGE: str,  选填  备注,默认空
+  EXTRA_DAYS:    list, 选填  响铃日期,默认 None
+  EXTRA_VIBRATE: bool, 选填  是否震动,默认 false
+\`\`\`
+
+约 1 万条样本,每条是一个三元组:(用户请求, 相关函数定义, 标准调用)。一条简单的长这样(论文原例):
+
+\`\`\`
+query:   "Wake me up at 8:30"
+answers: [{"id": 0, "name": "ACTION_SET_ALARM",
+           "arguments": {"EXTRA_HOUR": 8, "EXTRA_MINUTE": 30}}]
+\`\`\`
+
+模型要做的:看到 query,从函数列表里选出 ACTION_SET_ALARM,再把"8:30"拆成小时=8、分钟=30 填进参数。难的不是格式,是这些细节——8:30 怎么拆、可选参数要不要补、几个候选函数里选哪个。数据分两档生成:simple 是单函数单调用(上面这种);complex 要多函数组合,甚至一个调用的参数引用前一个调用的返回值(比如先"挑联系人",再把拿到的 URI 填进"发邮件")。数据是拿 GPT-4-turbo 生成的,按相似度去重,评测留出 200 条,不参与训练。
+
+**为什么是 3B?端侧主流就是 1B~4B。** 端侧(手机、平板、笔记本)能装的模型,主流尺寸基本落在这个区间:Meta 的 Llama 3.2 专门为端侧做了 1B 和 3B 两档,官方模型卡原话是 "running locally on edge",量化后 3B 约 2GB;Google 的 Gemma 3n 官方说 "designed for efficient execution on everyday devices such as laptops, tablets or phones",有效参数 2B/4B;Qwen2.5 最小的三档是 0.5B/1.5B/3B。为什么会聚在这里?手机内存摆着:3B 量化后约 2GB,7B 就得 4GB+,跑起来还热还掉电。再往上就不是"端侧"了。
+
+那为什么选 3B,不选更小的 1.5B?因为函数调用不是"续写",它要求模型真理解意图、在 24 个函数里选对、还填对参数——这活太小了干不动。Qwen 官方博客原话:"even models with just 3 billion parameters are now delivering highly competitive results",把 3B 标成小模型里的性能甜点。更直接的证据是 DroidCall 论文自己:实验用的就是 Qwen2.5-3B 和 Gemma2-2B,微调后能接近甚至超过 GPT-4o。等于原论文已经验证了"这个尺寸能把这活干好"。选 3B 不是拍脑袋,是"装得下"和"干得了"的交点。
 
 模型是 Qwen2.5-3B-Instruct,训练分两段:**先 SFT 热身,再 GRPO 强化**。训练只改一小部分参数(LoRA 低秩微调),整个 pipeline 只占一张 RTX 5090(32GB)。先放结果:
 
