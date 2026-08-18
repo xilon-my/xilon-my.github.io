@@ -63,7 +63,11 @@ answers: [{"id": 0, "name": "ACTION_SET_ALARM",
 
 第三步,**组内归一化**。8 个回答放在一起比,每个回答的优势 = (自己的分 − 组平均) ÷ 组标准差:
 
-$$\\hat{A}_i = \\frac{r_i - \\mathrm{mean}(\\mathbf{r})}{\\mathrm{std}(\\mathbf{r})}$$
+$$
+
+\\hat{A}_i = \\frac{r_i - \\mathrm{mean}(\\mathbf{r})}{\\mathrm{std}(\\mathbf{r})}
+
+$$
 
 这是 GRPO 的灵魂。它把"绝对分"变成"相对分":比组内平均好的,优势为正;差的,为负。为什么不直接用绝对分?因为打分尺度会漂移——这批问题可能整体都难、下批都简单。组内相对化让"好/坏"永远在当下这批里比,信号稳定。这也正是 "Group Relative" 这个名字的来历:基准不是绝对满分,是**这一组之间的相对好坏**。
 
@@ -75,7 +79,11 @@ $$\\hat{A}_i = \\frac{r_i - \\mathrm{mean}(\\mathbf{r})}{\\mathrm{std}(\\mathbf{
 
 PPO 算优势用的是 GAE(广义优势估计),每一步都要估计"当前状态值多少钱"的 V(s):
 
-$$\\delta_t = r_t + \\gamma V(s_{t+1}) - V(s_t)$$
+$$
+
+\\delta_t = r_t + \\gamma V(s_{t+1}) - V(s_t)
+
+$$
 
 而这个 V(s) 本身是一个要训练的模型(Critic),专门预测"从这个状态往后还能拿多少分"。所以 PPO 同时训两个模型:做决定的 Actor + 估分的 Critic。Critic 占差不多一倍的显存,多一份前向和反向。
 
