@@ -69,9 +69,9 @@ $$\\hat{A}_i = \\frac{r_i - \\mathrm{mean}(\\mathbf{r})}{\\mathrm{std}(\\mathbf{
 
 第四步,**更新**。优势为正的回答,里面的 token 概率被往高推;为负的,往低压(策略梯度)。然后回到第一步,反复 400 步,再续训到 1000 步。
 
-**GRPO 和 PPO 到底差在哪?** 一句话:**PPO 多训一个 Critic 网络,GRPO 用组内平均替代它**。下面这张图是 verl(一个 RL 训练框架)官方文档里的 GRPO 训练流程——注意图里没有 Critic 那条路:
+**GRPO 和 PPO 到底差在哪?** 一句话:**PPO 多训一个 Critic 网络,GRPO 用组内平均替代它**。下面这张图把改动点画得很直白(来源:开源教程 hands-on-modern-rl,github.com/walkinglabs/hands-on-modern-rl):PPO 用一个 Critic 网络预测 V(s) 当基线,GRPO 改成"同一题采样多个回答、用组内平均分当基线"——中间那个公式 A_i = (r_i − mean) / std,就是前面第三步组内归一化:
 
-![GRPO 训练流程(来源:verl 官方文档)](/images/grpo-flow.png)
+![GRPO 原理:替换 Critic 基线为组内平均(来源:walkinglabs/hands-on-modern-rl)](/images/grpo-principle.svg)
 
 PPO 算优势用的是 GAE(广义优势估计),每一步都要估计"当前状态值多少钱"的 V(s):
 
