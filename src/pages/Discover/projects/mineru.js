@@ -1,6 +1,6 @@
 const project = {
   slug: 'mineru',
-  date: '2026-08-18 10:00',
+  date: '2026-08-17 16:20',
   name: 'MinerU: Inside the PDF-to-Markdown Pipeline',
   url: 'https://github.com/opendatalab/MinerU',
   url2: 'https://github.com/opendatalab/PDF-Extract-Kit',
