@@ -2,7 +2,7 @@ const article = {
   slug: 'rag-self-train',
   date: '2026-08-06',
   name: '全参数微调检索模型的多模态 RAG',
-  description: '一直用的是现成的检索模型:embedding 拿来就用,reranker 拿来就用。这次试着自己训了两个,一个检索器(bi-encoder),一个重排器(reranker),用在金融文档问答上。过程有意思,踩了几个坑,记一下。',
+  description: '一直用的是现成的检索模型:embedding 拿来就用,reranker 拿来就用。这次试着自己训了两个,一个检索器(bi-encoder),一个重排器(reranker),用在金融文档问答上。',
   tags: ['RAG', 'Retrieval', 'LLM', 'PyTorch'],
   category: 'Project',
   author: 'shannon',
