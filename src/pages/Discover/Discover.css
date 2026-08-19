@@ -683,9 +683,25 @@
 }
 .discover-detail-content img[src*="vpi-heatmap"],
 .discover-detail-content img[src*="vstar-policy"],
-.discover-detail-content img[src*="qstar-argmax"] {
+.discover-detail-content img[src*="qstar-argmax"],
+.discover-detail-content img[src*="mc-q-s1"],
+.discover-detail-content img[src*="mc-vstar-policy"] {
   width: auto;
   max-width: 560px;
+  display: block;
+  margin: 24px auto;
+}
+
+/* ── MC grid world 配图 ── */
+.discover-detail-content img[src*="mc-3x3-map"] {
+  width: auto;
+  max-width: 400px;
+  display: block;
+  margin: 24px auto;
+}
+.discover-detail-content img[src*="mc-episode-decomp"] {
+  width: auto;
+  max-width: 720px;
   display: block;
   margin: 24px auto;
 }
