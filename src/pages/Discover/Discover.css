@@ -706,6 +706,16 @@
   margin: 24px auto;
 }
 
+/* ── Stochastic Approximation 配图 ── */
+.discover-detail-content img[src*="sa-incr-mean"],
+.discover-detail-content img[src*="sa-rm-w3"],
+.discover-detail-content img[src*="sa-bgd-sgd"] {
+  width: auto;
+  max-width: 640px;
+  display: block;
+  margin: 24px auto;
+}
+
 /* ── Tables ── */
 .discover-detail-content table {
   width: calc(100% - 48px);
