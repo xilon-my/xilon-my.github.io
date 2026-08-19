@@ -698,7 +698,8 @@
   margin: 24px auto;
 }
 .discover-detail-content img[src*="mc-q-s1"],
-.discover-detail-content img[src*="mc-eps-cover"] {
+.discover-detail-content img[src*="mc-eps-cover"],
+.discover-detail-content img[src*="mc-eps-soft"] {
   width: auto;
   max-width: 720px;
   display: block;
