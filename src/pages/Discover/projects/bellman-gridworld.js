@@ -2,7 +2,7 @@ const project = {
   slug: 'bellman-gridworld',
   date: '2026-08-12 19:00',
   name: 'Bellman Equation in a 2×2 Grid World',
-  url: 'http://incompleteideas.net/book/the-book-3rd-v2.pdf',
+  url: 'https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning',
   description: '最近在学习西湖大学赵世钰老师的强化学习的数学原理,前三节课完整介绍了强化学习的概念以及bellman equation,bellman optimality equation。这里用 2×2 grid world总结一下前三节的内容:把策略迭代和价值迭代两条路完整走一遍.',
   tags: ['RL'],
   author: 'shannon',

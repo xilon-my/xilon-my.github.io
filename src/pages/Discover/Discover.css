@@ -698,8 +698,10 @@
   margin: 24px auto;
 }
 .discover-detail-content img[src*="mc-q-s1"],
+.discover-detail-content img[src*="mc-sample-mean"],
 .discover-detail-content img[src*="mc-eps-cover"],
-.discover-detail-content img[src*="mc-eps-soft"] {
+.discover-detail-content img[src*="mc-eps-soft"],
+.discover-detail-content img[src*="mc-eps-value-trend"] {
   width: auto;
   max-width: 720px;
   display: block;
@@ -712,21 +714,22 @@
   margin: 24px auto;
 }
 
-/* ── Stochastic Approximation 配图 ── */
-.discover-detail-content img[src*="sa-incr-mean"],
-.discover-detail-content img[src*="sa-rm-w3"],
-.discover-detail-content img[src*="sa-bgd-sgd"] {
+/* ── TD grid world 配图 ── */
+.discover-detail-content img[src*="td-qlearn-behavior"] {
   width: auto;
-  max-width: 640px;
+  max-width: 720px;
   display: block;
   margin: 24px auto;
 }
 
 /* ── Tables ── */
 .discover-detail-content table {
-  width: calc(100% - 48px);
+  display: block;
+  width: max-content;
+  max-width: calc(100% - 48px);
+  overflow-x: auto;
   border-collapse: collapse;
-  margin: 16px 24px;
+  margin: 16px auto;
   font-size: 0.88rem;
   line-height: 1.7;
 }

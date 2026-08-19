@@ -1,10 +1,10 @@
 const project = {
   slug: 'llama-cpp',
-  date: '2026-08-18 12:00',
+  date: '2026-08-18 16:31',
   name: 'llama.cpp: A 7B Model on a 4GB Raspberry Pi',
   url: 'https://github.com/ggml-org/llama.cpp',
   url2: 'https://github.com/ggml-org/ggml',
-  description: 'llama.cpp 是"本地跑大模型"的起点:一个 C/C++ 写的推理库,把 7B 参数的模型压到 4.5GB,让普通笔记本、树莓派、手机都能跑。核心是两件事——量化(把每个权重从 2 字节压到 0.5 字节,靠"32 个权重共享一个缩放系数"这个机制)和 GGUF 单文件格式。推理有个关键事实:生成 token 的速度由内存带宽决定,不是算力,所以量化之后模型又小、生成又快。本文从 transformer 基础讲起:模型到底多大、为什么跑不动、量化怎么省内存、KV cache 是什么、CPU 和 GPU 后端怎么分工、以及 Ollama / vLLM / MLX 这些同类型工具怎么选。',
+  description: 'llama.cpp 是"本地跑大模型"的起点:C/C++ 推理库,把 7B 模型压到 4.5GB,笔记本、树莓派、手机都能跑。核心是量化和 GGUF 格式;生成速度由内存带宽决定,量化后模型又小又快。从 transformer 讲起,覆盖 KV cache、CPU/GPU 分工、工具取舍。',
   tags: ['Inference'],
   stars: '124k+',
   author: 'Shannon',
