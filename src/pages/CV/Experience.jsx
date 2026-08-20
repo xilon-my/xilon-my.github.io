@@ -7,6 +7,7 @@ const experiences = [
     title: 'Agent Development Intern',
     company: 'Huawei',
     description: 'Quality & Process IT department. Developing intelligent agents for lights-out factory automation within legacy systems.',
+    logo: '/images/huawei-color.svg',
   },
   {
     date: '2025.09 — Present',
