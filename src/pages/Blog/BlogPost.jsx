@@ -5,8 +5,10 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 import hljs from 'highlight.js'
+import Terminal from '../../components/Terminal.jsx'
 import articles, { folders } from './articles.js'
 import BlogFolder from './BlogFolder.jsx'
+import '../Discover/Discover.css'
 import './Blog.css'
 
 function CodeBlock({ className, children }) {
@@ -43,53 +45,82 @@ export default function BlogPost() {
 
   if (!post) {
     return (
-      <div className="blog-post-page">
-        <Link to="/blog" className="blog-post-back">&larr; cd ..</Link>
-        <div className="blog-empty">
-          <div className="icon">&#128533;</div>
-          <h3>Post not found</h3>
-          <p>The article you&apos;re looking for doesn&apos;t exist.</p>
+      <div className="blog-page">
+        <div className="container">
+          <Terminal title="shannon@shannon.zone ~/blog %">
+            <div className="discover-empty">
+              <p className="discover-prompt" style={{ marginBottom: 12 }}>
+                <span className="prompt-cv">❯</span> cat {slug}.md
+              </p>
+              <p style={{ color: 'var(--red)' }}>post not found: {slug}</p>
+              <p style={{ marginTop: 16 }}>
+                <Link to="/blog" className="discover-back-link">← back to list</Link>
+              </p>
+            </div>
+          </Terminal>
         </div>
       </div>
     )
   }
 
+  const backTo = post.folder ? `/blog/${post.folder}` : '/blog'
+  const catPath = post.folder ? `${post.folder}/${post.slug}.md` : `${post.slug}.md`
+  const pwd = post.folder ? `~/blog/${post.folder}` : '~/blog'
+
   return (
-    <article className="blog-post-page">
-      <Link to={post.folder ? `/blog/${post.folder}` : '/blog'} className="blog-post-back">&larr; cd ..</Link>
-      <header className="blog-post-header">
-        <h1>{post.name}</h1>
-        <div className="blog-post-meta">
-          <time>{post.date}</time>
-          {post.tags?.length > 0 && (
-            <div className="blog-card-tags">
+    <div className="blog-page">
+      <div className="container">
+        <Terminal title={`shannon@shannon.zone ${pwd} %`}>
+          {/* ── Back link ── */}
+          <Link to={backTo} className="discover-detail-back">&larr; cd ..</Link>
+
+          {/* ── Header ── */}
+          <div className="discover-detail-header">
+            <p className="discover-prompt">
+              <span className="prompt-cv">❯</span> cat {catPath}
+            </p>
+          </div>
+
+          {/* ── Post meta ── */}
+          <div className="discover-detail-meta">
+            <h1 className="discover-detail-name">{post.name}</h1>
+            <div className="discover-card-tags" style={{ marginTop: 8 }}>
               {post.tags.map(t => <span key={t}>{t}</span>)}
             </div>
-          )}
-        </div>
-      </header>
-      <div className="blog-post-content">
-        <p className="blog-post-desc">{post.description}</p>
-
-        <Markdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]} components={{ code: CodeBlock }}>{post.detail}</Markdown>
-
-        {post.takeaway && (
-          <div className="blog-post-takeaway">
-            <p className="blog-takeaway-prompt">
-              <span className="prompt-cv">❯</span> Takeaway
-            </p>
-            <p className="blog-takeaway-text">{post.takeaway}</p>
+            <div className="discover-detail-info">
+              <span><span className="detail-label">date</span> {post.date}</span>
+              {post.author && <span><span className="detail-label">author</span> {post.author}</span>}
+              {post.category && <span><span className="detail-label">category</span> {post.category}</span>}
+            </div>
           </div>
-        )}
 
-        {post.images && post.images.length > 0 && (
-          <div className="blog-post-images">
-            {post.images.map((img, i) => (
-              <img key={i} src={img} alt={`${post.name} screenshot ${i + 1}`} className="blog-post-img" loading="lazy" />
-            ))}
+          {/* ── Body ── */}
+          <div className="discover-detail-body">
+            <p className="discover-detail-desc">{post.description}</p>
+
+            <div className="discover-detail-content">
+              <Markdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]} components={{ code: CodeBlock }}>{post.detail}</Markdown>
+            </div>
+
+            {post.takeaway && (
+              <div className="discover-takeaway">
+                <p className="discover-prompt">
+                  <span className="prompt-cv">❯</span> Takeaway
+                </p>
+                <p className="discover-takeaway-text">{post.takeaway}</p>
+              </div>
+            )}
+
+            {post.images && post.images.length > 0 && (
+              <div className="discover-detail-images">
+                {post.images.map((img, i) => (
+                  <img key={i} src={img} alt={`${post.name} screenshot ${i + 1}`} className="discover-detail-img" loading="lazy" />
+                ))}
+              </div>
+            )}
           </div>
-        )}
+        </Terminal>
       </div>
-    </article>
+    </div>
   )
 }

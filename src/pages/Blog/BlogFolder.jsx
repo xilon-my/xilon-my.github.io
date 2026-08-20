@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import Terminal from '../../components/Terminal.jsx'
 import BlogList from './BlogList.jsx'
 import articles, { folders } from './articles.js'
+import '../Discover/Discover.css'
 import './Blog.css'
 
 export default function BlogFolder({ folderSlug }) {
@@ -14,7 +15,6 @@ export default function BlogFolder({ folderSlug }) {
     title: a.name,
     tag: a.tags[0],
     date: a.date,
-    desc: a.description,
     to: `/blog/${a.slug}`,
   })).sort((a, b) => b.date.localeCompare(a.date))
 
@@ -22,7 +22,7 @@ export default function BlogFolder({ folderSlug }) {
     <div className="blog-page">
       <div className="container">
         <Terminal title={`shannon@shannon.zone ~/blog/${folderSlug} %`}>
-          <Link to="/blog" className="blog-post-back">&larr; cd ..</Link>
+          <Link to="/blog" className="discover-detail-back">&larr; cd ..</Link>
           <div className="blog-header">
             <p className="blog-prompt">
               <span className="prompt-cv">❯</span> <span className="typewriter">ls</span>

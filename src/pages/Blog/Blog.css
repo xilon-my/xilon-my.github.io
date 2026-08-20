@@ -59,12 +59,6 @@
   font-family: var(--mono);
 }
 
-.blog-ls-mode {
-  color: var(--border);
-  font-size: 0.72rem;
-  white-space: nowrap;
-}
-
 .blog-ls-name {
   flex: 1;
   min-width: 0;
@@ -93,17 +87,6 @@
   white-space: nowrap;
 }
 
-.blog-ls-desc {
-  margin-top: 4px;
-  padding-left: 11ch;
-  color: var(--text-secondary);
-  font-size: 0.85rem;
-  line-height: 1.6;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-}
-
 /* 单个 tag,`[tag]` 括号风格(与 discover 列表一致) */
 .blog-card-tag {
   font-family: var(--mono);
@@ -112,312 +95,22 @@
   white-space: nowrap;
 }
 
-/* 文章页头:mono 胶囊(与 discover 详情页一致) */
-.blog-card-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 5px;
-}
-
-.blog-card-tags span {
-  font-family: var(--mono);
-  font-size: 0.65rem;
-  padding: 1px 8px;
-  border-radius: 4px;
-  background: var(--accent-light);
-  color: var(--accent-dark);
-  font-weight: 500;
-}
-
-/* ── Blog Post ── */
-.blog-post-page {
-  max-width: 720px;
-  margin: 0 auto;
-  padding: 80px 24px 64px;
-}
-
-.blog-post-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  color: var(--text-secondary);
-  font-size: 0.9rem;
-  font-family: var(--mono);
-  margin-bottom: 36px;
-  transition: color 0.2s;
-}
-
-.blog-post-back:hover {
-  color: var(--accent);
-  text-decoration: none;
-}
-
-.blog-post-header {
-  margin-bottom: 40px;
-}
-
-.blog-post-header h1 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  margin-bottom: 14px;
-}
-
-.blog-post-meta {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
-  font-family: var(--mono);
-  font-size: 0.85rem;
+/* ── Empty state ── */
+.blog-empty {
+  text-align: center;
+  padding: 60px 0;
   color: var(--text-secondary);
 }
 
-.blog-post-content {
-  font-size: 1.05rem;
-  line-height: 1.9;
-  color: var(--text);
-  font-style: normal;
-  font-variation-settings: 'wght' 400;
-  word-spacing: 0.08em;
-}
-
-.blog-post-content h2 {
-  font-size: 1.45rem;
-  font-weight: 600;
-  margin-top: 40px;
-  margin-bottom: 12px;
-  letter-spacing: -0.01em;
-}
-
-.blog-post-content h3 {
-  font-size: 1.15rem;
-  font-weight: 600;
-  margin-top: 28px;
-  margin-bottom: 8px;
-}
-
-.blog-post-content p {
-  margin-bottom: 18px;
-  text-indent: 2em;
-}
-
-.blog-post-content blockquote p {
-  text-indent: 0;
-}
-
-.blog-post-content ul,
-.blog-post-content ol {
-  margin-bottom: 18px;
-  padding-left: 24px;
-}
-
-.blog-post-content li {
-  margin-bottom: 6px;
-}
-
-.blog-post-content strong {
-  font-weight: 600;
-}
-
-.blog-post-content code {
-  background: var(--accent-light);
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-family: var(--mono);
-  font-size: 0.85em;
-}
-
-.blog-post-content pre {
-  position: relative;
-  background: var(--code-bg);
-  color: var(--code-text);
-  padding: 24px 24px 20px;
-  border-radius: var(--radius);
-  margin-bottom: 24px;
-  font-size: 1.05rem;
-  line-height: 1.9;
-  font-family: var(--font);
-  white-space: pre-wrap;
-  overflow-wrap: break-word;
-}
-
-.blog-post-content pre:has(code[class*="language-"])::before {
-  position: absolute;
-  top: 4px;
-  right: 10px;
-  font-family: var(--mono);
-  font-size: 0.6rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  opacity: 0.7;
-}
-
-.blog-post-content pre:has(code.language-yaml)::before { content: "yaml"; color: var(--accent); }
-.blog-post-content pre:has(code.language-markdown)::before { content: "md"; color: var(--magenta); }
-.blog-post-content pre:has(code.language-bash)::before,
-.blog-post-content pre:has(code.language-sh)::before { content: "bash"; color: var(--green); }
-.blog-post-content pre:has(code.language-diff)::before { content: "diff"; color: var(--yellow); }
-.blog-post-content pre:has(code.language-json)::before { content: "json"; color: var(--yellow); }
-
-.blog-post-content pre code {
-  background: none;
-  padding: 0;
-  color: inherit;
-}
-
-.blog-post-content blockquote {
-  margin: 20px 0;
-  padding: 0;
-  padding-left: 16px;
-  color: var(--text-secondary);
-  font-style: normal;
-  border-left: 2px solid var(--border);
-}
-
-.blog-post-content table {
-  display: block;
-  width: max-content;
-  max-width: calc(100% - 48px);
-  overflow-x: auto;
-  border-collapse: collapse;
-  margin: 16px auto;
-  font-size: 0.88rem;
-  line-height: 1.7;
-}
-
-.blog-post-content thead {
-  border-bottom: 2px solid var(--border);
-}
-
-.blog-post-content th {
-  font-family: var(--mono);
-  font-size: 0.78rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: var(--text-secondary);
-  padding: 10px 24px;
-  text-align: left;
-  white-space: nowrap;
-}
-
-.blog-post-content td {
-  padding: 10px 24px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: top;
-}
-
-.blog-post-content tbody tr:hover td {
-  background: var(--surface);
-}
-
-@media (max-width: 600px) {
-  .blog-post-content table {
-    font-size: 0.82rem;
-  }
-  .blog-post-content th,
-  .blog-post-content td {
-    padding: 8px 10px;
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .blog-ls-row {
+    padding: 12px 8px;
   }
 }
 
-/* ── 引导段(description)── */
-.blog-post-desc {
-  text-indent: 0;
-  font-weight: 500;
-  font-size: 1.1rem;
-  color: var(--text);
-}
-
-/* ── 图片 ── */
-.blog-post-content img {
-  width: 100%;
-  height: auto;
-  margin: 24px 0;
-  border-radius: var(--radius);
-  border: 1px solid var(--border);
-}
-
-/* ── Grid world 系列配图(居中限宽,继承 discover 时代的约束)── */
-.blog-post-content img[src*="gridworld-map"] {
-  width: auto;
-  max-width: 380px;
-  display: block;
-  margin: 24px auto;
-}
-.blog-post-content img[src*="vpi-heatmap"],
-.blog-post-content img[src*="vstar-policy"],
-.blog-post-content img[src*="qstar-argmax"] {
-  width: auto;
-  max-width: 560px;
-  display: block;
-  margin: 24px auto;
-}
-.blog-post-content img[src*="mc-3x3-map"] {
-  width: auto;
-  max-width: 400px;
-  display: block;
-  margin: 24px auto;
-}
-.blog-post-content img[src*="mc-q-s1"],
-.blog-post-content img[src*="mc-sample-mean"],
-.blog-post-content img[src*="mc-eps-soft"],
-.blog-post-content img[src*="mc-eps-value-trend"],
-.blog-post-content img[src*="mc-episode-decomp"] {
-  width: auto;
-  max-width: 720px;
-  display: block;
-  margin: 24px auto;
-}
-.blog-post-content img[src*="td-qlearn-behavior"] {
-  width: auto;
-  max-width: 720px;
-  display: block;
-  margin: 24px auto;
-}
-
-/* ── KaTeX 公式 ──
-   对齐正文;字体保留 KaTeX 默认(分数/上下标按自家字体度量算死,
-   强制换字体会导致错位,所以不覆盖 font-family)。 */
-.blog-post-content .katex-display {
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 6px 0;
-  margin: 16px 0;
-}
-.blog-post-content .katex-display > .katex {
-  display: block;
-  width: fit-content;
-  margin-inline: auto;
-  white-space: nowrap;
-}
-.blog-post-content .katex {
-  font-size: 1em;
-}
-
-/* ── Takeaway ── */
-.blog-post-takeaway {
-  margin-top: 32px;
-  padding-top: 16px;
-  border-top: 1px solid var(--border);
-}
-
-.blog-takeaway-prompt {
-  font-size: 0.85rem;
-  color: var(--green);
-  margin-bottom: 6px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.blog-takeaway-text {
-  margin-top: 6px;
-  font-size: 0.92rem;
-  line-height: 1.8;
-  color: var(--text-secondary);
-  text-indent: 0;
+@media (prefers-reduced-motion: reduce) {
+  .blog-ls-row {
+    transition: none;
+  }
 }

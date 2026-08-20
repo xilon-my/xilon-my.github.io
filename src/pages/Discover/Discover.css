@@ -236,6 +236,17 @@
   text-decoration: none;
 }
 
+.discover-back-link {
+  color: var(--accent);
+  font-family: var(--mono);
+  font-size: 0.85rem;
+}
+
+.discover-back-link:hover {
+  color: var(--magenta);
+  text-decoration: none;
+}
+
 .discover-detail-header {
   margin-bottom: 24px;
 }
@@ -359,6 +370,19 @@
   margin-bottom: 6px;
   line-height: 1.7;
   position: relative;
+}
+
+.discover-detail-content blockquote {
+  margin: 20px 0;
+  padding: 0;
+  padding-left: 16px;
+  color: var(--text-secondary);
+  font-style: normal;
+  border-left: 2px solid var(--border);
+}
+
+.discover-detail-content blockquote p {
+  text-indent: 0;
 }
 
 .discover-detail-content ul li::before {
@@ -501,6 +525,44 @@
 .discover-detail-content img[src*="ragchecker"] {
   width: auto;
   max-width: 460px;
+  display: block;
+  margin: 24px auto;
+}
+
+/* ── Grid world 系列配图(居中限宽)── */
+.discover-detail-content img[src*="gridworld-map"] {
+  width: auto;
+  max-width: 380px;
+  display: block;
+  margin: 24px auto;
+}
+.discover-detail-content img[src*="vpi-heatmap"],
+.discover-detail-content img[src*="vstar-policy"],
+.discover-detail-content img[src*="qstar-argmax"] {
+  width: auto;
+  max-width: 560px;
+  display: block;
+  margin: 24px auto;
+}
+.discover-detail-content img[src*="mc-3x3-map"] {
+  width: auto;
+  max-width: 400px;
+  display: block;
+  margin: 24px auto;
+}
+.discover-detail-content img[src*="mc-q-s1"],
+.discover-detail-content img[src*="mc-sample-mean"],
+.discover-detail-content img[src*="mc-eps-soft"],
+.discover-detail-content img[src*="mc-eps-value-trend"],
+.discover-detail-content img[src*="mc-episode-decomp"] {
+  width: auto;
+  max-width: 720px;
+  display: block;
+  margin: 24px auto;
+}
+.discover-detail-content img[src*="td-qlearn-behavior"] {
+  width: auto;
+  max-width: 720px;
   display: block;
   margin: 24px auto;
 }

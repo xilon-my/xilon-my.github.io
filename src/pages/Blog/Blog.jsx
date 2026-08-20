@@ -8,7 +8,6 @@ export default function BlogPage() {
     kind: 'dir',
     name: f.name,
     count: articles.filter(a => a.folder === slug).length,
-    desc: f.desc,
     to: `/blog/${slug}`,
   })).sort((a, b) => a.name.localeCompare(b.name))
 
@@ -18,7 +17,6 @@ export default function BlogPage() {
     title: a.name,
     tag: a.tags[0],
     date: a.date,
-    desc: a.description,
     to: `/blog/${a.slug}`,
   })).sort((a, b) => b.date.localeCompare(a.date))
 
