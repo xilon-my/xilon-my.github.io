@@ -525,54 +525,6 @@
   font-size: 1em;
 }
 
-/* ── Grid World 配图 ── */
-.discover-detail-content img[src*="gridworld-map"] {
-  width: auto;
-  max-width: 380px;
-  display: block;
-  margin: 24px auto;
-}
-.discover-detail-content img[src*="vpi-heatmap"],
-.discover-detail-content img[src*="vstar-policy"],
-.discover-detail-content img[src*="qstar-argmax"] {
-  width: auto;
-  max-width: 560px;
-  display: block;
-  margin: 24px auto;
-}
-
-/* ── MC grid world 配图 ── */
-.discover-detail-content img[src*="mc-3x3-map"] {
-  width: auto;
-  max-width: 400px;
-  display: block;
-  margin: 24px auto;
-}
-.discover-detail-content img[src*="mc-q-s1"],
-.discover-detail-content img[src*="mc-sample-mean"],
-.discover-detail-content img[src*="mc-eps-cover"],
-.discover-detail-content img[src*="mc-eps-soft"],
-.discover-detail-content img[src*="mc-eps-value-trend"] {
-  width: auto;
-  max-width: 720px;
-  display: block;
-  margin: 24px auto;
-}
-.discover-detail-content img[src*="mc-episode-decomp"] {
-  width: auto;
-  max-width: 720px;
-  display: block;
-  margin: 24px auto;
-}
-
-/* ── TD grid world 配图 ── */
-.discover-detail-content img[src*="td-qlearn-behavior"] {
-  width: auto;
-  max-width: 720px;
-  display: block;
-  margin: 24px auto;
-}
-
 /* ── Tables ── */
 .discover-detail-content table {
   display: block;

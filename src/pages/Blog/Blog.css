@@ -282,22 +282,50 @@
 }
 
 .blog-post-content table {
-  width: 100%;
+  display: block;
+  width: max-content;
+  max-width: calc(100% - 48px);
+  overflow-x: auto;
   border-collapse: collapse;
-  margin: 20px 0;
-  font-size: 0.9rem;
+  margin: 16px auto;
+  font-size: 0.88rem;
+  line-height: 1.7;
 }
 
-.blog-post-content th,
-.blog-post-content td {
-  border: 1px solid var(--border);
-  padding: 10px 14px;
-  text-align: left;
+.blog-post-content thead {
+  border-bottom: 2px solid var(--border);
 }
 
 .blog-post-content th {
-  background: var(--surface);
+  font-family: var(--mono);
+  font-size: 0.78rem;
   font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  padding: 10px 24px;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.blog-post-content td {
+  padding: 10px 24px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.blog-post-content tbody tr:hover td {
+  background: var(--surface);
+}
+
+@media (max-width: 600px) {
+  .blog-post-content table {
+    font-size: 0.82rem;
+  }
+  .blog-post-content th,
+  .blog-post-content td {
+    padding: 8px 10px;
+  }
 }
 
 /* ── 引导段(description)── */
@@ -315,6 +343,44 @@
   margin: 24px 0;
   border-radius: var(--radius);
   border: 1px solid var(--border);
+}
+
+/* ── Grid world 系列配图(居中限宽,继承 discover 时代的约束)── */
+.blog-post-content img[src*="gridworld-map"] {
+  width: auto;
+  max-width: 380px;
+  display: block;
+  margin: 24px auto;
+}
+.blog-post-content img[src*="vpi-heatmap"],
+.blog-post-content img[src*="vstar-policy"],
+.blog-post-content img[src*="qstar-argmax"] {
+  width: auto;
+  max-width: 560px;
+  display: block;
+  margin: 24px auto;
+}
+.blog-post-content img[src*="mc-3x3-map"] {
+  width: auto;
+  max-width: 400px;
+  display: block;
+  margin: 24px auto;
+}
+.blog-post-content img[src*="mc-q-s1"],
+.blog-post-content img[src*="mc-sample-mean"],
+.blog-post-content img[src*="mc-eps-soft"],
+.blog-post-content img[src*="mc-eps-value-trend"],
+.blog-post-content img[src*="mc-episode-decomp"] {
+  width: auto;
+  max-width: 720px;
+  display: block;
+  margin: 24px auto;
+}
+.blog-post-content img[src*="td-qlearn-behavior"] {
+  width: auto;
+  max-width: 720px;
+  display: block;
+  margin: 24px auto;
 }
 
 /* ── KaTeX 公式 ──

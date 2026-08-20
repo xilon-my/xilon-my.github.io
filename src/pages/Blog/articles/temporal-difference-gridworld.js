@@ -1,10 +1,10 @@
-const project = {
+const article = {
   slug: 'temporal-difference-gridworld',
   date: '2026-08-19 17:00',
   name: 'Temporal-Difference Methods in a Stochastic 3×3 Grid World',
-  url: 'https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning',
   description: '第 7 课:时序差分。MC 要等整条 episode 结束才能更新;TD 走一步更新一步,用"这一步奖励 + 下一步状态的当前估计"当目标,所以有偏、需初始猜测。沿 TD(0) → Sarsa → n-step Sarsa → Q-learning 走一遍,只有 Q-learning 解最优方程(off-policy)。',
   tags: ['RL'],
+  category: 'Course Review',
   author: 'shannon',
   takeaway: 'TD 与 MC 一样无模型,差别在"数据来了怎么用":MC 攒完整条 episode 的回报再平均(非增量);TD 拿到一步样本就更新当前状态(增量),target 用当前估计(bootstrap)。bootstrap 带来方差小、有偏、需初始猜测、能处理持续任务四个特点。TD(0) 估状态值;Sarsa 换成动作值并配合策略改进(广义策略迭代);n-step Sarsa 是 Sarsa↔MC 的插值;Q-learning 的 target 里是 max,直接解 Bellman 最优方程,因此 off-policy——能用别的策略采的数据学,行为策略探索越强学得越快。',
   detail: String.raw`
@@ -13,7 +13,7 @@ const project = {
 
 沿用上一篇的 3×3 grid world,规则不变:目标 $s_9$($+1$)、禁区 $s_6$($-1$)、撞墙 $-1$、其他 $0$,$\gamma=0.9$,5 个动作,确定性转移。初始策略 $\pi_0$ 均匀随机(每个动作 $1/5$)。
 
-![3×3 确定性 grid world,π0 均匀随机](/discover/mc-3x3-map.png)
+![3×3 确定性 grid world,π0 均匀随机](/images/mc-3x3-map.png)
 
 ## 2. MC 的痛点:一个样本要等 400 步
 
@@ -320,7 +320,7 @@ Q-learning 学到的 $\pi_T=[\mathrm{down},\ \mathrm{down},\ \mathrm{down},\ \ma
 
 uniform 行为策略 10 万步内收敛到 0;$\varepsilon=0.5$ 也能收敛但慢;$\varepsilon=0.1$ 到 10 万步还停在 3.31——探索不足,某些 $(s,a)$ 没被充分访问。行为策略探索越弱,off-policy 学习越慢;uniform 可以看成 $\varepsilon=1$ 的特例。
 
-![不同行为策略下 Q-learning 的收敛速度](/discover/td-qlearn-behavior.png)
+![不同行为策略下 Q-learning 的收敛速度](/images/td-qlearn-behavior.png)
 
 行为策略之外,初始猜测也影响收敛(bootstrap 的结果)。同样用 uniform 行为策略:$q_0=10$ 时 5,000 步内收敛($q_0=10$ 最接近真值 $7\sim10$);$q_0=0$ 约 3 万步;$q_0=100$ 最慢,约 10 万步——过高的初始猜测要把所有 $q$ 先压下来。教材 Figure 7.4(g)(h)。
 
@@ -351,4 +351,4 @@ MC 是这个式子的特例:令 $\alpha=1$、$\bar{q}_t$ 取完整回报,更新�
 - **on-policy(Sarsa 系)**:目标策略 = 行为策略;**off-policy(Q-learning)**:可以不同,能用别的策略采的数据学。`,
 }
 
-export default project
+export default article

@@ -1,10 +1,10 @@
-const project = {
+const article = {
   slug: 'monte-carlo-gridworld',
   date: '2026-08-19 15:00',
   name: 'Model-Free Monte Carlo in a Stochastic 3×3 Grid World',
-  url: 'https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning',
   description: '第 5 课:无模型的蒙特卡洛。上一篇都要用 P、R 算期望;这篇没有模型,价值靠 episode 数据的样本平均来估。即使环境确定、策略随机,同一条 (s,a) 每次回报也不同。沿 MC Basic → 回合长度/稀疏奖励 → Exploring Starts → ε-Greedy 走一遍。',
   tags: ['RL'],
+  category: 'Course Review',
   author: 'shannon',
   takeaway: '没有模型,就必须有数据:价值是回报的期望,期望用样本平均估计(大数定律)。MC Basic = 把策略迭代的评估从"解 Bellman 方程"换成"采样平均",且直接估 q(v→q 需要 P)。环境确定、策略随机(π0 均匀 1/5)时,同一条 (s,a) 每次采样回报仍不同——这正是必须采样平均的原因。MC Basic 有两个效率问题(一条 episode 只用开头一个样本 → every-visit;要收齐才更新 → 收一条就更新),代价是访问覆盖 → Exploring Starts。软策略 ε-Greedy 去掉访问覆盖条件,代价是牺牲最优性:ε 越大探索越全、价值越差(目标格价值从 10 塌到 -2.93)。',
   detail: String.raw`
@@ -31,7 +31,7 @@ const project = {
 
 但初始策略 $\pi_0$ 是**均匀随机**:每个状态、每个动作的概率都是 $1/5$(图上每个格子标 1/5)。
 
-![3×3 确定性 grid world,π0 均匀随机](/discover/mc-3x3-map.png)
+![3×3 确定性 grid world,π0 均匀随机](/images/mc-3x3-map.png)
 
 **agent 知道的只有这 5 个动作可选,不知道每个动作会通向哪个状态。** 图上画的转移(哪条边到哪个格子)是读者的上帝视角,不是 agent 手里的地图。agent 只能真的按下动作、观察结果,才知道环境怎么反应。
 
@@ -83,7 +83,7 @@ $$
 
 多数是负的——均匀随机下 agent 乱走,经常撞墙、踩禁区。单条回报不能代表 $q_{\pi_0}$,累积平均则逐渐逼近一个值:
 
-![MC 采样平均收敛](/discover/mc-sample-mean.png)
+![MC 采样平均收敛](/images/mc-sample-mean.png)
 
 **这个值是多少,MC 自己不知道**——它只看到样本平均在收敛。我们作为旁观者,如果额外假设**模型已知**(转移概率——环境确定,每个动作的结果固定——以及奖励规则),可以解出真实值 $q_{\pi_0}(s_1,\text{right})=-2.635$。MC 全程没有用到这些:样本够多时,平均自己就逼近它了。
 
@@ -97,7 +97,7 @@ $s_1$ 五个动作,对比 MC 用 2000 条 episode 采样平均的估计,和旁�
 | left | $-3.734$ | $-3.774$ |
 | stay | $-2.817$ | $-2.774$ |
 
-![q_π0(s1,·)](/discover/mc-q-s1.png)
+![q_π0(s1,·)](/images/mc-q-s1.png)
 
 两列几乎一致——**MC 没有用任何 $P$、$R$ 的信息,只靠采样平均,就得到了和模型解差不多的 $q$**。$\arg\max$ 是 down($-2.454$),所以 $\pi_1(s_1)=\text{down}$。$s_3$ 同理:五个动作 $-4.221,-4.221,-3.596,-2.635,-3.221$,$\pi_1(s_3)=\text{left}$。改进和策略迭代一模一样——MC 只换了"$q$ 从哪来"(数据 vs 模型)。
 
@@ -149,7 +149,7 @@ $$
 | $s_2 \to s_5 \to s_8 \to s_9 \to \cdots$ | $(s_2,\text{down})$ | 8.1 |
 | $s_1 \to s_2 \to s_5 \to s_8 \to s_9 \to \cdots$ | $(s_1,\text{right})$ | 7.29 |
 
-![一条 episode 拆成多条子-episode(示意:恰好走对到目标)](/discover/mc-episode-decomp.png)
+![一条 episode 拆成多条子-episode(示意:恰好走对到目标)](/images/mc-episode-decomp.png)
 
 **一条 episode 从"一个样本"变成"五个样本"**。计算上有技巧:从后往前"回溯"算回报——最后一个 $(s,a)$ 的回报最简单,前面的等于"这一步的奖励 $+ \gamma\times$ 后面那个 $(s,a)$ 的回报",一次扫描就得到所有被访问的 $(s,a)$ 的回报。注意这些子样本是相关的(后面的轨迹是前面轨迹的后缀),好在相关性弱,平均起来问题不大。
 
@@ -177,7 +177,7 @@ $$
 
 MC $\varepsilon$-Greedy 每轮只需要一条回合,因为策略是软的。先看"软"的表现:
 
-![ε-Greedy 是软策略](/discover/mc-eps-soft.png)
+![ε-Greedy 是软策略](/images/mc-eps-soft.png)
 
 左图:目标格 $s_9$,最优动作是 stay(价值 10)。$\varepsilon$-Greedy 学到的不是单个动作,而是一组概率:$\varepsilon=0$ 时 stay 概率 1;$\varepsilon=0.5$ 时 stay 概率 $0.6$,其余四个动作各 $0.1$——每步有 $40\%$ 的概率不 stay。右图:最优动作被选中的概率 $1-\varepsilon+\varepsilon/|\mathcal{A}|$ 随 $\varepsilon$ 从 1 降到均匀分布的 $0.2$。
 
@@ -196,7 +196,7 @@ $\varepsilon$ 是探索与利用的旋钮。**探索**:策略能多访问些动�
 
 **最优性随 $\varepsilon$ 增大而下降。** 保持贪心最优策略的动作选择不变、只把策略换成 $\varepsilon$-Greedy,目标格 $s_9$ 的价值随 $\varepsilon$ 一路下滑:
 
-![目标格价值随 ε 塌陷](/discover/mc-eps-value-trend.png)
+![目标格价值随 ε 塌陷](/images/mc-eps-value-trend.png)
 
 $$
 \varepsilon=0{:}\ 10 \quad \varepsilon=0.1{:}\ 8.59 \quad \varepsilon=0.2{:}\ 7.18 \quad \varepsilon=0.5{:}\ 2.96 \quad \varepsilon=1.0{:}\ -2.93
@@ -238,4 +238,4 @@ MC 与模型版的区别只有一个:期望从"代入 $P$、$R$ 算"变成"用�
 这个确定性世界里还有一点值得注意:**禁区 $s_6$ 的最优价值是 10**——它一步 down 就能逃进目标,而且它是最短路径的必经格(从 $s_3$ 到 $s_9$ 走 $s_3\to s_6\to s_9$ 只需 2 步)。价值顺着能到达目标的路径流过去,禁区格自己也在路径上;只有策略随机、乱走时,禁区才是负收益的来源。`,
 }
 
-export default project
+export default article

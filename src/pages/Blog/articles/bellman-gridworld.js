@@ -1,17 +1,17 @@
-const project = {
+const article = {
   slug: 'bellman-gridworld',
   date: '2026-08-12 19:00',
   name: 'Bellman Equation in a 2×2 Grid World',
-  url: 'https://github.com/MathFoundationRL/Book-Mathematical-Foundation-of-Reinforcement-Learning',
   description: '最近在学习西湖大学赵世钰老师的强化学习的数学原理,前三节课完整介绍了强化学习的概念以及bellman equation,bellman optimality equation。这里用 2×2 grid world总结一下前三节的内容:把策略迭代和价值迭代两条路完整走一遍.',
   tags: ['RL'],
+  category: 'Course Review',
   author: 'shannon',
   takeaway: '两条路殊途同归:策略迭代"评价 + 改进"交替(期望方程做平均、最大选动作),价值迭代只用最优方程直接取最大。都算出最优价值 V* 后,用 Q 的 argmax 读出最优策略。决策靠 Q,评价靠 V。',
   detail: String.raw`
 
 ## 1. 一个具体的 2×2 World
 
-![2×2 grid world 地图](/discover/gridworld-map.png)
+![2×2 grid world 地图](/images/gridworld-map.png)
 
 规则:
 
@@ -133,7 +133,7 @@ $P$ 第 0 行(从 (0,0) 出发): up/left/stay 三个动作回 (0,0),概率 $3/5=
 
 这个 4×4 方程组可以直接解,维度增大之后需要使用迭代方法。收敛后得到 $\pi_0$(均匀随机)的价值 $V^{\pi_0}$:
 
-![均匀随机策略下的 V_π 热力图](/discover/vpi-heatmap.png)
+![均匀随机策略下的 V_π 热力图](/images/vpi-heatmap.png)
 
 四个全是负的:$V(0)\approx-4.34$、$V(1)\approx-4.10$、$V(2)\approx-3.66$、$V(3)\approx-3.90$。随机乱走又撞墙又踩禁区,越走越亏。
 
@@ -254,7 +254,7 @@ $\max=1.9$(stay)→ $V_2(1,1)=1.9$。
 
 **一直迭代到数值不再变 → 收敛**:
 
-![V* 与最优策略](/discover/vstar-policy.png)
+![V* 与最优策略](/images/vstar-policy.png)
 
 $$
 V_*(0)=9,\qquad V_*(1)=10,\qquad V_*(2)=10,\qquad V_*(3)=10
@@ -286,7 +286,7 @@ $$
 \pi_* = \{\,(0,0)\to\text{down},\ (0,1)\to\text{down},\ (1,0)\to\text{right},\ (1,1)\to\text{stay} \,\}
 $$
 
-![Q* 与 argmax](/discover/qstar-argmax.png)
+![Q* 与 argmax](/images/qstar-argmax.png)
 
 从 (0,0) 出发: **down → (1,0),right → (1,1) 目标,然后 stay 待着,每步 +1**。
 
@@ -305,4 +305,4 @@ $$
 - **初始策略**:任意,通常均匀随机;价值迭代甚至不需要策略。`,
 }
 
-export default project
+export default article
