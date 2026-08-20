@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react'
 import Terminal from '../../components/Terminal.jsx'
-import LiveTerminal from './LiveTerminal.jsx'
 import ActivityMap from '../../components/ActivityMap.jsx'
 import projects from '../Discover/projects.js'
 import articles from '../Blog/articles.js'
@@ -81,14 +80,6 @@ export default function Home() {
           <div className="term-divider">
             <ActivityMap items={activities} />
           </div>
-
-          {/* ─── Interactive Terminal ─── */}
-          <div className="term-divider">
-            <p className="prompt">
-              <span className="prompt-sign">❯</span> ./interactive.sh
-            </p>
-          </div>
-          <LiveTerminal compact />
         </Terminal>
       </div>
     </div>
