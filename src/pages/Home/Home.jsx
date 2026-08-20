@@ -31,7 +31,7 @@ export default function Home() {
 
   return (
     <div className="home">
-      <div className="container home-hero">
+      <div className="container">
         <Terminal title="shannon@shannon.zone ~ %" glow>
 
           {/* ─── Intro ─── */}
@@ -77,6 +77,11 @@ export default function Home() {
             </div>
           </div>
 
+          {/* ─── Activity Timeline ─── */}
+          <div className="term-divider">
+            <ActivityMap items={activities} />
+          </div>
+
           {/* ─── Interactive Terminal ─── */}
           <div className="term-divider">
             <p className="prompt">
@@ -84,13 +89,6 @@ export default function Home() {
             </p>
           </div>
           <LiveTerminal compact />
-        </Terminal>
-      </div>
-
-      {/* ─── Activity Timeline ─── */}
-      <div className="container home-activity">
-        <Terminal title="shannon@shannon.zone ~/activity %">
-          <ActivityMap items={activities} />
         </Terminal>
       </div>
     </div>

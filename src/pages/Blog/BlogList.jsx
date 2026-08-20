@@ -4,12 +4,6 @@ import './Blog.css'
 
 const categories = ['all', ...new Set(articles.map(p => p.category).filter(Boolean))]
 
-// ── category → accent color (left bar on each card) ──
-const CAT_COLORS = {
-  'Project': 'var(--green)',
-  'Course Review': 'var(--yellow)',
-}
-
 export default function BlogList({ limit, category: activeCategory }) {
   const filtered = activeCategory && activeCategory !== 'all'
     ? articles.filter(p => p.category === activeCategory)
@@ -28,30 +22,21 @@ export default function BlogList({ limit, category: activeCategory }) {
 
   return (
     <div className="blog-grid">
-      {shown.map(post => {
-        const num = String(articles.indexOf(post) + 1).padStart(2, '0')
-        return (
-          <Link
-            key={post.slug}
-            to={`/blog/${post.slug}`}
-            className="blog-card"
-            style={{ '--cat-color': CAT_COLORS[post.category] || 'var(--border)' }}
-          >
-            <div className="blog-card-top">
-              <span className="blog-card-num">{num}</span>
-              <span className="blog-card-arrow">→</span>
-              <time className="blog-card-date">{post.date.slice(0, 10)}</time>
-            </div>
-            <h2>{post.name}</h2>
-            <p className="blog-card-desc">{post.description}</p>
+      {shown.map(post => (
+        <Link key={post.slug} to={`/blog/${post.slug}`} className="blog-card">
+          <div className="blog-card-meta">
+            <time>{post.date}</time>
+            {post.category && <span className="blog-category">{post.category}</span>}
             {post.tags?.length > 0 && (
               <div className="blog-card-tags">
                 {post.tags.map(t => <span key={t}>{t}</span>)}
               </div>
             )}
-          </Link>
-        )
-      })}
+          </div>
+          <h2>{post.name}</h2>
+          <p>{post.description}</p>
+        </Link>
+      ))}
     </div>
   )
 }
@@ -59,18 +44,15 @@ export default function BlogList({ limit, category: activeCategory }) {
 export function BlogFilter({ current, onChange }) {
   return (
     <div className="blog-filter">
-      {categories.map(cat => {
-        const n = cat === 'all' ? articles.length : articles.filter(a => a.category === cat).length
-        return (
-          <button
-            key={cat}
-            className={`blog-filter-btn ${cat === current ? 'active' : ''}`}
-            onClick={() => onChange(cat)}
-          >
-            {cat === 'all' ? 'All' : cat} <span className="blog-filter-count">{n}</span>
-          </button>
-        )
-      })}
+      {categories.map(cat => (
+        <button
+          key={cat}
+          className={`blog-filter-btn ${cat === current ? 'active' : ''}`}
+          onClick={() => onChange(cat)}
+        >
+          {cat === 'all' ? 'All' : cat}
+        </button>
+      ))}
     </div>
   )
 }

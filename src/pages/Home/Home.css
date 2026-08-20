@@ -1,21 +1,12 @@
 .home {
-  padding: 40px 0 80px;
-}
-
-.home .container {
-  width: 100%;
-}
-
-/* ── Hero (first fold) ── */
-.home-hero {
-  min-height: calc(100vh - 136px);
+  padding: 60px 0 80px;
+  min-height: 80vh;
   display: flex;
   align-items: center;
 }
 
-/* ── Activity timeline section ── */
-.home-activity {
-  margin-top: 56px;
+.home .container {
+  width: 100%;
 }
 
 /* ── Intro ── */
@@ -138,9 +129,7 @@
 
 /* ── Mobile ── */
 @media (max-width: 700px) {
-  .home { padding: 16px 0 32px; }
-  .home-hero { min-height: auto; }
-  .home-activity { margin-top: 32px; }
+  .home { padding: 16px 0 32px; min-height: auto; }
   .intro { padding: 0 0 16px; }
   .name { font-size: clamp(1.5rem, 8vw, 2rem); }
   .desc { font-size: 0.85rem; }
