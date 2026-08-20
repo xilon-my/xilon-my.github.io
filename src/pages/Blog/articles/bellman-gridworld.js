@@ -5,6 +5,7 @@ const article = {
   description: '最近在学习西湖大学赵世钰老师的强化学习的数学原理,前三节课完整介绍了强化学习的概念以及bellman equation,bellman optimality equation。这里用 2×2 grid world总结一下前三节的内容:把策略迭代和价值迭代两条路完整走一遍.',
   tags: ['RL'],
   category: 'Course Review',
+  folder: 'rl-math',
   author: 'shannon',
   takeaway: '两条路殊途同归:策略迭代"评价 + 改进"交替(期望方程做平均、最大选动作),价值迭代只用最优方程直接取最大。都算出最优价值 V* 后,用 Q 的 argmax 读出最优策略。决策靠 Q,评价靠 V。',
   detail: String.raw`

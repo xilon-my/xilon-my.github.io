@@ -5,6 +5,7 @@ const article = {
   description: '第 5 课:无模型的蒙特卡洛。上一篇都要用 P、R 算期望;这篇没有模型,价值靠 episode 数据的样本平均来估。即使环境确定、策略随机,同一条 (s,a) 每次回报也不同。沿 MC Basic → 回合长度/稀疏奖励 → Exploring Starts → ε-Greedy 走一遍。',
   tags: ['RL'],
   category: 'Course Review',
+  folder: 'rl-math',
   author: 'shannon',
   takeaway: '没有模型,就必须有数据:价值是回报的期望,期望用样本平均估计(大数定律)。MC Basic = 把策略迭代的评估从"解 Bellman 方程"换成"采样平均",且直接估 q(v→q 需要 P)。环境确定、策略随机(π0 均匀 1/5)时,同一条 (s,a) 每次采样回报仍不同——这正是必须采样平均的原因。MC Basic 有两个效率问题(一条 episode 只用开头一个样本 → every-visit;要收齐才更新 → 收一条就更新),代价是访问覆盖 → Exploring Starts。软策略 ε-Greedy 去掉访问覆盖条件,代价是牺牲最优性:ε 越大探索越全、价值越差(目标格价值从 10 塌到 -2.93)。',
   detail: String.raw`

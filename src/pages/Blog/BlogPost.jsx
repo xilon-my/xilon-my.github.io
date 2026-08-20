@@ -5,7 +5,8 @@ import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import 'katex/dist/katex.min.css'
 import hljs from 'highlight.js'
-import articles from './articles.js'
+import articles, { folders } from './articles.js'
+import BlogFolder from './BlogFolder.jsx'
 import './Blog.css'
 
 function CodeBlock({ className, children }) {
@@ -34,6 +35,10 @@ function CodeBlock({ className, children }) {
 
 export default function BlogPost() {
   const { slug } = useParams()
+
+  // slug 命中子目录 → 渲染目录页(终端 title 变成 ~/blog/rl-math %)
+  if (folders[slug]) return <BlogFolder folderSlug={slug} />
+
   const post = articles.find(a => a.slug === slug)
 
   if (!post) {
@@ -51,7 +56,7 @@ export default function BlogPost() {
 
   return (
     <article className="blog-post-page">
-      <Link to="/blog" className="blog-post-back">&larr; cd ..</Link>
+      <Link to={post.folder ? `/blog/${post.folder}` : '/blog'} className="blog-post-back">&larr; cd ..</Link>
       <header className="blog-post-header">
         <h1>{post.name}</h1>
         <div className="blog-post-meta">

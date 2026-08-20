@@ -8,4 +8,12 @@ import temporalDifferenceGridworld from './articles/temporal-difference-gridworl
 
 const articles = [ragSelfTrain, osCourseReflection, blackFactoryQa, ondeviceFc, bellmanGridworld, monteCarloGridworld, temporalDifferenceGridworld].sort((a, b) => b.date.localeCompare(a.date))
 
+// ── blog subdirectories(terminal 文件系统隐喻)──
+export const folders = {
+  'rl-math': {
+    name: 'rl-math',
+    desc: '赵世钰《强化学习的数学原理》公开课笔记:Bellman 方程 → 蒙特卡洛 → 时序差分,从有模型到无模型',
+  },
+}
+
 export default articles

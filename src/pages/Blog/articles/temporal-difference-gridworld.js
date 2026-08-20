@@ -5,6 +5,7 @@ const article = {
   description: '第 7 课:时序差分。MC 要等整条 episode 结束才能更新;TD 走一步更新一步,用"这一步奖励 + 下一步状态的当前估计"当目标,所以有偏、需初始猜测。沿 TD(0) → Sarsa → n-step Sarsa → Q-learning 走一遍,只有 Q-learning 解最优方程(off-policy)。',
   tags: ['RL'],
   category: 'Course Review',
+  folder: 'rl-math',
   author: 'shannon',
   takeaway: 'TD 与 MC 一样无模型,差别在"数据来了怎么用":MC 攒完整条 episode 的回报再平均(非增量);TD 拿到一步样本就更新当前状态(增量),target 用当前估计(bootstrap)。bootstrap 带来方差小、有偏、需初始猜测、能处理持续任务四个特点。TD(0) 估状态值;Sarsa 换成动作值并配合策略改进(广义策略迭代);n-step Sarsa 是 Sarsa↔MC 的插值;Q-learning 的 target 里是 max,直接解 Bellman 最优方程,因此 off-policy——能用别的策略采的数据学,行为策略探索越强学得越快。',
   detail: String.raw`
