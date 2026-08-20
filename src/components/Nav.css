@@ -65,13 +65,6 @@ nav ul a:hover {
   transition: opacity 0.2s;
 }
 
-.nav-count {
-  color: var(--text-secondary);
-  font-size: 0.72em;
-  opacity: 0.6;
-  margin-left: 2px;
-}
-
 nav ul a:hover .nav-arrow,
 nav ul a.active .nav-arrow {
   opacity: 1;
