@@ -1,11 +1,10 @@
-const project = {
+const article = {
   slug: 'vla',
   date: '2026-08-03 23:15',
   name: 'VLA: Vision-Language-Action, When Robots Follow Instructions',
-  url: 'https://arxiv.org/abs/2410.24164',
-  url2: 'https://arxiv.org/abs/2506.01844',
   description: '具身智能的第三代范式:VLA 一个模型同时吃"画面 + 指令 + 状态",直接输出动作——从"学会一个任务"变成"听懂指令"。用 4.5 亿参数的 smolvla 在 LIBERO 仿真里实测,它真的把碗放到了盘子上。',
   tags: ['RL'],
+  category: 'Project',
   author: 'Shannon',
   takeaway: 'VLA 是具身智能的第三代范式:一个模型同时吃"画面 + 指令 + 状态",直接输出动作,把机器人从"学会一个任务"变成"听懂指令"。它的骨架是"VLM 骨干 + flow-matching 动作专家":前者继承互联网级语义负责"看懂听懂",后者负责"动手"。π0(2024)用大模型 + 10,000+ 小时真机数据证明这条路通;smolvla(2025)用 4.5 亿参数 + 不到 3 万社区 episode 证明这条路人人可走。实测 smolvla_libero 在 LIBERO 仿真里听懂一句英文指令、真的把碗放到了盘子上(check_success=True)。仿真是学习 VLA 最好的起点——不碰硬件,也能亲眼看到机器人"听话干活"。',
   detail:
@@ -29,7 +28,7 @@ VLA 不再绑定单一任务。给它看相机画面、听一句自然语言指�
 
 不管 π0 还是 smolvla,这类"flow-matching VLA"的骨架是同一个:一个"看得懂、听得懂"的大模型,加一个"会动手"的小模块。(OpenVLA、RT-2 那种早期 VLA 没有独立动作专家——把动作离散成 token、和文字一起自回归生成,后面会对比。)π0 论文的这张图展示了它想做的事——一个移动机械臂,从烘干机取衣服、装进筐、端到叠衣台、逐件叠好,几十步的灵巧动作链,全程只有一个模型在指挥:
 
-![π0 用移动机械臂完成端到端叠衣服](/discover/pi0-hero-8bit.png)
+![π0 用移动机械臂完成端到端叠衣服](/images/pi0-hero-8bit.png)
 
 ### 参谋部:VLM 骨干
 
@@ -53,7 +52,7 @@ VLA 不再绑定单一任务。给它看相机画面、听一句自然语言指�
 
 π0 论文的架构图把这一点画得很清楚:上半是 VLM 骨干,下半是动作专家;左边进图像、文字、状态,右边出一个动作块。补充一句容易漏掉的:粗略看成"VLM 骨干 + 动作专家"两部分,动作专家用 attention 读 VLM 的输出——Q 是带噪动作 token,K/V 是 VLM 输出的 H。严格说它是同一个 transformer,只是动作部分用了更窄的权重;当作"两部分"理解不碍事。flow matching 不是结构里的一块,而是套在动作专家外面的一层循环,下一小节细讲:
 
-![π0 架构:VLM 骨干 + 动作专家](/discover/pi0-arch-8bit.png)
+![π0 架构:VLM 骨干 + 动作专家](/images/pi0-arch-8bit.png)
 
 ### 动作到底怎么生成:flow matching
 
@@ -119,7 +118,7 @@ loss  = mse(v, x0 - noise)    # 拿"干净−噪声"当标签
 
 结果是,π0 在真机上零样本评估,连只训 160k 步的"算力对齐版"都压过 OpenVLA 和 Octo 的所有任务,完整版大幅领先:
 
-![π0 真机零样本结果对比](/discover/pi0-results-8bit.png)
+![π0 真机零样本结果对比](/images/pi0-results-8bit.png)
 
 代价也很直白:10,000+ 小时机器人数据、约 903M 条数据步(指数据量,不是训练步数)——论文自称"有史以来最大的机器人学习实验"。这条路能走通,但一般人复现不起。
 
@@ -134,15 +133,15 @@ loss  = mse(v, x0 - noise)    # 拿"干净−噪声"当标签
 
 三个省算力的设计(架构图里能看到):每帧只留 64 个视觉 token(PixelShuffle 把 1024 个压下来);动作专家只读 VLM 一半层的特征;交叉注意力与自注意力交错,比全注意力轻量:
 
-![smolvla 架构:SmolVLM2 骨干 + flow-matching 动作专家](/discover/smolvla-arch-8bit.png)
+![smolvla 架构:SmolVLM2 骨干 + flow-matching 动作专家](/images/smolvla-arch-8bit.png)
 
 效果并没有因为小而打折。LIBERO 平均成功率 87.3——超过 33 亿参数的 π0(86.0)和 70 亿的 OpenVLA(76.5),而且它**没有用任何机器人数据做预训练**:
 
-![smolvla 在 LIBERO 与 Meta-World 的结果](/discover/smolvla-libero-8bit.png)
+![smolvla 在 LIBERO 与 Meta-World 的结果](/images/smolvla-libero-8bit.png)
 
 真机 SO-100 上平均 78.3%,吊打单任务训练 ACT 的 48.3%;社区数据预训练把它从 51.7% 抬到 78.3%(+26.6):
 
-![smolvla 在真机 SO-100/SO-101 的结果](/discover/smolvla-real-8bit.png)
+![smolvla 在真机 SO-100/SO-101 的结果](/images/smolvla-real-8bit.png)
 
 一句话总结这两条路:π0 证明 VLA 这条路**通**,smolvla 证明这条路**人人可走**。后者正是这篇文章能被写出来的原因——我们用的是 smolvla。
 
@@ -168,7 +167,7 @@ pick up the black bowl between the plate and the ramekin and place it on the pla
 
 上表每一步,在画面里长这样:
 
-![smolvla 实测:把碗放到盘子上](/discover/vla-rollout.gif)
+![smolvla 实测:把碗放到盘子上](/images/vla-rollout.gif)
 
 这就是上面讲的每一块各就各位的样子:参谋部看懂"碗在盘子旁边、指令要放上去",动作专家 flow-matching 出一整段动作,仿真闭环执行。跑之前我们以为难的是模型,跑完发现难的是别的东西——下面两个坑。
 
@@ -188,4 +187,4 @@ pick up the black bowl between the plate and the ramekin and place it on the pla
 对学习者来说,smolvla + LIBERO 是最好的起点:纯仿真、单卡可跑、社区数据开放。不碰硬件,也能亲眼看到机器人"听话干活"。`,
 }
 
-export default project
+export default article

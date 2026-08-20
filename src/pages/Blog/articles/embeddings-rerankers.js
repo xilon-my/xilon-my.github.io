@@ -1,11 +1,10 @@
-const project = {
+const article = {
   slug: 'embeddings-rerankers',
   date: '2026-08-06 10:00',
   name: 'Embeddings and Rerankers from Scratch: When and How to Judge Relevance',
-  url: 'https://arxiv.org/abs/1908.10084',
-  url2: 'https://arxiv.org/abs/2402.03216',
   description: '嵌入模型(embedding)和重排模型(reranker)的深度拆解:为什么一个把判断提前到入库、一个留到查询时,它们分别怎么被训出来,近三年又怎么被蒸馏成同一份判断力。',
   tags: ['RAG'],
+  category: 'Project',
   author: 'Shannon',
   detail:
 `先看一次真实的翻车。你问检索器"这笔订单的退款政策是什么",embedding 检索器从库里捞回 top-3:一条讲退货流程的,一条讲运费险的,一条讲优惠券的,没一条直接回答。答案其实就在库里,只是它的每个词都和问题对不上——embedding 把整段压成一颗向量,精确词被稀释成了泛语义。同样的候选集换给 reranker,它把问题和每段文档逐字对看一遍,答案跳到了第一名。
@@ -45,7 +44,7 @@ const project = {
 
 那为什么还叫"双塔"?因为检索天然涉及两个文本(查询、文档),它们必须被**同一个**编码器编码,才落在同一个向量空间、才比得了。图上的两座塔其实是同一个 transformer 画了两遍——左边编码查询、右边编码文档,权重是同一套。推理时你每次只跑这一个模型:入库时跑一遍每个文档,查询时跑一遍查询。不是"从两个 BERT 里挑一个",而是**本来就只有一个模型**。这也划清了两者的分工:模型的职责是决定"什么算相似"(训练时把语义写进权重),FAISS 的职责是在画好的空间里机械地找最近的 k 个——它只做算术,不懂语义。
 
-![SBERT 孪生双塔架构](/discover/sbert-arch-8bit.png)
+![SBERT 孪生双塔架构](/images/sbert-arch-8bit.png)
 *图:SBERT 用共享权重的两个 BERT 把句子各自编码成向量(arXiv:1908.10084,Figure 1)*
 
 为什么非要"分开编码、最后比",而不是"拼一起一次算完"?因为这换来一个关键能力:**预计算**。2019 年之前,"两句话相不相似"用的是原生 BERT——把两句话拼成一个序列丢进去。它很准,但贵到离谱:在一万句话里找最相似的一对,要跑约 5000 万次两两拼接的推理,约 65 小时。SBERT(Sentence-BERT,2019,arXiv:1908.10084)用共享权重的双塔把它拆开:文档各自提前编码成向量存好(离线一遍,一万句约 5 秒),查询时只编查询、和存好的向量比(0.01 秒)。一句话:双塔换来文档可离线预计算、查询毫秒级——这正是 RAG 里"入库"这一步的由来。
@@ -85,7 +84,7 @@ const project = {
 
 四种范式,值得放到一张图里看。ColBERT 论文这张图是神经 IR 匹配范式的全景图:(a) 表示式——查询和文档各编码成一个向量再比,本文的 embedding 双塔就属于这一路;(c) 全交互式——拼成一个序列过 transformer,就是本文的单塔;(d) 晚期交互——先各自编码成 token 向量、查询时逐对取最大相似度再求和(MaxSim),是 ColBERT 的贡献,正是下一节要讲的"曲线的中点";(b) 词级交互——给词和词建交互矩阵(DRMM/KNRM 那类经典 IR 模型),比 (a) 细但不是 transformer 系,本文不展开。主线上的三个主角都在图里:(a) 双塔、(c) 单塔、(d) 那个中点。
 
-![神经 IR 匹配范式全景](/discover/colbert-paradigms-8bit.png)
+![神经 IR 匹配范式全景](/images/colbert-paradigms-8bit.png)
 *图:神经 IR 的四种匹配范式——(a) 表示式、(b) 词级交互式、(c) 全交互式、(d) 晚期交互(arXiv:2004.12832,Figure 2)*
 
 这就是全文的主线地图:别把 embedding 和 reranker 当成两个孤立工具,它们是同一条"何时判断 × 看得多细"的取舍曲线的两端——双塔把判断提前到入库(粗而快),单塔把判断留到查询时(细而慢)。而曲线中间还有一站——(d) 晚期交互,下一节讲。
@@ -94,7 +93,7 @@ const project = {
 
 如果"一颗向量"太粗,"每对完整前向"太贵,中间还有第三条路:晚期交互(late interaction)。[ColBERT](https://github.com/stanford-futuredata/ColBERT)(2020,arXiv:2004.12832)的做法是:入库时不为整段存一个向量,而是为每个 token 存一个向量(预计算,偏晚);查询时 query 的每个 token 和 passage 的每个 token 逐对算相似度,取最大再求和(MaxSim)。既拿到双塔的"预计算",又拿到单塔的"逐 token 细粒度"。
 
-![ColBERT 架构](/discover/colbert-arch-8bit.png)
+![ColBERT 架构](/images/colbert-arch-8bit.png)
 *图:ColBERT 的晚期交互,查询和文档的 token 向量逐对 MaxSim(arXiv:2004.12832,Figure 3)*
 
 它不是第三种模型,是曲线上的中点:一套输出,两个角色都能当——token 向量可以像双塔一样预计算、建索引,当**检索器**用(全库捞 top-k);MaxSim 打分又可以像单塔一样对 top-k 逐对精排,当 **reranker** 用。注意它没有池化层、不产单向量,所以"粗筛"不是把文档 pool 成单向量再比,而是把 MaxSim 拆成两级:入库时先对文档的 token 向量做聚类(聚的是 token,不是 chunk;ColBERTv2 的 PLAID 索引),查询时每个 query token 先找到最近的簇、锁定候选文档集(近似,粗),再对候选逐对算精确 MaxSim 排序(精)。所以这个中点比想象中常用——Cohere 的商业 rerank 就以晚交互为主力;bge-m3 的"三合一"里也有一个 ColBERT 引擎,第六节会回来引用。
@@ -140,7 +139,7 @@ def contrastive_loss(q, k, temperature=0.05):
 
 正样本对从哪来?2019 年之后最重要的一个技巧来自 SimCSE(2021,arXiv:2104.08821):把 dropout 当数据增强。同一句话过两次编码器,两次 dropout mask 不同,得到的两个表示互为"正对"。诀窍在于 dropout 必须开着——关掉(p=0)或固定 mask,模型会直接塌缩:所有向量变成同一个。无监督版在 STS-B 句子相似度上拿到 76.3 分,有监督版 81.6;有监督版还把 NLI 里语义相反(矛盾)的句子对当难负样本混进分母,把 STS-B 从 84.9 推到 86.2。
 
-![SimCSE 无监督和有监督对比](/discover/simcse-8bit.png)
+![SimCSE 无监督和有监督对比](/images/simcse-8bit.png)
 *图:SimCSE——左为无监督(同一句两个 dropout mask 互为正对),右为有监督(蕴含对为正、矛盾对为负)(arXiv:2104.08821,Figure 1)*
 
 #### 难负样本:质量的分水岭
@@ -164,7 +163,7 @@ def contrastive_loss(q, k, temperature=0.05):
 
 维度不是越多越好,是"够用 vs 烧钱"。Matryoshka Representation Learning(MRL,2022,arXiv:2205.13147)的思路:训练时对不同长度的前缀各算一份损失(如 64/128/256/512/1024 维),逼判别信息挤进前几维。于是同一颗向量,你既可以只用前 128 维(省存储),也可以全用(更准)。
 
-![MRL 嵌套表示](/discover/mrl-nested-8bit.png)
+![MRL 嵌套表示](/images/mrl-nested-8bit.png)
 *图:MRL 让表示按维度嵌套,前几维就能承载大部分判别信息(arXiv:2205.13147,Figure 1)*
 
 两条铁律:**只有 MRL 训过的模型能截断**,没训过直接砍尾,等于扔掉信息;截完必须再做一次 L2 归一化。OpenAI text-embedding-3-large 官方声称 3072 维裁到 1024 维仍保有 95%～98% 的质量,省约 67% 的存储。
@@ -262,4 +261,4 @@ MRL 变维常态化:OpenAI text-embedding-3 官方声称 3072 维裁到 256 维�
   takeaway: 'Embedding(bi-encoder)和 reranker(cross-encoder)回答同一个问题"这段文档跟你的问题相不相关",差别只在判断发生在什么时候(入库时 vs 查询时)和看得多细(一颗向量 vs 逐 token 互看),晚期交互是这条取舍曲线上的中点。训练的本质是"拿什么当正负样本就定义出什么语义":InfoNCE + 难负样本 + 合成数据塑造双塔,排序损失 + LLM 蒸馏塑造单塔;蒸馏最终让两个架构共享同一份判断力。榜单分数不等于你的语料效果,拿约 50 条真实 query 先量出来。',
 }
 
-export default project
+export default article

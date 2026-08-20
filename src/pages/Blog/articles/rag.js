@@ -1,11 +1,10 @@
-const project = {
+const article = {
   slug: 'rag',
   date: '2026-08-05 10:00',
   name: 'RAG from Scratch: Bolt-On Memory for LLMs',
-  url: 'https://arxiv.org/abs/2005.11401',
-  url2: 'https://arxiv.org/abs/2312.10997',
   description: 'RAG 的完整工作逻辑、分块这个最容易被低估的细节、怎么客观评估一个 RAG 好不好(RAGAS / RAGChecker / 中文 benchmark),以及从 Naive 到 Agentic RAG 的进化。',
   tags: ['RAG'],
+  category: 'Project',
   author: 'Shannon',
   detail:
 `这个系列前几篇在聊 Agent:怎么约束 Agent 的行为(Superpowers)、怎么用图把流程定死(LangGraph)、怎么让 Agent 用工具(MCP)。这一篇换一个层——知识层:怎么让模型知道它没学过的东西。
@@ -34,7 +33,7 @@ RAG 的原理一句话就能说完,但拆开是两条流水线,一条离线、�
 
 RAG 原论文(Lewis et al., 2020)的架构图把这条流水线画得很清楚——上半是查询编码和索引检索,下半是生成器在检索到的文档上生成:
 
-![RAG 原论文架构图:查询编码 → 索引检索 → 生成器在检索文档上生成答案](/discover/rag-arch-8bit.png)
+![RAG 原论文架构图:查询编码 → 索引检索 → 生成器在检索文档上生成答案](/images/rag-arch-8bit.png)
 
 这个循环的关键在最后两步之间:LLM 自己不用"记住"任何资料,它只需要"读"检索结果。资料更新了,重新入库就行,模型权重不用动——这就是 RAG 对"知识过期"问题的天然解。
 
@@ -200,7 +199,7 @@ RAGChecker 的方法论不同:不按整段答案打分,而是把答案、ground 
 
 RAGChecker 的评估框架原图——模型回答 vs 标准答案的论断集合,以及每个检索块被判为相关/不相关,喂出整体、检索、生成三组指标:
 
-![RAGChecker 评估框架:模型回答 vs 标准答案的论断集合,和检索块的相关性判定](/discover/ragchecker-framework-8bit.png)
+![RAGChecker 评估框架:模型回答 vs 标准答案的论断集合,和检索块的相关性判定](/images/ragchecker-framework-8bit.png)
 
 中文场景有现成的 benchmark:评估中文 RAG 常用 **[CRUD-RAG](https://github.com/IAAR-Shanghai/CRUD_RAG)**(3.6 万个中文测试样本,按 Create/Read/Update/Delete 四类任务组织)和 **[RGB](https://github.com/chen700564/RGB)**(中英双语,涵盖噪声鲁棒性、反事实鲁棒性等能力)。
 
@@ -277,4 +276,4 @@ RAG 的全部骨架是两条流水线:入库把资料变成可检索的向量,�
   takeaway: 'RAG 的原理是"先检索、再生成":入库把文档切成块、嵌入成向量、存进向量库;问答时把问题嵌入、捞 top-k、拼进 prompt 让 LLM 基于资料回答。骨架只有两条流水线,难在细节:分块策略直接决定检索质量,是 RAG 里最容易被低估的杠杆;检索质量是整条链路的天花板;评价分两段——检索用召回类指标,生成用 LLM 裁判(RAGAS),但裁判本身要校准,Amazon 的 RAGChecker 发现它和人类判断相关很弱;2026 年的生产基线是混合检索 + 强制 rerank + agent 决定何时检索。分块、嵌入、向量库、rerank 这些词,自己搭一遍就全懂了——一段代码加你自己的文档,就是一次完整的 RAG。',
 }
 
-export default project
+export default article

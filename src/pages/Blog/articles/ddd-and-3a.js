@@ -1,11 +1,10 @@
-const project = {
+const article = {
   slug: 'ddd-and-3a',
   date: '2026-08-14 10:00',
   name: 'Domain-Driven Design: 域、子域、限界上下文,再到 3A 架构',
-  url: 'https://martinfowler.com/bliki/DomainDrivenDesign.html',
-  url2: 'https://www.infoq.cn/article/4UZyz4FL36xf4BhQM0mv',
   description: '从 DDD 的域、子域、限界上下文,到公司三层(3A),到 OKF 知识仓,再到 agent 顺着这条链定位到要改的代码——所有词都在回答同一件事:边界在哪',
   tags: ['RAG'],
+  category: 'Project',
   author: 'Shannon',
   takeaway: '所有词都在回答同一个问题:一个大程序(或一家公司),怎么切开、怎么组织。限界上下文管"含义"(每块里词的意思统一),模块管"摆放"(代码放哪个格子),服务管"干活"(一件事一个负责的),微服务管"单飞"(一个限界上下文单独部署;拆完里面照样有模块和服务)。公司层面分三层(3A):业务架构管"做什么生意",系统架构管"怎么用程序做",技术架构管"跑在哪、代码在哪"——业务能力→限界上下文→部署,一层套一层映射。"关于代码的知识"用 OKF 写,不放代码仓,放独立知识仓(像地图在城边上)。agent 改代码前,先沿业务→系统→技术逐级下钻,定位到要改的那段代码。3A 是企业架构的俗称,不是 DDD 的术语。',
   detail: `限界上下文、模块、微服务来自一套思路,叫 **DDD(领域驱动设计,Domain-Driven Design)**。DDD 的主张一句话:程序难,难在业务复杂;所以动手写程序之前,先把边界画清楚。下面,从"程序是什么"讲起。
@@ -308,4 +307,4 @@ agent 手里不是一把"全文搜索",而是一组**检索工具**,循环里按
 另外记住:**"3A"是企业架构的俗称,不是 DDD 的术语。**`,
 }
 
-export default project
+export default article

@@ -1,10 +1,10 @@
-const project = {
+const article = {
   slug: 'mcp',
   date: '2026-07-28 10:59',
   name: 'Model Context Protocol (MCP)',
-  url: 'https://claude.com/blog/bringing-mcp-2026-07-28-to-claude',
   description: 'AI Agent 与外部工具之间的开放标准协议。由 Anthropic 创建，现由 Linux 基金会旗下的 AAIF 管理，让模型以统一的方式调用工具、读取数据、执行操作。',
   tags: ['agent'],
+  category: 'Project',
   author: 'Anthropic / AAIF',
   detail:
 `在 MCP 出现之前，给 AI 模型接工具是一个工具一套写法。你要让 Claude 能查数据库，写一个 database tool；让 ChatGPT 也能查同一个数据库，再写一个。每个模型都有自己的 tool calling 格式——OpenAI 的是 function calling，Anthropic 的是 tool use，参数怎么传、错误怎么返回，全不一样。N 个模型 × M 个工具 = N×M 个适配器。
@@ -173,4 +173,4 @@ Pi 拒绝 MCP 的理由是"Build CLI tools with READMEs"——让 Agent 直接�
   takeaway: 'MCP 把 AI 工具调用从各家自定义格式变成了行业标准协议。Host/Client/Server 三层模型、JSON-RPC 2.0 通信、无状态设计——它在 Agent 基础设施层扮演的角色，某种程度上类似 HTTP 之于 Web：不是唯一的选择，但大多数人都在用。',
 }
 
-export default project
+export default article

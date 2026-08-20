@@ -5,8 +5,14 @@ import ondeviceFc from './articles/ondevice-fc.js'
 import bellmanGridworld from './articles/bellman-gridworld.js'
 import monteCarloGridworld from './articles/monte-carlo-gridworld.js'
 import temporalDifferenceGridworld from './articles/temporal-difference-gridworld.js'
+import dddAnd3a from './articles/ddd-and-3a.js'
+import embeddingsRerankers from './articles/embeddings-rerankers.js'
+import rag from './articles/rag.js'
+import vla from './articles/vla.js'
+import embodiedAi from './articles/embodied-ai.js'
+import mcp from './articles/mcp.js'
 
-const articles = [ragSelfTrain, osCourseReflection, blackFactoryQa, ondeviceFc, bellmanGridworld, monteCarloGridworld, temporalDifferenceGridworld].sort((a, b) => b.date.localeCompare(a.date))
+const articles = [ragSelfTrain, osCourseReflection, blackFactoryQa, ondeviceFc, bellmanGridworld, monteCarloGridworld, temporalDifferenceGridworld, dddAnd3a, embeddingsRerankers, rag, vla, embodiedAi, mcp].sort((a, b) => b.date.localeCompare(a.date))
 
 // ── blog subdirectories(terminal 文件系统隐喻)──
 export const folders = {

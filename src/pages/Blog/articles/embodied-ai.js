@@ -1,11 +1,10 @@
-const project = {
+const article = {
   slug: 'embodied-ai',
   date: '2026-08-03 00:30',
   name: 'Embodied AI from Scratch: RL to Diffusion Policy',
-  url: 'https://arxiv.org/abs/2303.04137',
-  url2: 'https://github.com/huggingface/lerobot',
   description: '具身智能主流方法论的两次范式切换：从 RL 奖励试错（REINFORCE → PPO）到模仿学习 + 扩散模型（Diffusion Policy）。两代方法怎么解决同一个问题，以及为什么后者成了主流。',
   tags: ['RL'],
+  category: 'Project',
   author: 'Shannon',
   detail:
 `零基础学具身智能，第一个接触的通常是强化学习（RL）。但也正是在这里有一个让人困惑的落差：RL 学完之后抬头一看，业界主流已经换成了模仿学习。特斯拉 Optimus、π0、OpenVLA——这些当下最前沿的机器人模型，没有一个靠奖励试错训练。
@@ -52,7 +51,7 @@ advantage = G_t − V(s_t)
 
 训练好的策略就是反复"杆往哪倒、往哪推"——看 GIF 里的小车始终保持平衡：
 
-![CartPole 演示：倒立摆保持平衡](/discover/cartpole-demo.gif)
+![CartPole 演示：倒立摆保持平衡](/images/cartpole-demo.gif)
 
 **PPO** 补了 REINFORCE 剩下的两个洞：数据用一次就扔，步子迈太大容易崩。它做两件事——同批数据复习多遍（用重要性采样加权），和 clip 限速（每个动作概率一次最多改 20-30%）。
 
@@ -64,7 +63,7 @@ model = PPO("MlpPolicy", env, n_steps=512, gamma=0.9, clip_range=0.3)
 
 在 Reacher（平面双关节臂够目标）上实测：加上奖励工程——把控制惩罚从 1.0 降到 0.1——效果从 -6.1 提升到 -4.69。机械臂从"慢吞吞地挪"变成"果断扫向目标、稳稳停住"：
 
-![Reacher 演示：双关节臂伸向目标](/discover/reacher-demo.gif)
+![Reacher 演示：双关节臂伸向目标](/images/reacher-demo.gif)
 
 ## RL 的三个难处
 
@@ -111,7 +110,7 @@ lerobot-train --dataset.repo_id=lerobot/pusht --env.type=pusht \
 
 Diffusion Policy 论文（Chi et al., RSS 2023）真正管用，靠的是三个设计的组合。整条流程就是论文的架构图——观测序列 → 视觉编码器 → DDPM 去噪迭代 → 预测动作序列：
 
-![Diffusion Policy 架构图](/discover/diffusion-policy-arch-8bit.png)
+![Diffusion Policy 架构图](/images/diffusion-policy-arch-8bit.png)
 
 **动作分块（Action Chunking）**——一次预测一整段未来动作（论文里多数任务预测 16 步），而不是一步。单步预测的毛病是相邻动作可能来自不同"模式"，造成抖动；预测整段能保证时序一致，而且对"停在原地"的空闲动作更鲁棒。代价是预测太长反应会变慢，16 步是平衡点。
 
@@ -134,11 +133,11 @@ Push-T 上（状态观测）：
 
 真实 Push-T 上差距更大：Diffusion Policy **95% 成功率、0.80 IoU**，人类 100%、0.84 IoU——论文说它"接近人类水平"；而最强的 baseline（IBC）在真实环境是 0%。下图为真实 Push-T 上各方法的动作轨迹对比，Diffusion Policy 的轨迹最接近目标：
 
-![真实 Push-T 各方法轨迹对比](/discover/diffusion-policy-pusht-8bit.png)
+![真实 Push-T 各方法轨迹对比](/images/diffusion-policy-pusht-8bit.png)
 
 其他任务：Kitchen 的最终成功率指标提升 **213%**（0.99 vs 0.44）；真实翻杯子 20 次试验 **90% 成功**，baseline 是 0%。多阶段任务（Block Push / Kitchen）的定量对比也一致地偏向 Diffusion Policy：
 
-![Block Push / Kitchen 定量对比](/discover/diffusion-policy-blockpush-kitchen-8bit.png)
+![Block Push / Kitchen 定量对比](/images/diffusion-policy-blockpush-kitchen-8bit.png)
 
 论文把优势归结为三点：能表达多模态分布、能预测高维动作序列、训练稳定（扩散模型不需要像 IBC 那样估计归一化常数）。
 
@@ -158,11 +157,11 @@ Push-T 上（状态观测）：
 
 **500 步基线**——推杆基本在乱抖，碰不到目标：
 
-![500步基线：随机乱推](/discover/pusht-baseline.gif)
+![500步基线：随机乱推](/images/pusht-baseline.gif)
 
 **200k 步训练后**——学会把 T 形方块推进目标区：
 
-![200k步训练后：把T形推进目标区](/discover/pusht-trained-1.gif)
+![200k步训练后：把T形推进目标区](/images/pusht-trained-1.gif)
 
 官方同配置报 63.8%（500 回合评估，方差更小；我们 50 回合）。36% 不算高，但"从完全不会到会推"的跨越是实打实的。
 
@@ -176,4 +175,4 @@ Push-T 上（状态观测）：
   takeaway: '具身智能的主流方法论已经从 RL 奖励试错切换到了模仿学习 + Diffusion Policy。切换的本质是反馈来源变了：从环境奖励变成人类演示。RL（REINFORCE→actor-critic→PPO）教的是"智能体-环境"的骨架，Diffusion Policy 解决的是多模态动作分布——后者正是真实操作里最普遍、也最难的那部分。学具身智能，两条线都值得跑一遍，纯仿真就够。',
 }
 
-export default project
+export default article
