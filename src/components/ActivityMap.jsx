@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import './ActivityMap.css'
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
 
@@ -9,18 +10,18 @@ const fmtDate = d => {
   return `${String(dd).padStart(2, '0')} ${MONTHS[m - 1]} ${y}`
 }
 
-export default function ActivityMap({ projects }) {
+export default function ActivityMap({ items }) {
   const [hovered, setHovered] = useState(null)
 
-  // ── bucket by day ──
+  // ── bucket by day (skip invalid dates — JS would silently roll them over) ──
   const byDay = {}
-  projects.forEach(p => {
+  items.forEach(p => {
     const day = p.date.slice(0, 10)
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return
     ;(byDay[day] = byDay[day] || []).push(p)
   })
 
   const days = Object.keys(byDay).sort()
-  const total = projects.length
   const first = days[0]
   const last = days[days.length - 1]
   const busiest = days.reduce((a, b) => (byDay[b].length > byDay[a].length ? b : a), days[0])
@@ -36,11 +37,13 @@ export default function ActivityMap({ projects }) {
     }
   }
 
-  const stats = `${total} articles · ${fmtDate(first)} → ${fmtDate(last)} · ${days.length} active days · busiest ${fmtDate(busiest)} (${byDay[busiest].length})`
+  const nProjects = items.filter(i => i.kind === 'project').length
+  const nPosts = items.filter(i => i.kind === 'post').length
+  const stats = `${nProjects} projects · ${nPosts} posts · ${fmtDate(first)} → ${fmtDate(last)} · ${days.length} active days`
   const readout = hovered
     ? `${hovered.tags[0]} · ${fmtDate(hovered.date.slice(0, 10))} · ${hovered.name}`
     : stats
-  const activeTags = [...new Set(projects.flatMap(p => p.tags))]
+  const activeTags = [...new Set(items.flatMap(p => p.tags))]
 
   return (
     <div className="activity-map">
@@ -59,9 +62,9 @@ export default function ActivityMap({ projects }) {
                 {sorted && sorted.map(a => (
                   <Link
                     key={a.slug}
-                    to={`/discover/${a.slug}`}
+                    to={a.to}
                     className="activity-dot"
-                    style={{ background: `var(--tag-${tagKey(a.tags[0])})` }}
+                    style={{ background: `var(--tag-${tagKey(a.tags[0])}, var(--accent-dark))` }}
                     aria-label={`${a.name} · ${fmtDate(a.date.slice(0, 10))} · ${a.tags[0]}`}
                     onMouseEnter={() => setHovered(a)}
                     onMouseLeave={() => setHovered(null)}
@@ -89,7 +92,7 @@ export default function ActivityMap({ projects }) {
       <div className="activity-legend">
         {activeTags.map(t => (
           <span key={t} className="activity-legend-tag">
-            <span className="activity-legend-swatch" style={{ background: `var(--tag-${tagKey(t)})` }} />
+            <span className="activity-legend-swatch" style={{ background: `var(--tag-${tagKey(t)}, var(--accent-dark))` }} />
             {t}
           </span>
         ))}

@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react'
 import Terminal from '../../components/Terminal.jsx'
 import LiveTerminal from './LiveTerminal.jsx'
+import ActivityMap from '../../components/ActivityMap.jsx'
+import projects from '../Discover/projects.js'
+import articles from '../Blog/articles.js'
 import './Home.css'
 
 const taglines = [
@@ -20,9 +23,15 @@ export default function Home() {
     return () => clearInterval(timer)
   }, [])
 
+  // ── activity timeline aggregates discover projects + blog posts ──
+  const activities = [
+    ...projects.map(p => ({ ...p, to: `/discover/${p.slug}`, kind: 'project' })),
+    ...articles.map(a => ({ ...a, to: `/blog/${a.slug}`, kind: 'post' })),
+  ].sort((a, b) => b.date.localeCompare(a.date))
+
   return (
     <div className="home">
-      <div className="container">
+      <div className="container home-hero">
         <Terminal title="shannon@shannon.zone ~ %" glow>
 
           {/* ─── Intro ─── */}
@@ -75,6 +84,13 @@ export default function Home() {
             </p>
           </div>
           <LiveTerminal compact />
+        </Terminal>
+      </div>
+
+      {/* ─── Activity Timeline ─── */}
+      <div className="container home-activity">
+        <Terminal title="shannon@shannon.zone ~/activity %">
+          <ActivityMap items={activities} />
         </Terminal>
       </div>
     </div>

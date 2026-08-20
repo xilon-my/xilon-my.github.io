@@ -1,6 +1,6 @@
 const project = {
   slug: 'mcp',
-  date: '2026-07-39 10:59',
+  date: '2026-07-28 10:59',
   name: 'Model Context Protocol (MCP)',
   url: 'https://claude.com/blog/bringing-mcp-2026-07-28-to-claude',
   description: 'AI Agent 与外部工具之间的开放标准协议。由 Anthropic 创建，现由 Linux 基金会旗下的 AAIF 管理，让模型以统一的方式调用工具、读取数据、执行操作。',
