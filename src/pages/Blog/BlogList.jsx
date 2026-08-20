@@ -27,11 +27,7 @@ export default function BlogList({ limit, category: activeCategory }) {
           <div className="blog-card-meta">
             <time>{post.date}</time>
             {post.category && <span className="blog-category">{post.category}</span>}
-            {post.tags?.length > 0 && (
-              <div className="blog-card-tags">
-                {post.tags.map(t => <span key={t}>{t}</span>)}
-              </div>
-            )}
+            {post.tags?.[0] && <span className="blog-card-tag">[{post.tags[0]}]</span>}
           </div>
           <h2>{post.name}</h2>
           <p>{post.description}</p>

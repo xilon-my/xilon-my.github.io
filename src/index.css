@@ -52,12 +52,7 @@ html { scroll-behavior: smooth; }
   --tag-agent: #89DCEB;
   --tag-architecture: #FAB387;
   --tag-inference: #CBA6F7;
-  --tag-llm: #B4BEFE;
-  --tag-retrieval: #74C7EC;
-  --tag-pytorch: #EBA0AC;
-  --tag-functioncalling: #F38BA8;
-  --tag-interview: #F5E0DC;
-  --tag-rewardhecking: #F2CDCD;
+  --tag-course: #94E2D5;
 }
 
 [data-theme="light"] {
@@ -85,12 +80,7 @@ html { scroll-behavior: smooth; }
   --tag-agent: #04A5E5;
   --tag-architecture: #FE640B;
   --tag-inference: #8839EF;
-  --tag-llm: #7287FD;
-  --tag-retrieval: #209FB5;
-  --tag-pytorch: #E64553;
-  --tag-functioncalling: #D20F39;
-  --tag-interview: #DC8A78;
-  --tag-rewardhecking: #DD7878;
+  --tag-course: #04A5E5;
 }
 
 @media (min-width: 1400px) {

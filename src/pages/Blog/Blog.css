@@ -62,19 +62,29 @@
   color: var(--text-secondary);
 }
 
+/* 列表卡片:单个 tag,`[tag]` 括号风格(与 discover 列表一致) */
+.blog-card-tag {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--accent-dark);
+  white-space: nowrap;
+}
+
+/* 文章页头:mono 胶囊(与 discover 详情页一致) */
 .blog-card-tags {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 5px;
 }
 
 .blog-card-tags span {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  padding: 1px 8px;
+  border-radius: 4px;
   background: var(--accent-light);
   color: var(--accent-dark);
-  font-size: 0.7rem;
   font-weight: 500;
-  padding: 2px 10px;
-  border-radius: 999px;
 }
 
 .blog-card h2 {

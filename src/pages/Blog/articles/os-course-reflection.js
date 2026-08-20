@@ -3,7 +3,7 @@ const article = {
   date: '2026-07-26 04:03',
   name: 'NJU OS by Jyy',
   description: '我完全可以理解，\'分数就是一切\'的那种感觉。但忽然有一天分数不作为评价标准的时候，人生是否就失去动力？',
-  tags: ['Reward hecking'],
+  tags: ['Course'],
   category: 'Course Review',
   author: 'shannon',
   detail: `一张保研/大厂/公务员的船票只是起点。

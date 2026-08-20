@@ -3,7 +3,7 @@ const article = {
   date: '2026-08-06',
   name: '全参数微调检索模型的多模态 RAG',
   description: '一直用的是现成的检索模型:embedding 拿来就用,reranker 拿来就用。这次试着自己训了两个,一个检索器(bi-encoder),一个重排器(reranker),用在金融文档问答上。',
-  tags: ['RAG', 'Retrieval', 'LLM', 'PyTorch'],
+  tags: ['RAG'],
   category: 'Project',
   author: 'shannon',
   detail: `**数据**:最省心的部分。用 FinRAGBench-V,一个开源金融 RAG 基准,带了 855 条真人标注的问题,每条对应哪一页都标好了。训检索模型最贵的就是数据,拿到现成、真人标的,最麻烦的步骤直接跳过。评测也用它:留出 99 条查询,按文档切分,保证训练和评测不在同一份文档上。

@@ -3,7 +3,7 @@ const article = {
   date: '2026-08-14 20:00',
   name: '黑灯工厂式自动化开发',
   description: '黑灯工厂式自动化开发。',
-  tags: ['agent', 'interview'],
+  tags: ['agent'],
   category: 'Project',
   author: 'shannon',
   detail: `

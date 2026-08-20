@@ -3,7 +3,7 @@ const article = {
   date: '2026-08-18',
   name: '基于可靠奖励的 SFT + GRPO 强化学习,让小模型在手机上学会调函数',
   description: '手机上的 agent 得会调函数:用户说"定个闹钟",小模型要输出一个 JSON 调用。我用 DroidCall 数据,在一张 RTX 5090 上把 Qwen2.5-3B 的函数调用准确率从 21% 训到 51%。SFT 只涨了 4 个点,GRPO 直接翻倍——功夫全在奖励函数上。',
-  tags: ['RL', 'Agent', 'Function-Calling', 'LLM'],
+  tags: ['RL'],
   category: 'Project',
   author: 'shannon',
   detail: `**手机上跑 agent 的前置问题:小模型会不会调函数。** 用户说一句"帮我定明天早上 7 点半的闹钟",模型要输出一个函数调用——\`{"ACTION_SET_ALARM": {"EXTRA_HOUR": 7, "EXTRA_MINUTES": 30}}\`——系统拿到 JSON 再去执行。要求模型小(3B 级别,手机内存才装得下),而且不能全靠云端:隐私、流量、离线都要能跑。那么问题来了,这么小的模型,能不能把"一句人话"变成"一次准确的函数调用"?
