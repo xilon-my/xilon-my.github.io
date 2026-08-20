@@ -203,7 +203,7 @@ LangGraph 的 Studio UI 是唯一的官方交互界面，但它默认显示的�
 - ❌ 只想给 Agent 一组 tool 让模型自己发挥——ReAct 循环就够了，图式编排是过度设计
 - ❌ 使用的模型 tool calling 不稳定——LangGraph 的优势建立在稳定的 tool calling 之上
 
-回到 Superpowers 那篇文章的结尾：Superpowers 从外部约束 Agent 的行为，OpenSpec 从内部约束 Agent 的目标。LangGraph 提供了另一种约束方式——从结构上约束。但它的约束需要底层模型配合，不是纯文本能搞定的。三个工具放在一起，选择哪个不取决于谁更好，取决于你信任模型什么能力。`,
+回到 Superpowers 那篇文章的结尾：Superpowers 从外部约束 Agent 的行为，OpenSpec 从内部约束 Agent 的目标。LangGraph 提供了另一种约束方式——从结构上约束。但它的约束需要底层模型配合，不是纯文本能解决的。三个工具放在一起，选择哪个不取决于谁更好，取决于你信任模型什么能力。`,
   takeaway: 'LangGraph 用图结构替代 prompt 约束来做 Agent 编排——节点之间的路是编译时定死的，不是运行时靠 prompt 说服模型配合的。但这是双刃剑：图越精确，对模型 tool calling 能力的要求越高，如果模型不够稳定，确定性就变成了死板。Studio UI 难用、create_react_agent 是黑盒、文档分散，这些问题让上手门槛比预期的高。更关键的是，Supervisor 模式本质上还是在定义 Agent 角色然后路由，跟其他多 Agent 框架没有区别——图的价值在不确定的流程上，不在线性链里。选 LangGraph 之前先问自己：你的流程真的需要图吗？',
 }
 

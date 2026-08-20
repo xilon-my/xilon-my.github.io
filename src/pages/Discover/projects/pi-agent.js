@@ -10,7 +10,7 @@ const project = {
   detail:
 `Agent 框架现在多到数不过来，每个都在往里面塞东西——加 MCP、加子 Agent、加权限弹窗、加 Plan Mode。功能越堆越多，留给用户自己发挥的空间就越小。
 
-Pi 反着来的。它核心功能少到不能再少，然后把扩展做到极致。你需要什么自己装，不需要的零开销。
+Pi 反着来的。它核心功能少到不能再少，然后把扩展做得很充分。你需要什么自己装，不需要的零开销。
 
 这个理念说好听叫"极简"，说直白就是"我替你把决定权留着"。
 
@@ -28,7 +28,7 @@ Pi 的 README 里有一节叫 "What we didn't build"，挺能说明这项目的�
 
 每个"没有"后面都跟了理由。不是做不了，是不想替你做这个决定。
 
-你想要什么自己装。装的方式有三种：Extensions（TypeScript 模块）、Skills（遵循 Agent Skills 标准的 Markdown 包）、Themes（JSON 配色）。Extensions 自带了几十个例子，\`plan-mode/\` 大概 50 行就能实现只读模式，\`permission-gate.ts\` 30 行搞定危险命令确认。
+你想要什么自己装。装的方式有三种：Extensions（TypeScript 模块）、Skills（遵循 Agent Skills 标准的 Markdown 包）、Themes（JSON 配色）。Extensions 自带了几十个例子，\`plan-mode/\` 大概 50 行就能实现只读模式，\`permission-gate.ts\` 30 行实现危险命令确认。
 
 Skills 的设计也很聪明。启动时 Pi 只扫名字和描述加到 system prompt，完整内容等 Agent 判断任务匹配了再加载。不是一股脑全塞进 context——这本身就是在省 token。
 
@@ -58,7 +58,7 @@ Formal ability 说的是 Agent 跟外部系统打交道的方式有多"正式"�
 
 最早期的 Agent 就是调 API 然后解析字符串。OpenAI 的 function calling 是一个转折点。从那之后分了三步走：function calling / JSON mode → MCP → Agent Skills 标准。
 
-有意思的是三个工具在这个链条上选了不同的位置。Claude Code 推 MCP，Codex 跟着 Workflow.md 走，Pi 则明确拒绝了 MCP——与其搞一个抽象协议层不如让 Agent 直接读工具的 README。但它兼容 Skills 标准，RPC 模式也有严格的 JSONL 帧结构。
+值得注意的是三个工具在这个链条上选了不同的位置。Claude Code 推 MCP，Codex 跟着 Workflow.md 走，Pi 则明确拒绝了 MCP——与其搞一个抽象协议层不如让 Agent 直接读工具的 README。但它兼容 Skills 标准，RPC 模式也有严格的 JSONL 帧结构。
 
 Databricks 的评测间接证明了这条路行得通——Pi 的 context 管理更紧凑，说明它没有为了 formal 而 formal，而是找到了够用的平衡点。
 

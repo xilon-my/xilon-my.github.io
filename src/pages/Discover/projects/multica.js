@@ -71,7 +71,7 @@ Squad 的模型是"先定义谁负责什么，再分配任务"——前端 Agent
 - ✅ 需要定时任务和自动化
 - ✅ 想把 Agent 产出沉淀下来复用
 - ❌ 你只有一个 Agent 在本地跑跑`,
-  takeaway: 'Multica 给"Agent 多了怎么管"提供了一个 Squad 方案。跟它价值相当的其实是它引发的问题——"一定要提前定义 Agent 角色吗？"——这个问题指向了 Symphony 路线上的 WORKFLOW.md 增强方向。两个项目放在一起看，比单独看任何一个都有意思。',
+  takeaway: 'Multica 给"Agent 多了怎么管"提供了一个 Squad 方案。跟它价值相当的其实是它引发的问题——"一定要提前定义 Agent 角色吗？"——这个问题指向了 Symphony 路线上的 WORKFLOW.md 增强方向。两个项目放在一起看，比单独看任何一个都更能说明问题。',
 }
 
 export default project

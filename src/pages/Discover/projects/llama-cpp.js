@@ -98,7 +98,7 @@ llama.cpp 现在主打 \`llama-server\`:本地起一个 HTTP 服务,暴露 OpenA
 | 工具 | 定位 | 引擎 | 硬件 | 协议 | 特点 |
 |---|---|---|---|---|---|
 | **llama.cpp** | 推理引擎(基础) | 自研 ggml | CPU+全 GPU | MIT | 覆盖最广、CPU 最优 |
-| **Ollama** | 一键本地运行 | llama.cpp | 同上 | MIT | 模型仓库+命令即可用 |
+| **Ollama** | 一条命令本地运行 | llama.cpp | 同上 | MIT | 模型仓库+命令即可用 |
 | **LM Studio** | 图形界面 | llama.cpp | 同上 | 专有 | 桌面 App、拖拽即用 |
 | **vLLM** | 高并发服务 | 自研(PagedAttention) | N 卡为主 | Apache-2.0 | 多用户、吞吐优先 |
 | **MLX** | Apple 原生推理 | Apple 自研 | 仅 Apple Silicon | MIT | 苹果上比 llama.cpp 快 |

@@ -179,7 +179,7 @@ gh auth setup-git
 
 **Round 2 — SHA-6: 添加 GitHub Actions CI**
 
-想测点更实用的——给仓库加 CI。Issue 内容是创建 GitHub Actions 工作流 + Makefile，让所有语言的测试能一键跑。
+想测点更实用的——给仓库加 CI。Issue 内容是创建 GitHub Actions 工作流 + Makefile，让所有语言的测试能一条命令运行。
 
 但这轮就没那么顺利了：
 
