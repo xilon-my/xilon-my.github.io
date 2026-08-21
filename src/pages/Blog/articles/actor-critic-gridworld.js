@@ -1,6 +1,6 @@
 const article = {
   slug: 'actor-critic-gridworld',
-  date: '2026-08-20 22:00',
+  date: '2026-08-21 14:06',
   name: 'Actor-Critic Methods in a 3×3 Grid World',
   description: '第 10 课:actor-critic。上一课的 REINFORCE 用整条 episode 的回报估 q_t;这一课只动一处——q_t 换成学出来的价值函数(TD),策略(actor)和价值(critic)每步同步更新。一条主线:QAC 给 REINFORCE 加 critic,再把 actor 的信号从 q 换成优势 q−v(A2C)。off-policy 和 DPG 各一句带过。3×3 上每一步更新都能手算。',
   tags: ['RL'],
