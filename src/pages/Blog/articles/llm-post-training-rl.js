@@ -80,13 +80,26 @@ $$
 
 **问题:一步更新可能走太远。** 策略梯度每次用一批数据只更新一步(第 9 章 REINFORCE 每回合更新一次)。如果一步推得太远,策略性能会掉。TRPO 的解决办法是给更新加硬约束:新旧策略的 KL 不超过一个阈值,用二阶方法解,贵。PPO 想保留"别走太远"的效果,但只用一阶的修改。
 
-**关键工具:重要性比值。** 数据是旧策略 $\pi_{\theta_{\mathrm{old}}}$ 采的,目标要评估新策略 $\pi_\theta$。把第 10 章 off-policy 的思想搬过来:每个样本乘权重 $\pi/\beta$,把 $\beta$ 换成 $\theta_{\mathrm{old}}$:
+**先解决一个问题:怎么用旧数据评估新策略。** 目标是"对 $\pi_\theta$ 取期望"的量,数据却是按旧策略 $\pi_{\theta_{\mathrm{old}}}$ 采的。直接把这批数据平均,估的是 $\pi_{\theta_{\mathrm{old}}}$ 下的期望,不是 $\pi_\theta$ 下的——差的部分正是"新策略更常选谁"。要校正,用 **importance sampling**。原理是一行恒等式:把对 $\pi_\theta$ 的求和改写成对 $\pi_{\theta_{\mathrm{old}}}$ 的求和:
+
+$$
+\mathbb{E}_{a\sim\pi_\theta(\cdot|s)}\big[f(s,a)\big]
+= \sum_a \pi_\theta(a|s)\,f(s,a)
+= \sum_a \pi_{\theta_{\mathrm{old}}}(a|s)\,\frac{\pi_\theta(a|s)}{\pi_{\theta_{\mathrm{old}}}(a|s)}\,f(s,a)
+= \mathbb{E}_{a\sim\pi_{\theta_{\mathrm{old}}}(\cdot|s)}\Big[\frac{\pi_\theta(a|s)}{\pi_{\theta_{\mathrm{old}}}(a|s)}\,f(s,a)\Big]
+$$
+
+中间一步是每一项乘上 $\pi_{\theta_{\mathrm{old}}}/\pi_{\theta_{\mathrm{old}}}=1$。每个旧策略采的样本,乘上新旧概率之比,平均下来就等于新策略下的期望。这个比 $\pi_\theta/\pi_{\theta_{\mathrm{old}}}$ 叫**重要性比**。这一步要求 $\pi_{\theta_{\mathrm{old}}}$ 的支撑覆盖 $\pi_\theta$:凡 $\pi_\theta(a|s)>0$ 处,$\pi_{\theta_{\mathrm{old}}}(a|s)>0$。softmax 策略每个动作概率都严格为正,自然满足。
+
+**算一个数。** 玩具语言,两个动作 $a,b$,奖励 $r(a)=+1$、$r(b)=0$。旧策略均匀:$\pi_{\theta_{\mathrm{old}}}(a)=\pi_{\theta_{\mathrm{old}}}(b)=0.5$。新策略 $\pi_\theta(a)=0.8$、$\pi_\theta(b)=0.2$。我们想要的期望(按 $\pi_\theta$ 加权)真值是 $0.8\times(+1)+0.2\times0=0.8$。直接按旧策略平均,得到 $0.5\times(+1)+0.5\times0=0.5$——错了,低估了"新策略更常选 $a$"这一部分。加权后:采到 $a$(概率 0.5),权重 $0.8/0.5=1.6$,贡献 $1.6\times(+1)=1.6$;采到 $b$(概率 0.5),权重 $0.2/0.5=0.4$,贡献 $0.4\times0=0$;两个贡献的期望 $0.5\times1.6+0.5\times0=0.8$,对了。
+
+PPO 里 $\theta_{\mathrm{old}}$ 就是采这批数据的策略,被校正的量是优势,比值记作
 
 $$
 r_t(\theta) = \frac{\pi_\theta(a_t|s_t)}{\pi_{\theta_{\mathrm{old}}}(a_t|s_t)}
 $$
 
-这就是 PPO 的重要性比。在玩具语言里,$\pi_\theta(a)/\pi_{\theta_{\mathrm{old}}}(a)$ 就是新旧策略选 $a$ 的概率之比。有了它,同一批数据可以多轮更新——第 10 章说 off-policy 能换数据来源,这里是把旧策略采的数据多轮复用。
+$\theta=\theta_{\mathrm{old}}$ 时,每个比值都是 1,目标退化成旧数据上的普通平均;$\theta$ 变了,比值给每个样本重新加权,估计仍然是对的——前提是比值别离 1 太远:比值太大,少数样本的权重被放大,估计方差跟着涨。这正是下一步 clip 要管的事。有了它,同一批数据可以多轮更新,不用每轮重新采样。
 
 **裁剪目标。** 用 $r_t$ 乘上优势 $\hat{A}_t$ 当目标,就是策略梯度更新式的期望形式(不裁剪的版本):
 
@@ -297,7 +310,7 @@ R1-Zero 从基座模型直接上 GRPO,不做 SFT,推理能力自己涌现出来(
 ## 7. 小结
 
 - **问题没变**:对指标 $J(\theta)$ 做梯度上升。变的是 $\nabla_\theta\ln\pi$ 前面的信号怎么算、怎么防止更新跑偏。
-- **PPO**:actor-critic 的现代版。信号是优势(critic 提供),比值 $r_t=\pi_\theta/\pi_{\theta_{\mathrm{old}}}$ 对应第 10 章的 off-policy 重要性采样 $\pi/\beta$;clip 把一步更新封在 $[1-\epsilon,1+\epsilon]$。RLHF 管线:SFT → 奖励模型 → PPO,KL 惩罚逐 token 扣,β=0.02、ε=0.2。
+- **PPO**:actor-critic 的现代版。信号是优势(critic 提供),比值 $r_t=\pi_\theta/\pi_{\theta_{\mathrm{old}}}$ 就是重要性采样(把对 $\pi_\theta$ 的期望改写到采数据的 $\pi_{\theta_{\mathrm{old}}}$ 上);clip 把一步更新封在 $[1-\epsilon,1+\epsilon]$。RLHF 管线:SFT → 奖励模型 → PPO,KL 惩罚逐 token 扣,β=0.02、ε=0.2。
 - **DPO**:RL 目标的闭式解。最优策略 $\pi^*\propto\pi_{\mathrm{ref}}e^{r/\beta}$,反推出隐式奖励 $\beta\ln(\pi_\theta/\pi_{\mathrm{ref}})$,代入 Bradley-Terry 得一个二分类损失。梯度是带权策略梯度:抬 $y_w$、压 $y_l$,权重 = 模型当前有多错。不训练奖励模型、不采样、不走 RL 循环。
 - **GRPO**:组内相对优势 $A_i=(r_i-\mathrm{mean})/\mathrm{std}$,组均值替代学出来的 $v$,不要 critic。DeepSeek-R1 用规则奖励(正确性 + 格式)训练推理。
 - **agentic RL 与课本 RL**:数学没变,状态从查表变 token 序列、动作从 5 个方向变词表或工具调用、奖励从每步都有变整条回答一个分、环境从已知转移变工具或自身生成。新现象:可验证奖励、reward hacking、稀疏奖励下的信用分配。
