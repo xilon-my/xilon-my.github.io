@@ -8,7 +8,9 @@ import temporalDifferenceGridworld from './articles/temporal-difference-gridworl
 import valueFunctionApproxGridworld from './articles/value-function-approximation-gridworld.js'
 import policyGradientGridworld from './articles/policy-gradient-gridworld.js'
 import actorCriticGridworld from './articles/actor-critic-gridworld.js'
-import llmPostTrainingRl from './articles/llm-post-training-rl.js'
+import rlhfPpo from './articles/rlhf-ppo.js'
+import dpo from './articles/dpo.js'
+import grpo from './articles/grpo.js'
 import dddAnd3a from './articles/ddd-and-3a.js'
 import embeddingsRerankers from './articles/embeddings-rerankers.js'
 import rag from './articles/rag.js'
@@ -16,7 +18,7 @@ import vla from './articles/vla.js'
 import embodiedAi from './articles/embodied-ai.js'
 import mcp from './articles/mcp.js'
 
-const articles = [ragSelfTrain, osCourseReflection, blackFactoryQa, ondeviceFc, bellmanGridworld, monteCarloGridworld, temporalDifferenceGridworld, valueFunctionApproxGridworld, policyGradientGridworld, actorCriticGridworld, llmPostTrainingRl, dddAnd3a, embeddingsRerankers, rag, vla, embodiedAi, mcp].sort((a, b) => b.date.localeCompare(a.date))
+const articles = [ragSelfTrain, osCourseReflection, blackFactoryQa, ondeviceFc, bellmanGridworld, monteCarloGridworld, temporalDifferenceGridworld, valueFunctionApproxGridworld, policyGradientGridworld, actorCriticGridworld, rlhfPpo, dpo, grpo, dddAnd3a, embeddingsRerankers, rag, vla, embodiedAi, mcp].sort((a, b) => b.date.localeCompare(a.date))
 
 // ── blog subdirectories(terminal 文件系统隐喻)──
 export const folders = {
