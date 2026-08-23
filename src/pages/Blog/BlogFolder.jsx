@@ -22,6 +22,7 @@ export default function BlogFolder({ folderSlug }) {
     <div className="blog-page">
       <div className="container">
         <Terminal title={`shannon@shannon.zone ~/blog/${folderSlug} %`}>
+          <h1 className="sr-only" tabIndex="-1">Blog / {folder.name}</h1>
           <Link to="/blog" className="discover-detail-back">&larr; cd ..</Link>
           <div className="blog-header">
             <p className="blog-prompt">

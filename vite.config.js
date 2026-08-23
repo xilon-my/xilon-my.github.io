@@ -5,6 +5,6 @@ export default defineConfig({
   plugins: [react()],
   base: '/',
   define: {
-    __BUILD_TIME__: JSON.stringify('2026-07-24'),
+    __BUILD_TIME__: JSON.stringify(new Date().toISOString().slice(0, 10)),
   },
 })

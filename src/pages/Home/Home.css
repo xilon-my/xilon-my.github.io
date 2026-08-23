@@ -47,16 +47,27 @@
   font-size: 0.95rem;
   color: var(--text);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 8px;
-  flex-wrap: wrap;
-  min-height: 2em;
+  min-height: 3.8em;
+}
+
+.focus-copy {
+  min-width: 0;
+  display: grid;
+  gap: 1px;
+}
+
+.focus-label {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
 }
 
 .tag-rotator {
-  display: inline-block;
+  display: block;
   color: var(--magenta);
   font-weight: 600;
+  overflow-wrap: anywhere;
   transition: opacity 0.3s;
 }
 
@@ -133,6 +144,7 @@
   .intro { padding: 0 0 16px; }
   .name { font-size: clamp(1.5rem, 8vw, 2rem); }
   .desc { font-size: 0.85rem; }
+  .rotating-tags { min-height: 5.4em; }
   .about-section { padding: 16px 0 0; }
   .about-content { font-size: 0.85rem; }
   .contact-block { margin: 0 -16px; flex-direction: column; }

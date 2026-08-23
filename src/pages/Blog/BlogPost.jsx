@@ -1,49 +1,97 @@
+import { useEffect, useMemo, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
-import 'katex/dist/katex.min.css'
-import hljs from 'highlight.js'
 import Terminal from '../../components/Terminal.jsx'
+import MarkdownContent, { ContentImage, ContentToc, extractHeadings } from '../../components/MarkdownContent.jsx'
 import articles, { folders } from './articles.js'
 import BlogFolder from './BlogFolder.jsx'
 import '../Discover/Discover.css'
 import './Blog.css'
 
-function CodeBlock({ className, children }) {
-  const lang = className?.replace('language-', '') || ''
-  const code = String(children).replace(/\n$/, '')
+const articleLoaders = import.meta.glob('./articles/*.js')
 
-  if (lang === 'markdown') {
-    const fm = code.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
-    if (fm) {
-      const yamlHtml = hljs.highlight(fm[1], { language: 'yaml' }).value
-      const mdHtml = hljs.highlight(fm[2], { language: 'markdown' }).value
-      return <code className={className} dangerouslySetInnerHTML={{
-        __html: `---\n${yamlHtml}\n---\n\n${mdHtml}`
-      }} />
-    }
-  }
+function SeriesNavigation({ postMeta, backTo }) {
+  const series = postMeta.folder
+    ? articles
+      .filter(article => article.folder === postMeta.folder)
+      .sort((a, b) => a.seriesOrder - b.seriesOrder)
+    : []
+  const index = series.findIndex(article => article.slug === postMeta.slug)
+  const previous = index > 0 ? series[index - 1] : null
+  const next = index >= 0 && index < series.length - 1 ? series[index + 1] : null
 
-  if (lang && hljs.getLanguage(lang)) {
-    return <code className={className} dangerouslySetInnerHTML={{
-      __html: hljs.highlight(code, { language: lang }).value
-    }} />
-  }
+  return (
+    <nav className="article-end-nav" aria-label="文章导航">
+      <Link to={backTo} className="article-end-back">← cd ..</Link>
+      {previous && (
+        <Link to={`/blog/${previous.slug}`} className="article-series-link article-series-previous">
+          <span>上一篇</span>
+          <strong>{previous.name}</strong>
+        </Link>
+      )}
+      {next && (
+        <Link to={`/blog/${next.slug}`} className="article-series-link article-series-next">
+          <span>下一篇</span>
+          <strong>{next.name}</strong>
+        </Link>
+      )}
+    </nav>
+  )
+}
 
-  return <code className={className}>{children}</code>
+function LoadingPost({ title, catPath }) {
+  return (
+    <div className="blog-page">
+      <div className="container detail-container">
+        <Terminal title={title} showFooter={false}>
+          <p className="discover-prompt" role="status">
+            <span className="prompt-cv">❯</span> cat {catPath}
+          </p>
+          <div className="detail-loading" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </Terminal>
+      </div>
+    </div>
+  )
 }
 
 export default function BlogPost() {
   const { slug } = useParams()
+  const postMeta = articles.find(article => article.slug === slug)
+  const [loadedPost, setLoadedPost] = useState(null)
+  const [loadError, setLoadError] = useState(false)
+  const post = loadedPost?.slug === slug ? loadedPost.data : null
 
-  // slug 命中子目录 → 渲染目录页(终端 title 变成 ~/blog/rl-math %)
+  useEffect(() => {
+    if (folders[slug] || !postMeta) return
+    let active = true
+    const loader = articleLoaders[`./articles/${slug}.js`]
+    setLoadedPost(null)
+    setLoadError(false)
+
+    if (!loader) {
+      setLoadError(true)
+      return
+    }
+
+    loader()
+      .then(module => { if (active) setLoadedPost({ slug, data: module.default }) })
+      .catch(() => { if (active) setLoadError(true) })
+
+    return () => { active = false }
+  }, [slug, postMeta])
+
+  useEffect(() => {
+    if (post) window.dispatchEvent(new Event('route-content-ready'))
+  }, [post])
+
+  const headings = useMemo(() => post?.detail ? extractHeadings(post.detail) : [], [post])
+
   if (folders[slug]) return <BlogFolder folderSlug={slug} />
 
-  const post = articles.find(a => a.slug === slug)
-
-  if (!post) {
+  if (!postMeta || loadError) {
     return (
       <div className="blog-page">
         <div className="container">
@@ -63,43 +111,59 @@ export default function BlogPost() {
     )
   }
 
-  const backTo = post.folder ? `/blog/${post.folder}` : '/blog'
-  const catPath = post.folder ? `${post.folder}/${post.slug}.md` : `${post.slug}.md`
-  const pwd = post.folder ? `~/blog/${post.folder}` : '~/blog'
+  const backTo = postMeta.folder ? `/blog/${postMeta.folder}` : '/blog'
+  const catPath = postMeta.folder ? `${postMeta.folder}/${postMeta.slug}.md` : `${postMeta.slug}.md`
+  const pwd = postMeta.folder ? `~/blog/${postMeta.folder}` : '~/blog'
+
+  if (!post) return <LoadingPost title={`shannon@shannon.zone ${pwd} %`} catPath={catPath} />
+
+  const series = postMeta.folder
+    ? articles.filter(article => article.folder === postMeta.folder).sort((a, b) => a.seriesOrder - b.seriesOrder)
+    : []
+  const seriesIndex = series.findIndex(article => article.slug === postMeta.slug)
 
   return (
     <div className="blog-page">
-      <div className="container">
-        <Terminal title={`shannon@shannon.zone ${pwd} %`}>
-          {/* ── Back link ── */}
+      <div className={`container detail-container${headings.length >= 2 ? ' has-outline' : ''}`}>
+        {headings.length >= 2 && (
+          <aside className="detail-outline" aria-label="文章目录">
+            <div className="detail-outline-rail">
+              <ContentToc headings={headings} variant="rail" />
+            </div>
+            <div className="detail-outline-inline">
+              <ContentToc headings={headings} />
+            </div>
+          </aside>
+        )}
+
+        <div className="detail-terminal-column">
+          <Terminal title={`shannon@shannon.zone ${pwd} %`}>
           <Link to={backTo} className="discover-detail-back">&larr; cd ..</Link>
 
-          {/* ── Header ── */}
           <div className="discover-detail-header">
             <p className="discover-prompt">
               <span className="prompt-cv">❯</span> cat {catPath}
             </p>
           </div>
 
-          {/* ── Post meta ── */}
           <div className="discover-detail-meta">
-            <h1 className="discover-detail-name">{post.name}</h1>
+            <h1 className="discover-detail-name" tabIndex="-1">{post.name}</h1>
             <div className="discover-card-tags" style={{ marginTop: 8 }}>
-              {post.tags.map(t => <span key={t}>{t}</span>)}
+              {post.tags.map(tag => <span key={tag}>{tag}</span>)}
             </div>
             <div className="discover-detail-info">
               <span><span className="detail-label">date</span> {post.date}</span>
               {post.author && <span><span className="detail-label">author</span> {post.author}</span>}
               {post.category && <span><span className="detail-label">category</span> {post.category}</span>}
+              {seriesIndex >= 0 && <span><span className="detail-label">series</span> {seriesIndex + 1}/{series.length}</span>}
             </div>
           </div>
 
-          {/* ── Body ── */}
           <div className="discover-detail-body">
             <p className="discover-detail-desc">{post.description}</p>
 
             <div className="discover-detail-content">
-              <Markdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]} components={{ code: CodeBlock }}>{post.detail}</Markdown>
+              <MarkdownContent source={post.detail} />
             </div>
 
             {post.takeaway && (
@@ -111,15 +175,18 @@ export default function BlogPost() {
               </div>
             )}
 
-            {post.images && post.images.length > 0 && (
+            {post.images?.length > 0 && (
               <div className="discover-detail-images">
-                {post.images.map((img, i) => (
-                  <img key={i} src={img} alt={`${post.name} screenshot ${i + 1}`} className="discover-detail-img" loading="lazy" />
+                {post.images.map((src, index) => (
+                  <ContentImage key={src} src={src} alt={`${post.name} screenshot ${index + 1}`} className="discover-detail-img" />
                 ))}
               </div>
             )}
           </div>
-        </Terminal>
+
+          <SeriesNavigation postMeta={postMeta} backTo={backTo} />
+          </Terminal>
+        </div>
       </div>
     </div>
   )

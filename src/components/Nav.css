@@ -1,4 +1,4 @@
-nav {
+.site-nav {
   position: sticky;
   top: 0;
   z-index: 100;
@@ -9,50 +9,60 @@ nav {
   transition: background 0.3s;
 }
 
-nav .container {
+.site-nav .container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   height: 56px;
 }
 
-nav .logo {
+.site-nav .logo {
   font-weight: 700;
   font-size: 1rem;
   color: var(--green);
+  min-height: 44px;
+  min-inline-size: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
-nav .logo:hover { text-decoration: none; color: var(--green); }
+.site-nav .logo:hover { text-decoration: none; color: var(--green); }
 
 .nav-right {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 14px;
+  min-width: 0;
 }
 
-nav ul {
+.site-nav ul {
   list-style: none;
   display: flex;
+  flex-wrap: wrap;
   gap: 6px;
 }
 
-nav ul a {
+.site-nav ul a {
   color: var(--text-secondary);
   font-size: 0.85rem;
   font-weight: 500;
   transition: color 0.2s;
-  padding: 3px 10px;
+  padding: 0 10px;
+  min-height: 44px;
+  min-inline-size: 44px;
   border-radius: 4px;
   display: inline-flex;
   align-items: center;
 }
 
-nav ul a.active {
+.site-nav ul a.active {
   color: var(--green);
   background: var(--accent-light);
   text-decoration: none;
 }
 
-nav ul a:hover {
+.site-nav ul a:hover {
   color: var(--green);
   text-decoration: none;
 }
@@ -65,8 +75,8 @@ nav ul a:hover {
   transition: opacity 0.2s;
 }
 
-nav ul a:hover .nav-arrow,
-nav ul a.active .nav-arrow {
+.site-nav ul a:hover .nav-arrow,
+.site-nav ul a.active .nav-arrow {
   opacity: 1;
 }
 
@@ -85,10 +95,13 @@ nav ul a.active .nav-arrow {
   line-height: 1.4;
   color: var(--text-secondary);
   padding: 3px 8px;
+  min-height: 44px;
+  min-inline-size: 44px;
   border-radius: 4px;
   transition: color 0.2s, background 0.2s;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
 }
 
 .theme-toggle:hover {
@@ -97,15 +110,21 @@ nav ul a.active .nav-arrow {
 }
 
 @media (max-width: 700px) {
-  nav { height: 48px; }
-  nav .container { height: 48px; }
-  nav .logo { font-size: 0.85rem; }
-  nav ul { gap: 2px; }
-  nav ul a { font-size: 0.7rem; padding: 2px 5px; }
-  nav ul a.active { background: transparent; }
-  nav ul a:hover { background: transparent; }
+  .site-nav { min-height: 52px; }
+  .site-nav .container { height: auto; min-height: 52px; padding-inline: 12px; }
+  .site-nav .logo { font-size: 0.85rem; }
+  .site-nav ul { gap: 2px; }
+  .site-nav ul a { font-size: 0.72rem; padding: 0 6px; min-height: 44px; }
+  .site-nav ul a.active { background: transparent; }
+  .site-nav ul a:hover { background: transparent; }
   .nav-arrow { display: none; }
   .nav-right { gap: 4px; }
   .nav-sep { display: none; }
-  .theme-toggle { font-size: 0.7rem; padding: 2px 5px; }
+  .theme-toggle { font-size: 0.72rem; padding: 0 6px; min-height: 44px; }
+}
+
+@media (max-width: 520px) {
+  .site-nav .logo { display: none; }
+  .nav-right { width: 100%; justify-content: space-between; }
+  .site-nav ul { flex: 1; justify-content: space-between; }
 }

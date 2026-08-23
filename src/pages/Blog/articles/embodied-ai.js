@@ -131,7 +131,7 @@ Push-T 上（状态观测）：
 | BET | 0.79 / 0.70 |
 | LSTM-GMM | 0.67 / 0.61 |
 
-真实 Push-T 上差距更大：Diffusion Policy **95% 成功率、0.80 IoU**，人类 100%、0.84 IoU——论文说它"接近人类水平"；而最强的 baseline（IBC）在真实环境是 0%。下图为真实 Push-T 上各方法的动作轨迹对比，Diffusion Policy 的轨迹最接近目标：
+真实 Push-T 上的结果为：Diffusion Policy 达到 **95% 成功率、0.80 IoU**，人类为 100%、0.84 IoU；论文将其描述为"接近人类水平"。表现最好的 baseline（IBC）在真实环境中的成功率为 0%。下图比较各方法在真实 Push-T 上的动作轨迹，Diffusion Policy 的轨迹与目标最接近：
 
 ![真实 Push-T 各方法轨迹对比](/images/diffusion-policy-pusht-8bit.png)
 

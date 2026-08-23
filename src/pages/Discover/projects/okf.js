@@ -7,13 +7,13 @@ const project = {
   tags: ['RAG'],
   stars: '7.8k+',
   author: 'Google Cloud',
-  takeaway: 'OKF 本质上不是什么新技术，就是个文件组织规范。它的核心观点是：软件工程里管代码的那套（Markdown + Git + PR）直接拿来管知识就够了，不需要给 AI 搞特权格式。如果你发现你的 Agent 每次都要重新搞清楚同一个东西，可能就是缺了一个 kb/ 目录。',
+  takeaway: 'OKF 是一种文件组织规范,使用 Markdown、Git 和 PR 管理知识,不引入 AI 专用格式。知识包通过 kb/ 目录集中保存结构化文档,使 Agent 可以复用已经确认的领域信息,而不必在每次任务中重新推断。',
   detail:
-`现在 Agent 越来越多了，但每个 Agent 的知识都锁在不同的系统里 —— 数据血缘在 Dataplex，指标定义在 Wiki，SQL 在代码库。各有各的 API，谁也读不懂谁。
+`Agent 所需的知识常分散在不同系统中:数据血缘位于 Dataplex,指标定义位于 Wiki,SQL 位于代码库。各系统使用不同 API 和数据格式,难以统一读取。
 
-OKF 的解法很粗暴：就用 Markdown。
+OKF 选择使用 Markdown 作为统一表示格式。
 
-一个知识包就是一个目录，里面一堆 .md 文件，每个文件头顶 YAML 写元数据，正文写内容。人用 cat 能看，Agent 也能直接丢进 context。放 Git 里，改就是 PR，历史就是 git log。
+一个知识包对应一个目录,其中每个 .md 文件使用 YAML frontmatter 记录元数据,正文记录内容。人可以直接阅读,Agent 也可以将其加入上下文。文件由 Git 管理,修改通过 PR 审查,历史通过 git log 查询。
 
 具体到每个文件长这样：
 
@@ -38,7 +38,7 @@ generated: { by: reference_agent/gemini-2.5-pro, at: 2026-06-20T14:30:00Z }
 关联 [customers](/tables/customers.md) 表。
 \`\`\`
 
-格式只强制一个字段：type。别的全是可选的。没有中央注册表，不需要 SDK。
+格式只要求 type 字段,其他字段均为可选项。它不依赖中央注册表或专用 SDK。
 
 代码仓里 okf/bundles/ 下面放了几个示例包：
 
@@ -76,7 +76,7 @@ bundles/acme_retail/
 └── viz.html                    # 可视化页面
 \`\`\`
 
-viz.html 是把整个知识包渲染成交互式图谱的工具。用 Cytoscape.js 画的力导向图 —— 每个概念是一个节点，Markdown 里的链接关系是边。点一个节点能看到它的 frontmatter 和正文，还能搜索和筛选类型。不需要后端，一个 HTML 就能跑。
+viz.html 将知识包渲染为交互式图谱。它使用 Cytoscape.js 绘制力导向图,每个概念是一个节点,Markdown 链接表示边。选择节点后可以查看 frontmatter 和正文,也可以搜索并按类型筛选。该页面不需要后端服务。
 
 这个 viz 是通过 \`reference_agent visualize --bundle ./bundles/acme_retail\` 生成的，本身也是一个 OKF consumer 的参考实现。
 
@@ -85,9 +85,9 @@ viz.html 是把整个知识包渲染成交互式图谱的工具。用 Cytoscape.
 okf/src/reference_agent/    # Python: Producer agent + 可视化
 toolbox/mdcode/             # TypeScript: 数据目录双向同步
 \`\`\`
-reference_agent 分两阶段跑：先读 BigQuery 元数据为每张表写概念文件，再给 Agent 一组 seed URL 去爬官方文档补充细节。mdcode 则反过来，把你的知识包和数据目录保持双向同步。
+reference_agent 分两阶段运行:先读取 BigQuery 元数据,为每张表生成概念文件;再根据一组 seed URL 读取官方文档并补充细节。mdcode 则在知识包和数据目录之间进行双向同步。
 
-v0.2 还加了一套可信度机制 —— 每条知识可以记录谁写的（人还是 Agent）、谁核验过、什么时候过期、来源是啥、来源活不活跃。
+v0.2 增加可信度元数据,用于记录内容由人还是 Agent 生成、由谁核验、何时过期、来源地址以及来源的使用情况。
 
 \`\`\`yaml
 generated: { by: reference_agent/gemini-2.5-pro, at: 2026-06-20T22:53:05Z }
@@ -99,9 +99,9 @@ sources:
     usage_count: 5000
 \`\`\`
 
-还有一个 Attested Computation 类型 —— 不只说"收入是多少"，而是把"收入应该怎么算"写成 SQL 定死，Agent 只能填参数不能改逻辑。跑完有 attester 来验。财务合规场景很实用。
+Attested Computation 类型不仅记录收入结果,还用 SQL 固定计算逻辑。Agent 只能填写参数,不能修改查询结构,运行结果再由 attester 验证。这适合需要固定计算口径的财务与合规场景。
 
-实践中怎么用？建一个 \`kb/\` 目录开始写 .md。需要批量生成的话跑 \`reference_agent enrich\` 或者用 toolbox/mdcode。Agent 不需要人喂上下文了，直接指向文件就能读。`,
+实际使用时,先建立 \`kb/\` 目录并编写 .md 文件。批量生成可以运行 \`reference_agent enrich\` 或使用 toolbox/mdcode。Agent 可以按任务读取对应文件,无需人工重复提供相同上下文。`,
 }
 
 export default project

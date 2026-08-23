@@ -1,29 +1,53 @@
 .skills {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  border-top: 1px solid var(--border);
+}
+
+.skill-group {
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: 14ch minmax(0, 1fr);
+  align-items: baseline;
+  gap: 16px;
+  padding: 10px 4px;
+  border-bottom: 1px solid var(--border);
 }
 
 .skill-group h3 {
   font-size: 0.85rem;
   font-weight: 600;
-  color: var(--yellow);
-  margin-bottom: 10px;
+  color: var(--accent);
 }
 
-.skill-tags {
+.skill-group h3::after {
+  content: ':';
+  color: var(--text-secondary);
+}
+
+.skill-list {
+  min-width: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
+  gap: 2px 0;
+  list-style: none;
 }
 
-.skill-tags span {
-  background: var(--bg);
-  border: 1px solid var(--border);
+.skill-list li {
   color: var(--text);
-  font-size: 0.78rem;
-  font-weight: 500;
-  font-style: italic;
-  padding: 4px 12px;
-  border-radius: 6px;
+  font-size: 0.82rem;
+  overflow-wrap: anywhere;
+}
+
+.skill-list li:not(:last-child)::after {
+  content: ' · ';
+  color: var(--text-secondary);
+  white-space: pre;
+}
+
+@media (max-width: 600px) {
+  .skill-group {
+    grid-template-columns: 1fr;
+    gap: 3px;
+    padding: 12px 2px;
+  }
 }

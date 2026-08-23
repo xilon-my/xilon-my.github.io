@@ -3,16 +3,16 @@ const project = {
   date: '2026-07-29 10:08',
   name: 'Pi Agent Harness',
   url: 'https://github.com/earendil-works/pi',
-  description: '一个极简 AI Agent 工具包。统一的多供应商 LLM 接口，带差分渲染的 TUI，可扩展的 Agent 运行时，和自解释的编码 Agent CLI。',
+  description: '一个保持较小核心功能集的 AI Agent 工具包，提供统一的多供应商 LLM 接口、带差分渲染的 TUI、可扩展的 Agent 运行时和编码 Agent CLI。',
   tags: ['agent'],
   stars: '79.5k+',
   author: 'earendil-works',
   detail:
-`Agent 框架现在多到数不过来，每个都在往里面塞东西——加 MCP、加子 Agent、加权限弹窗、加 Plan Mode。功能越堆越多，留给用户自己发挥的空间就越小。
+`许多 Agent 框架把 MCP、子 Agent、权限确认和 Plan Mode 等能力直接放入核心功能。功能增加后,默认行为和上下文开销也随之增加。
 
-Pi 反着来的。它核心功能少到不能再少，然后把扩展做得很充分。你需要什么自己装，不需要的零开销。
+Pi 选择保留较小的核心功能集,其余能力通过扩展提供。使用者可以按需安装,未启用的扩展不会占用运行时上下文。
 
-这个理念说好听叫"极简"，说直白就是"我替你把决定权留着"。
+这一设计把更多功能选择留给使用者,代价是部分常用能力需要自行配置。
 
 ## Pi 是什么
 
@@ -22,31 +22,31 @@ Pi 是四个包组成的 monorepo。@earendil-works/pi-ai 管统一 LLM 接口�
 
 ## 少了什么比多了什么更重要
 
-Pi 的 README 里有一节叫 "What we didn't build"，挺能说明这项目的性格。
+Pi 的 README 使用 "What we didn't build" 一节明确列出未内置的能力及原因。
 
 没有 MCP 支持，因为觉得"Build CLI tools with READMEs"就够了。没有子 Agent，留给扩展实现。没有权限弹窗，进程有什么权限 Pi 就有什么权限。没有 Plan Mode，不需要就是不支持。没有内置 Todo，文件就是你的 todo。没有后台 bash，因为已经有 tmux 了。
 
-每个"没有"后面都跟了理由。不是做不了，是不想替你做这个决定。
+这些能力可以通过外部工具或扩展实现,项目选择不在核心中预设实现方式。
 
-你想要什么自己装。装的方式有三种：Extensions（TypeScript 模块）、Skills（遵循 Agent Skills 标准的 Markdown 包）、Themes（JSON 配色）。Extensions 自带了几十个例子，\`plan-mode/\` 大概 50 行就能实现只读模式，\`permission-gate.ts\` 30 行实现危险命令确认。
+功能通过三种方式扩展：Extensions（TypeScript 模块）、Skills（遵循 Agent Skills 标准的 Markdown 包）和 Themes（JSON 配色）。Extensions 附带了几十个例子，\`plan-mode/\` 用约 50 行实现只读模式，\`permission-gate.ts\` 用约 30 行实现危险命令确认。
 
-Skills 的设计也很聪明。启动时 Pi 只扫名字和描述加到 system prompt，完整内容等 Agent 判断任务匹配了再加载。不是一股脑全塞进 context——这本身就是在省 token。
+Skills 采用按需加载。启动时 Pi 只把名称和描述加入 system prompt，等 Agent 判断任务匹配后再加载完整内容，避免所有 Skill 同时占用 context。
 
 ![Pi 对话截图](/discover/pi-agent.png)
 
-## Databricks 的验证：少确实省钱
+## Databricks 的评测：核心功能规模与成本
 
 2026 年 7 月，Databricks 公开了他们内部的编码 Agent 评测结果。他们用了自己百万行级别的真实代码仓库做测试，不是 SWE-Bench 那种公开榜单。
 
-结果最值得注意的发现是：**同一个模型跑在不同框架上，成本差距超过 2 倍，但质量几乎不变。**
+评测显示：**同一个模型运行在不同框架上时，成本相差超过 2 倍，而质量指标接近。**
 
-原因是 Pi 每轮发送的上下文少了大约 3 倍，跑的轮数更少，工作集更紧凑。Claude Code 和 Codex 内置了大量功能（Plan Mode 提示词、权限弹窗逻辑、MCP 工具定义、子 Agent 指令模板），这些本身就是 token 开销。Pi 没有这些，所以 context 更干净。
+Pi 每轮发送的上下文约少 3 倍,运行轮数也较少。Claude Code 和 Codex 内置的 Plan Mode 提示词、权限确认逻辑、MCP 工具定义和子 Agent 指令模板会增加 token 使用量;Pi 未内置这些功能,因此默认上下文更短。
 
 ![编码 Agent Pareto 前沿](/discover/db-pareto.png)
 
-他们还发现模型能力出现了三个明确的分层。Opus 4.8 和 GLM 5.2 在顶端，GPT 5.4 Mini 和 Haiku 在中间层，开源模型在底层。工程师们即使做简单的 flag 翻转也在用最贵的模型，所以他们开始根据任务复杂度自动路由。
+评测还显示模型能力可以分为三个层次:Opus 4.8 和 GLM 5.2 得分较高,GPT 5.4 Mini 和 Haiku 居中,受测开源模型得分较低。由于工程师在修改简单 flag 时也可能使用成本较高的模型,团队开始根据任务复杂度自动路由。
 
-另一个反直觉的发现：**Token 单价便宜不代表总成本低。** Sonnet 5 每 token 比 Opus 4.8 便宜 1.7 倍，但总成本反而更高（$2.09 vs $1.94），分数还低了 6 个百分点。大模型 token 效率更高，花得更少。
+另一个结果是：**Token 单价较低不一定使总成本更低。** Sonnet 5 的单 token 价格比 Opus 4.8 低 1.7 倍,但该评测中的总成本更高($2.09 vs $1.94),分数低 6 个百分点。原因是两者完成任务所需的 token 数量不同。
 
 ## Formal ability 和 Representational ability 的发展
 
@@ -71,7 +71,7 @@ Databricks 的评测间接证明了这条路行得通——Pi 的 context 管理
 最新的研究通过探针分析发现，LLM 在做空间导航任务时，中间层会激活与空间位置强相关的神经元，这些表征不随 prompt 表述方式变化。[MIT 的研究](https://www.csail.mit.edu/event/thesis-defense-world-models-user-models-and-self-models-ai-systems)揭示了模型内部确实存在一张"地图"。
 
 回到三个工具来看，在内部表征层面它们都依赖底层模型的能力。区别在于**外部表征**的设计。Pi 的 Session 不存成线性日志，而是树形结构。\`/tree\` 看到全部分支，\`/resume <id>\` 跳到任意节点，\`/fork\` 从当前点分叉。Agent 的对话历史不是一条线，而是一棵可以任意导航的树。`,
-  takeaway: 'Databricks 的 benchmark 给 Pi 的"极简哲学"做了一个有力的注脚：同一个模型跑在不同的框架上，成本差距超过 2 倍，质量几乎不变。少即是多不只是理念问题——它在 token 账单上能直接体现出来。Pi 在 formal ability 上拒绝了 MCP 选择了更轻的路，在 representational ability 上用树形 Session 给出了不一样的设计，这些选择在 benchmark 中被证明是有效的。',
+  takeaway: 'Pi 保留较小的核心功能集,把其他能力交给扩展。Databricks 的评测显示,同一模型运行在不同框架上时,成本相差超过 2 倍而质量指标接近,说明默认上下文规模会直接影响 token 成本。Pi 没有内置 MCP,而是使用 CLI 和 README 描述工具;Session 使用树形结构保存分支,支持恢复和分叉。',
 }
 
 export default project

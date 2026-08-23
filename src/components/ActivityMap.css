@@ -55,15 +55,9 @@
   transition: opacity 0.15s, transform 0.15s;
 }
 
-.activity-dot:hover,
-.activity-dot:focus-visible {
+.activity-dot:hover {
   opacity: 1;
   transform: scale(1.15);
-}
-
-.activity-dot:focus-visible {
-  outline: 1px solid var(--accent);
-  outline-offset: 1px;
 }
 
 /* ── Date labels ── */
@@ -141,6 +135,11 @@
 }
 
 @media (max-width: 700px) {
+  .activity-legend,
+  .activity-readout {
+    display: none;
+  }
+
   .activity-day,
   .activity-datelabel {
     width: 14px;

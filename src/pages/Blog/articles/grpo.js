@@ -1,96 +1,195 @@
 const article = {
-  slug: 'grpo',
-  date: '2026-08-22 18:00',
-  name: 'Group Relative Policy Optimization: GRPO',
-  description: 'PPO 要同时维护策略和 critic 两个模型。GRPO 不要 critic:对同一个 prompt 采一组回答,用组内相对优势 (r_i−mean)/std 替代学出来的价值函数。KL 直接加在损失上,而不是逐 token 扣进奖励。DeepSeek-R1 用它训练推理,奖励用规则不用学出来的模型。',
-  tags: ['RL'],
-  category: 'Course Review',
-  folder: 'rl-math',
-  author: 'shannon',
-  takeaway: 'GRPO 用组内相对优势 A_i=(r_i−mean)/std:组均值替代学出来的 v,不要 critic。目标函数和 PPO 同构(裁剪比值 × 组优势),但 KL 直接加在损失上而不是扣进奖励。DeepSeek-R1 用规则奖励(正确性+格式)训练推理,AIME 2024 pass@1 从 15.6% 涨到 71.0%。',
+  slug: 'grpo', date: '2026-08-22 18:00', name: 'Group Relative Policy Optimization: GRPO',
+  description: 'GRPO 删除 PPO 的 critic。对同一个 prompt 采一组回答,将每条回答的奖励在组内标准化,得到回答级优势;再把这个优势复制给回答中的每个 token,逐 token 计算新旧策略比、clip 和 KL。文章用四条 2-token 回答完整计算一轮更新。',
+  tags: ['RL'], category: 'Course Review', folder: 'rl-math', author: 'shannon',
+  takeaway: 'GRPO 的顺序是:旧策略对同一 prompt 采 G 条回答 → 奖励函数逐条打分 → 组内标准化得到 A_i → 同一回答的每个 token 共用 A_i → 逐 token 计算 π_θ/π_old、clip 和 KL → 更新策略。它省掉 critic,没有省掉奖励;DeepSeekMath 使用奖励模型,DeepSeek-R1-Zero 使用正确性和格式规则。',
   detail: String.raw`
-## 1. PPO 的 critic 问题
+## 1. GRPO 只改 PPO 的一处
 
-上一讲的 PPO 要同时维护两个模型:策略 $\pi_\theta$ 和 critic(价值网络)。critic 是拿奖励模型初始化的,规模和策略相当,训练时内存和计算都翻倍。而且论文指出:奖励模型通常只给最后一个 token 打分,要训练一个"每个 token 都准确"的价值网络变复杂。能不能不要 critic,用一组采样回答把"平均"算出来?
+PPO 需要 critic $v(s_t)$ 给每个 token 状态估计基线,再由 GAE 算优势。对 LLM 来说,critic 通常也是一个大模型;而奖励又常在回答末尾才出现,训练逐 token 价值网络会增加内存、计算和拟合难度。
 
-GRPO 就是答案:对同一个 prompt 采一组回答,用**组内相对优势**替代学出来的价值函数——没有 critic,也就省掉一个模型的训练。注意省掉的是 critic,不是奖励:每条回答还是要一个奖励 $r_i$,来源可以是学出来的奖励模型,也可以是规则判定(§3 的 R1 讲后者)。先把语言 RL 的基础和 PPO 的裁剪比值摆好(§2),再看 GRPO(§3)。
+GRPO 删除 critic。它对同一个 prompt 一次采多条回答,直接用这一组回答的奖励均值作为经验基线。其余部分仍保留 PPO 的基本结构:旧策略采样、新旧策略概率比、clip 和参考模型 KL。
 
-## 2. 语言 RL 的基础
+注意:删除的是 critic,不是奖励。每条回答仍必须得到一个分数。
 
-**一个回答是一条 token 序列。** 大模型逐 token 生成回答:给定 prompt $x$,输出回答 $y=(y_1,\dots,y_T)$,整条回答的概率是逐 token 概率的乘积。$\pi_\theta(y|x)$ 是当前策略给回答的概率,$\pi_{\mathrm{ref}}(y|x)$ 是参考模型(SFT)的概率。
+## 2. 先从一组回答算优势
 
-**KL 锚定。** 后训练想让"奖励的期望大、但别离参考策略太远",目标是:
-
-$$
-\max_\theta\ \mathbb{E}_{x\sim\mathcal{D}}\Big[\mathbb{E}_{y\sim\pi_\theta(y|x)}\big[r(x,y)\big] - \beta\,\mathbb{D}_{\mathrm{KL}}\big(\pi_\theta(y|x)\,\|\,\pi_{\mathrm{ref}}(y|x)\big)\Big]
-$$
-
-$r(x,y)$ 是回答的奖励,$\beta>0$ 是 KL 系数。这个目标在 PPO 和 GRPO 里都有,只是 KL 项的放法不同(§3 讲)。
-
-**重要性比和裁剪。** 语言 RL 里采样一条回答要花一次生成,同一批数据想多用几轮,就得用重要性比校正"数据是旧策略采的"。第 $i$ 条回答的比值是
+给定 prompt $q$,用旧策略 $\pi_{\theta_{\mathrm{old}}}$ 采 $G$ 条回答:
 
 $$
-\rho_i = \frac{\pi_\theta(o_i|q)}{\pi_{\theta_{\mathrm{old}}}(o_i|q)}
+o_1,o_2,\dots,o_G\sim\pi_{\theta_{\mathrm{old}}}(\cdot\mid q)
 $$
 
-($o_i$ 是第 $i$ 条回答,$q$ 是 prompt,$\theta_{\mathrm{old}}$ 是采这批数据时的策略)。比值越大,说明新策略比采数据时更常选这条回答。为避免一步更新走太远,PPO 用 clip 把比值夹在 $[1-\epsilon,1+\epsilon]$($\epsilon$ 常用 0.2)。GRPO 的目标函数里这两样都会原样出现。
-
-为了能手算,玩具语言:**词表只有两个 token $a$ 和 $b$**,每条回答 2 个 token(和前面两篇一样:回答是 $(y_1,y_2)$,每个 token 从 $\{a,b\}$ 里选)。奖励规则在下面的例子里给。
-
-## 3. GRPO
-
-**动机。** PPO 的优势要靠 critic 提供:"实际奖励 − 价值网络的预期",$v(s)$ 是**学出来的**"平均能拿多少"。学一个准确的 $v$ 不容易——奖励模型通常只给整条回答一个分,却要让价值网络对每个 token 位置都预测准。GRPO 换一个基线:不学,直接采一组回答,用这一组的**经验平均**当"平均能拿多少"。
-
-**组内相对优势。** 对同一个 prompt $q$,从当前策略采 $G$ 条回答 $\{o_1,\dots,o_G\}$,每条拿一个奖励 $r_i$。第 $i$ 条的优势定义为它相对这一组的偏离:
+奖励函数分别给出 $r_1,dots,r_G$。GRPO 将第 $i$ 条回答的奖励在组内标准化:
 
 $$
-A_i = \frac{r_i - \mathrm{mean}(r_1,\dots,r_G)}{\mathrm{std}(r_1,\dots,r_G)}
+A_i=\frac{r_i-\operatorname{mean}(r_1,dots,r_G)}
+{\operatorname{std}(r_1,dots,r_G)}
 $$
 
-$\mathrm{mean}$ 是组内平均,$\mathrm{std}$ 是组内标准差。
-
-它和 PPO 的优势是同一个东西。PPO 里优势 = 实际奖励 − 价值网络的预期,$v(s)$ 是**学出来的**"平均能拿多少";GRPO 里优势 = 当前奖励 − 这一组回答的平均。两者都是"减掉一个基线,看这条比平均好多少",区别只在基线从哪来:PPO 的基线是 critic 学的,GRPO 的基线是这批采样的经验均值——所以不用学,也就没有 critic。除以 $\mathrm{std}$ 是额外的:让优势的尺度自动调节。
-
-**在玩具语言上算一组。** 词表 $\{a,b\}$,每条回答 2 个 token。奖励规则:回答 $(a,a)$ 得 $+1$,其他回答得 $0$。同一 prompt $q$ 采 $G=4$ 条回答:$(a,a)$、$(a,b)$、$(b,a)$、$(b,b)$,奖励 $r=[1,0,0,0]$。
-
-- 平均 $\mathrm{mean}=(1+0+0+0)/4=0.25$;
-- 偏离:正确那条 $1-0.25=0.75$,三条错的各 $-0.25$;
-- 标准差 $\mathrm{std}=\sqrt{(0.75^2+3\times0.25^2)/4}=\sqrt{0.1875}=0.433$(按 4 条平均);
-- 优势:
+$A_i>0$ 表示这条回答比同组平均好;$A_i<0$ 表示比平均差。outcome supervision 只给整条回答一个奖励,所以同一回答中的所有 token 共用这个优势:
 
 $$
-A = \Big[\frac{0.75}{0.433},\, \frac{-0.25}{0.433},\, \frac{-0.25}{0.433},\, \frac{-0.25}{0.433}\Big]
-= [1.73,\,-0.58,\,-0.58,\,-0.58]
+\hat A_{i,t}=A_i,
+\qquad t=1,dots,|o_i|
 $$
 
-正确的那条优势 $+1.73$ 被抬,三条错误的各 $-0.58$ 被压。四者之和为 0——"相对平均"的基线让优势和为零,和课本里"期望中减基线梯度不变"是同一件事。
+它不像 PPO 的 GAE 那样区分同一回答中的不同位置。GRPO 用更多回答换掉了价值网络。
 
-**目标函数。** 和 PPO 同构:裁剪的比值乘组优势,再加 KL 到参考策略:
+## 3. 优势怎样进入参数更新
+
+对回答 $o_i$ 的第 $t$ 个 token,新旧策略概率比为:
 
 $$
-\mathcal{J}_{\mathrm{GRPO}}(\theta)
-= \mathbb{E}\Big[\frac{1}{G}\sum_{i=1}^{G}
-\min\big(\rho_i A_i,\ \operatorname{clip}(\rho_i,1-\epsilon,1+\epsilon)A_i\big)
-- \beta\,\mathbb{D}_{\mathrm{KL}}\big(\pi_\theta(\cdot|q)\,\|\,\pi_{\mathrm{ref}}(\cdot|q)\big)\Big]
+\rho_{i,t}(\theta)
+=\frac{\pi_\theta(o_{i,t}\mid q,o_{i,<t})}
+{\pi_{\theta_{\mathrm{old}}}(o_{i,t}\mid q,o_{i,<t})}
 $$
 
-$\rho_i=\pi_\theta(o_i|q)/\pi_{\theta_{\mathrm{old}}}(o_i|q)$ 是第 $i$ 条回答的比值(整条回答的概率之比;实现上逐 token 算、log 后求和)。括号里和 PPO 的 $L^{CLIP}$ 一模一样,只是优势从"critic 估的"换成"组内算的"。
+DeepSeekMath 提出的原始 GRPO 目标逐 token 计算概率比、clip 和 KL:
 
-注意 KL 项的位置和 PPO 不同。PPO 把 KL 惩罚逐 token 扣进奖励,再算优势;GRPO 把 KL 直接加在损失上——因为 KL 进奖励会改变每条回答的 $r_i$,组内平均跟着变,优势的计算就绕进去了。DeepSeekMath 的配置:$G=64$、$\beta=0.04$。
+$$
+\mathcal J_{\mathrm{GRPO}}(\theta)
+=\mathbb E\left[
+\frac{1}{G}\sum_{i=1}^{G}\frac{1}{|o_i|}
+\sum_{t=1}^{|o_i|}
+\left(
+\min\big(\rho_{i,t}A_i,
+\operatorname{clip}(\rho_{i,t},1-\epsilon,1+\epsilon)A_i\big)
+-\beta D_{i,t}
+\right)
+\right]
+$$
 
-**R1 用它训练推理。** DeepSeek-R1 的奖励不用学出来的奖励模型,用**规则**:
-- 正确性:数学题比对最终答案,LeetCode 用编译器跑测试用例;
-- 格式:要求思考过程放在指定标签里。
+这里有两种不同的比较:
 
-R1-Zero 从基座模型直接上 GRPO,不做 SFT,推理能力自己涌现出来(AIME 2024 上 15.6% → 71.0%,pass@1)。R1 加了一步冷启动 SFT 再 RL,更稳定。论文明确说不用神经奖励模型做这个训练,因为在大规模 RL 里它容易被利用(reward hacking)。
+- $\rho_{i,t}$ 比较当前策略与采样策略,用于复用旧数据并做 clip;
+- $D_{i,t}$ 比较当前策略与固定参考策略,用于 KL 锚定。
 
-## 4. 小结
+DeepSeekMath 使用的逐 token KL 估计为:
 
-- **GRPO 用组内相对优势** $A_i=(r_i-\mathrm{mean})/\mathrm{std}$:组均值替代学出来的 $v$,不要 critic。
-- **目标函数和 PPO 同构**:裁剪比值 $\rho_i$ 乘组优势,KL 直接加在损失上(而不是扣进奖励)。
-- **奖励用规则**:数学题比对答案、代码跑测试,不学奖励模型。
-- DeepSeek-R1 用规则奖励训练推理,AIME 2024 pass@1 从 15.6% 涨到 71.0%。
-- 和 PPO 的分工:PPO 有 critic(学出来的基线),GRPO 有组采样(经验基线);PPO 的 KL 扣进奖励,GRPO 的 KL 加在损失上。同一套 RL 目标,基线来源和 KL 放法不同。
+$$
+D_{i,t}
+=\frac{\pi_{\mathrm{ref}}(o_{i,t}\mid q,o_{i,<t})}
+{\pi_\theta(o_{i,t}\mid q,o_{i,<t})}
+-\ln\frac{\pi_{\mathrm{ref}}(o_{i,t}\mid q,o_{i,<t})}
+{\pi_\theta(o_{i,t}\mid q,o_{i,<t})}-1
+$$
+
+令 $x=\pi_{\mathrm{ref}}/\pi_\theta$,则 $D=x-\ln x-1\ge0$,因此目标中的 $-\beta D_{i,t}$ 始终是惩罚项。GRPO 先用原始回答奖励计算 $A_i$,再从策略目标中单独减 KL;KL 不进入组内奖励标准化。
+
+## 4. 四条 2-token 回答完整算一遍
+
+词表是 $\{a,b\}$,每条回答有两个 token。奖励规则为:回答 $(a,a)$ 得 1,其余回答得 0。对同一个 prompt 采到:
+
+$$
+o_1=(a,a),\quad o_2=(a,b),\quad o_3=(b,a),\quad o_4=(b,b)
+$$
+
+$$
+r=[1,0,0,0]
+$$
+
+### 4.1 组内优势
+
+平均奖励:
+
+$$
+\bar r=\frac{1+0+0+0}{4}=0.25
+$$
+
+标准差:
+
+$$
+\operatorname{std}(r)
+=\sqrt{\frac{(1-0.25)^2+3(0-0.25)^2}{4}}
+=0.433
+$$
+
+所以:
+
+$$
+A=[1.73,-0.58,-0.58,-0.58]
+$$
+
+$o_1$ 比同组平均好,它的两个 token 都使用 $A_1=1.73$;另外三条回答的 token 分别使用 $-0.58$。这些是每条采样轨迹对总梯度的贡献,共享 token 可能在不同轨迹中得到相反方向,最终由所有样本梯度相加决定。
+
+### 4.2 对正确回答逐 token 做 clip
+
+假设更新若干步后,$o_1=(a,a)$ 两个 token 的新旧策略比分别为:
+
+$$
+\rho_{1,1}=1.10,
+\qquad
+\rho_{1,2}=1.25
+$$
+
+取 $\epsilon=0.2$。第一个 token 没越界:
+
+$$
+\min(1.10\times1.73,1.10\times1.73)=1.903
+$$
+
+第二个 token 超过 $1.2$:
+
+$$
+\min(1.25\times1.73,1.20\times1.73)=2.076
+$$
+
+第二个 token 的当前概率比虽然是 $1.25$,裁剪目标只按 $1.20$ 计算;继续提高它不会再增加这一项的目标。
+
+### 4.3 再计算 KL 惩罚
+
+假设第一个 token 上,当前策略给已采样 $a$ 的概率是 $0.44$,参考策略给它 $0.40$。则:
+
+$$
+x=\frac{0.40}{0.44}=0.9091
+$$
+
+$$
+D_{1,1}=0.9091-\ln0.9091-1=0.0044
+$$
+
+若 $\beta=0.04$,从第一个 token 的目标项中减去:
+
+$$
+\beta D_{1,1}=0.04\times0.0044=0.00018
+$$
+
+因此这个 token 对目标的最终贡献约为:
+
+$$
+1.903-0.00018=1.90282
+$$
+
+其他 token 完全同样计算,最后按 token、回答和 batch 求平均,对 $\mathcal J_{\mathrm{GRPO}}$ 做梯度上升。
+
+## 5. 奖励从哪来
+
+GRPO 本身不规定奖励必须由什么产生。
+
+**DeepSeekMath** 使用训练出的奖励模型给回答打分。论文配置中每个问题采 $G=64$ 条回答,KL 系数 $\beta=0.04$。
+
+**DeepSeek-R1-Zero** 不使用神经奖励模型,而使用规则:
+
+- 正确性奖励:数学答案按指定格式提取后核对;代码题可编译并运行测试用例;
+- 格式奖励:检查推理过程是否放在指定标签中。
+
+R1-Zero 直接从基座模型开始 RL,没有预先做 SFT;其 AIME 2024 pass@1 在训练过程中从 15.6% 上升到 71.0%。DeepSeek-R1 则先加入冷启动 SFT,之后还包含多阶段 SFT 与 RL,不能把它的完整管线简化成一次 GRPO。
+
+## 6. 一轮 GRPO 的顺序
+
+1. 固定 $\pi_{\theta_{\mathrm{old}}}$;
+2. 对每个 prompt 采 $G$ 条回答;
+3. 奖励函数给每条回答打分;
+4. 组内标准化得到 $A_i$;
+5. 把 $A_i$ 复制给回答中的每个 token;
+6. 逐 token 计算 $\rho_{i,t}$、clip 和 $D_{i,t}$;
+7. 更新 $\pi_\theta$;
+8. 下一批采样前,再更新 $\pi_{\theta_{\mathrm{old}}}$。
+
+GRPO 与 PPO 的主要差别集中在第 4 步:PPO 用 critic 和 GAE 估优势,GRPO 用同一 prompt 下的一组回答直接算相对优势。
 `,
 }
+
 export default article

@@ -121,7 +121,7 @@ Description: {{ issue.description }}
 - \`Rework\` → address feedback
 \`\`\`
 
-Symphony 启动时读这个文件，\`workflow.ex\` 解析 YAML frontmatter 拿到配置，\`prompt_builder.ex\` 把 Issue 的标题、描述、标签等信息塞进模板生成最终 prompt，然后发给 Codex。
+Symphony 启动时读取这个文件，\`workflow.ex\` 解析 YAML frontmatter 获取配置，\`prompt_builder.ex\` 将 Issue 的标题、描述和标签等信息填入模板,生成最终 prompt 后发送给 Codex。
 
 改工作流就是改这个文件提 PR，跟改代码一个流程。这个思路跟 OKF 的 YAML frontmatter 异曲同工——都是把元数据和内容放在一起，人可读、Agent 也可读。
 
@@ -131,7 +131,7 @@ Symphony 启动时读这个文件，\`workflow.ex\` 解析 YAML frontmatter 拿�
 
 ![Symphony TUI](/discover/symphony_tui.png)
 
-不过这个 TUI 的信息量很有限——只能看到 Agent 跑在第几轮、花了多少 token，具体在干嘛完全不知道。Event 列显示的都是 \`item completed: reasoning\` 这类模糊状态，你想知道它卡在哪一步、在读哪个文件、写了什么代码，统统看不到。仪表盘也是同样的问题，只有宏观状态没有微观进度。对于调试来说体验不太好。
+不过这个 TUI 提供的信息有限：它只显示 Agent 当前轮次和 token 用量。Event 列主要是 \`item completed: reasoning\` 等概括状态，不显示当前步骤、正在读取的文件或具体代码改动。仪表盘同样只有整体状态，没有细粒度进度，因此不便于定位执行问题。
 
 架构是这样的：
 
@@ -151,11 +151,11 @@ mimo2codex 协议代理 (:8788)
 DeepSeek V4 Flash (deepseek-v4-flash)
 \`\`\`
 
-为什么要加 mimo2codex？因为 Codex CLI 0.142.2 只支持 OpenAI 的 **Responses API**，而 DeepSeek 只提供 **Chat Completions API**，两边对不上。mimo2codex 就是个本地协议翻译器——把 Codex 的请求拆成 Chat Completions 的 messages 数组，再把 DeepSeek 的响应包装回 Responses API 格式。
+需要增加 mimo2codex,因为 Codex CLI 0.142.2 只支持 OpenAI 的 **Responses API**,而 DeepSeek 只提供 **Chat Completions API**,两者协议不兼容。mimo2codex 是本地协议转换器:它把 Codex 请求转换为 Chat Completions 的 messages 数组,再把 DeepSeek 响应转换回 Responses API 格式。
 
-### 踩坑记录
+### 实现中遇到的问题
 
-Symphony 本身跑起来不难，难的是它依赖的那一串工具链：
+Symphony 本身可以正常启动,主要问题来自下游工具链的配置:
 
 \`\`\`bash
 # 1. bwrap 沙箱权限 —— Ubuntu 24.04 默认禁了用户命名空间
@@ -171,45 +171,45 @@ gh auth setup-git
 
 ### 实测：两轮 Issue
 
-一共跑了两个 Issue，过程挺折腾的。
+测试共运行两个 Issue。
 
 **Round 1 — SHA-5: 多语言实现 two-sum**
 
-先跑个最简单的验证 Symphony 能不能正常 pick Issue 和调度 Codex。在 Linear 上创建 Issue 后 Symphony 确实 pick 了，Workspace 创建了，Codex 也启动了，调度链路是通的。实际代码是手动提交的，但这轮本来的目的就是测链路，不是测 Codex 写代码。
+第一轮用于验证 Symphony 能否读取 Issue 并调度 Codex。在 Linear 创建 Issue 后,Symphony 读取了任务、创建 Workspace 并启动 Codex,说明调度链路可以运行。实际代码由人工提交,因为本轮只验证调度链路,不评估 Codex 的编码能力。
 
 **Round 2 — SHA-6: 添加 GitHub Actions CI**
 
-想测点更实用的——给仓库加 CI。Issue 内容是创建 GitHub Actions 工作流 + Makefile，让所有语言的测试能一条命令运行。
+第二轮用于给仓库增加 CI。Issue 要求创建 GitHub Actions 工作流和 Makefile,使所有语言的测试可以通过一条命令运行。
 
-但这轮就没那么顺利了：
+本轮遇到一个沙箱权限问题:
 
 第一次跑 Codex 把 CI 文件和 Makefile 都创建好了，但 git commit 时报错：
 \`\`\`
 fatal: Unable to create '.git/index.lock': Read-only file system
 \`\`\`
 
-查了一下是 Codex 的 app-server 模式把 .git 目录设成了只读，Symphony 生成的默认 sandbox 策略没覆盖这个限制。折腾了一轮改了 WORKFLOW.md 里的 \`turn_sandbox_policy\` 配置才解决。
+原因是 Codex 的 app-server 模式把 .git 目录设为只读,而 Symphony 生成的默认 sandbox 策略没有覆盖这一限制。修改 WORKFLOW.md 中的 \`turn_sandbox_policy\` 后问题解决。
 
-重启后第二次跑总算走通了——commit、push、建 PR 一气呵成。但 WORKFLOW.md 要求 CI 通过了才能移到 Human Review，Codex 只能一遍遍轮询 GitHub Actions 的状态，白白烧了 500 万 token。
+重启后第二次运行完成了 commit、push 和 PR 创建。但 WORKFLOW.md 要求 CI 通过后才能进入 Human Review,Codex 因而持续轮询 GitHub Actions 状态,该过程消耗约 500 万 token。
 
 最终 PR：https://github.com/xilon-my/symphony-test/pull/1
 
 ![Linear Issue](/discover/linear.png)
 
-两轮跑下来的结论：Symphony 的设计很清晰，但真实环境里工程细节才是真正的耗时点。光一个 sandbox 权限就折腾了两轮。
+两轮测试表明,Symphony 的调度流程能够运行,但实际接入时间主要花在沙箱权限、认证和协议兼容等工程配置上。上述 sandbox 权限问题需要第二轮运行才解决。
 
 ## Symphony 适合什么
 
 最适合**高信任度、小粒度、无外部依赖的任务**：
 
-- ✅ 批量 Bug 修复（相互独立，互不阻塞）
-- ✅ 文档生成 / 翻译
-- ✅ 单功能实现（像 two-sum 这种）
-- ❌ 跨多模块的复杂功能（没有 DAG 编排，Issue 之间没有依赖管理）
-- ❌ 需求模糊的任务（没有意图提取层，需要人来拆解）
+- **适合**:批量修复相互独立的 Bug
+- **适合**:文档生成或翻译
+- **适合**:two-sum 这类单一功能实现
+- **不适合**:跨多个模块且存在任务依赖的复杂功能,因为没有 DAG 编排和 Issue 依赖管理
+- **不适合**:需求尚未明确的任务,因为没有意图提取层,需要人先拆解
 
-Elixir 参考实现还带了一个 Phoenix LiveView 仪表盘，启动后访问 \`localhost:4000\` 就能实时看到每个 Issue 的状态。如果把 Symphony 和 Multica 放在一起看就很清晰了——Multica 做"理解与规划"（把需求拆成任务），Symphony 做"执行与编排"（调度 Agent 逐个执行），两个合起来才接近完整的自主开发流程。`,
-  takeaway: 'Symphony 本质上就是个调度器——它不写代码，但它让 Agent 自己写代码。真正的门槛不在 Symphony 本身，而在下游工具链的兼容性：Codex 协议、bwrap 沙箱、git 认证，这些工程基础设施的问题比 Agent 架构的问题更难缠。如果你也在搭类似的东西，先把工具链跑通再谈编排。',
+Elixir 参考实现还包含一个 Phoenix LiveView 仪表盘,启动后访问 \`localhost:4000\` 可以查看每个 Issue 的实时状态。Multica 负责理解与规划,把需求拆成任务;Symphony 负责执行与编排,调度 Agent 逐项处理。两者覆盖自主开发流程中的不同阶段。`,
+  takeaway: 'Symphony 是一个调度器,负责读取 Issue、创建 Workspace 并调用 Agent,自身不编写代码。实际接入中的主要工作来自下游工具链的兼容性,包括 Codex 协议、bwrap 沙箱和 git 认证。因此,在配置编排流程前需要先验证这些基础设施。',
 }
 
 export default project

@@ -19,11 +19,22 @@
   border-radius: 50%;
 }
 
+.term-dot-close { background: var(--red); }
+.term-dot-minimize { background: var(--yellow); }
+.term-dot-expand { background: var(--green); }
+
 .term-title {
   margin-left: auto;
   font-size: 0.75rem;
   color: var(--text-secondary);
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: right;
 }
+
+.term-title-short { display: none; }
 
 .term-body {
   background: var(--bg);
@@ -58,4 +69,10 @@
   .term-bar { padding: 8px 12px; }
   .term-dot { width: 10px; height: 10px; }
   .term-title { font-size: 0.65rem; }
+  .term-title-long { display: none; }
+  .term-title-short { display: inline; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typewriter { animation: none; width: auto; }
 }

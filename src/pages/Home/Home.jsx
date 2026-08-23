@@ -6,27 +6,39 @@ import articles from '../Blog/articles.js'
 import './Home.css'
 
 const taglines = [
-  'six-dimensional force sensors',
-  'CLI agents & LLMs',
-  'half marathon runner (1:56:08)',
-  'open source & building things',
+  'six-dimensional force sensing',
+  'agents for real software systems',
+  'small on-device models that call tools',
+  'reinforcement learning from first principles',
 ]
+
+const activities = [
+  ...projects.map(project => ({ ...project, kind: 'project' })),
+  ...articles.map(article => ({ ...article, kind: 'post' })),
+].sort((a, b) => b.date.localeCompare(a.date))
 
 export default function Home() {
   const [tagIndex, setTagIndex] = useState(0)
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTagIndex(i => (i + 1) % taglines.length)
-    }, 3000)
-    return () => clearInterval(timer)
-  }, [])
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let timer
+    const updateRotation = () => {
+      clearInterval(timer)
+      if (!media.matches) {
+        timer = setInterval(() => {
+          setTagIndex(i => (i + 1) % taglines.length)
+        }, 3000)
+      }
+    }
 
-  // ── activity timeline aggregates discover projects + blog posts ──
-  const activities = [
-    ...projects.map(p => ({ ...p, to: `/discover/${p.slug}`, kind: 'project' })),
-    ...articles.map(a => ({ ...a, to: `/blog/${a.slug}`, kind: 'post' })),
-  ].sort((a, b) => b.date.localeCompare(a.date))
+    updateRotation()
+    media.addEventListener?.('change', updateRotation)
+    return () => {
+      clearInterval(timer)
+      media.removeEventListener?.('change', updateRotation)
+    }
+  }, [])
 
   return (
     <div className="home">
@@ -43,8 +55,11 @@ export default function Home() {
               M.S. in Electronic Information @ Tsinghua University · B.S. @ Xiamen University
             </p>
             <div className="rotating-tags">
-              <span className="prompt-sign">❯</span> Currently into{' '}
-              <span className="tag-rotator">{taglines[tagIndex]}</span>
+              <span className="prompt-sign">❯</span>
+              <span className="focus-copy">
+                <span className="focus-label">Currently working on</span>
+                <span className="tag-rotator">{taglines[tagIndex]}</span>
+              </span>
             </div>
           </div>
 
@@ -76,7 +91,6 @@ export default function Home() {
             </div>
           </div>
 
-          {/* ─── Activity Timeline ─── */}
           <div className="term-divider">
             <ActivityMap items={activities} />
           </div>

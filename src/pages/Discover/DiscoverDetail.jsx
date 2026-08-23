@@ -1,43 +1,72 @@
-import { useParams, Link } from 'react-router-dom'
-import Markdown from 'react-markdown'
-import remarkGfm from 'remark-gfm'
-import remarkMath from 'remark-math'
-import rehypeKatex from 'rehype-katex'
-import 'katex/dist/katex.min.css'
-import hljs from 'highlight.js'
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom'
 import Terminal from '../../components/Terminal.jsx'
+import MarkdownContent, { ContentImage, ContentToc, extractHeadings } from '../../components/MarkdownContent.jsx'
 import projects from './projects.js'
 import './Discover.css'
 
-function CodeBlock({ className, children }) {
-  const lang = className?.replace('language-', '') || ''
-  const code = String(children).replace(/\n$/, '')
+const projectLoaders = import.meta.glob('./projects/*.js')
+const projectFiles = { pi: 'pi-agent' }
 
-  if (lang === 'markdown') {
-    const fm = code.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/)
-    if (fm) {
-      const yamlHtml = hljs.highlight(fm[1], { language: 'yaml' }).value
-      const mdHtml = hljs.highlight(fm[2], { language: 'markdown' }).value
-      return <code className={className} dangerouslySetInnerHTML={{
-        __html: `---\n${yamlHtml}\n---\n\n${mdHtml}`
-      }} />
-    }
-  }
-
-  if (lang && hljs.getLanguage(lang)) {
-    return <code className={className} dangerouslySetInnerHTML={{
-      __html: hljs.highlight(code, { language: lang }).value
-    }} />
-  }
-
-  return <code className={className}>{children}</code>
+function LoadingProject({ slug }) {
+  return (
+    <div className="discover-page">
+      <div className="container detail-container">
+        <Terminal title="shannon@shannon.zone ~/discover %" showFooter={false}>
+          <p className="discover-prompt" role="status">
+            <span className="prompt-cv">❯</span> cat projects-i-like/{slug}.md
+          </p>
+          <div className="detail-loading" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+          </div>
+        </Terminal>
+      </div>
+    </div>
+  )
 }
 
 export default function DiscoverDetail() {
   const { slug } = useParams()
-  const project = projects.find(p => p.slug === slug)
+  const location = useLocation()
+  const navigate = useNavigate()
+  const projectMeta = projects.find(project => project.slug === slug)
+  const [loadedProject, setLoadedProject] = useState(null)
+  const [loadError, setLoadError] = useState(false)
+  const project = loadedProject?.slug === slug ? loadedProject.data : null
+  const headings = useMemo(() => project?.detail ? extractHeadings(project.detail) : [], [project])
+  const returnToDiscover = event => {
+    if (!location.state?.fromDiscover || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+    event.preventDefault()
+    navigate(-1)
+  }
 
-  if (!project) {
+  useEffect(() => {
+    if (!projectMeta) return
+    let active = true
+    const file = projectFiles[slug] || slug
+    const loader = projectLoaders[`./projects/${file}.js`]
+    setLoadedProject(null)
+    setLoadError(false)
+
+    if (!loader) {
+      setLoadError(true)
+      return
+    }
+
+    loader()
+      .then(module => { if (active) setLoadedProject({ slug, data: module.default }) })
+      .catch(() => { if (active) setLoadError(true) })
+
+    return () => { active = false }
+  }, [slug, projectMeta])
+
+  useEffect(() => {
+    if (project) window.dispatchEvent(new Event('route-content-ready'))
+  }, [project])
+
+  if (!projectMeta || loadError) {
     return (
       <div className="discover-page">
         <div className="container">
@@ -48,7 +77,7 @@ export default function DiscoverDetail() {
               </p>
               <p style={{ color: 'var(--red)' }}>project not found: {slug}</p>
               <p style={{ marginTop: 16 }}>
-                <Link to="/discover" className="discover-back-link">← back to list</Link>
+                <Link to="/discover" onClick={returnToDiscover} className="discover-back-link">← back to list</Link>
               </p>
             </div>
           </Terminal>
@@ -57,25 +86,36 @@ export default function DiscoverDetail() {
     )
   }
 
+  if (!project) return <LoadingProject slug={slug} />
+
   return (
     <div className="discover-page">
-      <div className="container">
-        <Terminal title="shannon@shannon.zone ~/discover %">
-          {/* ── Back link ── */}
-          <Link to="/discover" className="discover-detail-back">← cd ..</Link>
+      <div className={`container detail-container${headings.length >= 2 ? ' has-outline' : ''}`}>
+        {headings.length >= 2 && (
+          <aside className="detail-outline" aria-label="文章目录">
+            <div className="detail-outline-rail">
+              <ContentToc headings={headings} variant="rail" />
+            </div>
+            <div className="detail-outline-inline">
+              <ContentToc headings={headings} />
+            </div>
+          </aside>
+        )}
 
-          {/* ── Header ── */}
+        <div className="detail-terminal-column">
+          <Terminal title="shannon@shannon.zone ~/discover %">
+          <Link to="/discover" onClick={returnToDiscover} className="discover-detail-back">← cd ..</Link>
+
           <div className="discover-detail-header">
             <p className="discover-prompt">
               <span className="prompt-cv">❯</span> cat projects-i-like/{project.slug}.md
             </p>
           </div>
 
-          {/* ── Project meta ── */}
           <div className="discover-detail-meta">
-            <h1 className="discover-detail-name">{project.name}</h1>
+            <h1 className="discover-detail-name" tabIndex="-1">{project.name}</h1>
             <div className="discover-card-tags" style={{ marginTop: 8 }}>
-              {project.tags.map(t => <span key={t}>{t}</span>)}
+              {project.tags.map(tag => <span key={tag}>{tag}</span>)}
             </div>
             <div className="discover-detail-info">
               {project.date && <span><span className="detail-label">date</span> {project.date}</span>}
@@ -84,36 +124,27 @@ export default function DiscoverDetail() {
             </div>
           </div>
 
-          {/* ── Project link ── */}
           <div className="discover-detail-links">
-            <a
-              href={project.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="discover-detail-gh-link"
-            >
-              <span className="prompt-cv">❯</span> {project.url.startsWith('https://github.com/') ? 'github.com/' + project.url.replace('https://github.com/', '') : project.url}
-              <span className="discover-card-arrow"> ↗</span>
-            </a>
-            {project.url2 && (
+            {[project.url, project.url2].filter(Boolean).map(url => (
               <a
-                href={project.url2}
+                key={url}
+                href={url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="discover-detail-gh-link"
               >
-                <span className="prompt-cv">❯</span> {project.url2.startsWith('https://github.com/') ? 'github.com/' + project.url2.replace('https://github.com/', '') : project.url2}
-                <span className="discover-card-arrow"> ↗</span>
+                <span className="prompt-cv">❯</span>{' '}
+                {url.startsWith('https://github.com/') ? `github.com/${url.replace('https://github.com/', '')}` : url}
+                <span className="discover-card-arrow" aria-hidden="true"> ↗</span>
               </a>
-            )}
+            ))}
           </div>
 
-          {/* ── Description ── */}
           <div className="discover-detail-body">
             <p className="discover-detail-desc">{project.description}</p>
 
             <div className="discover-detail-content">
-              <Markdown remarkPlugins={[remarkGfm, remarkMath]} rehypePlugins={[rehypeKatex]} components={{ code: CodeBlock }}>{project.detail}</Markdown>
+              <MarkdownContent source={project.detail} />
             </div>
 
             {project.takeaway && (
@@ -125,15 +156,20 @@ export default function DiscoverDetail() {
               </div>
             )}
 
-            {project.images && project.images.length > 0 && (
+            {project.images?.length > 0 && (
               <div className="discover-detail-images">
-                {project.images.map((img, i) => (
-                  <img key={i} src={img} alt={`${project.name} screenshot ${i + 1}`} className="discover-detail-img" loading="lazy" />
+                {project.images.map((src, index) => (
+                  <ContentImage key={src} src={src} alt={`${project.name} screenshot ${index + 1}`} className="discover-detail-img" />
                 ))}
               </div>
             )}
           </div>
-        </Terminal>
+
+          <nav className="article-end-nav discover-end-nav" aria-label="项目导航">
+            <Link to="/discover" onClick={returnToDiscover} className="article-end-back">← cd ..</Link>
+          </nav>
+          </Terminal>
+        </div>
       </div>
     </div>
   )

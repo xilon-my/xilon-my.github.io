@@ -10,9 +10,9 @@ const links = [
 
 export default function Nav({ theme, onToggleTheme }) {
   return (
-    <nav>
+    <nav className="site-nav" aria-label="主要导航">
       <div className="container">
-        <NavLink to="/" className="logo">shannon</NavLink>
+        <NavLink to="/" className="logo" aria-label="Shannon 首页">shannon</NavLink>
         <div className="nav-right">
           <ul>
             {links.map(l => (
@@ -24,7 +24,12 @@ export default function Nav({ theme, onToggleTheme }) {
             ))}
           </ul>
           <span className="nav-sep">|</span>
-          <button className="theme-toggle" onClick={onToggleTheme} title="Toggle theme">
+          <button
+            className="theme-toggle"
+            onClick={onToggleTheme}
+            title={`切换到${theme === 'dark' ? '浅色' : '深色'}主题`}
+            aria-label={`切换到${theme === 'dark' ? '浅色' : '深色'}主题`}
+          >
             [{theme === 'dark' ? 'light' : 'dark'}]
           </button>
         </div>

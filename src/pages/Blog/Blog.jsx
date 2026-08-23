@@ -28,6 +28,7 @@ export default function BlogPage() {
     <div className="blog-page">
       <div className="container">
         <Terminal title="shannon@shannon.zone ~/blog %">
+          <h1 className="sr-only" tabIndex="-1">Blog</h1>
           <div className="blog-header">
             <p className="blog-prompt">
               <span className="prompt-cv">❯</span> <span className="typewriter">ls</span>

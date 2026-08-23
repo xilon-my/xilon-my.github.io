@@ -8,7 +8,7 @@ export default function BlogList({ entries }) {
     return (
       <div className="blog-empty">
         <div className="icon">&#128221;</div>
-        <h3>Coming soon</h3>
+        <h2>Coming soon</h2>
         <p>No posts yet here.</p>
       </div>
     )
@@ -17,7 +17,12 @@ export default function BlogList({ entries }) {
   return (
     <div className="blog-ls">
       {entries.map(e => (
-        <Link key={e.kind === 'dir' ? e.name : e.slug} to={e.to} className="blog-ls-row">
+        <Link
+          key={e.kind === 'dir' ? e.name : e.slug}
+          id={`blog-entry-${e.kind === 'dir' ? e.name : e.slug}`}
+          to={e.to}
+          className="blog-ls-row"
+        >
           <div className="blog-ls-line">
             <span className={`blog-ls-name${e.kind === 'dir' ? ' dir' : ''}`}>
               {e.kind === 'dir' ? `${e.name}/` : e.title}

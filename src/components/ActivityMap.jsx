@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import './ActivityMap.css'
 
 const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
@@ -13,6 +12,8 @@ const fmtDate = d => {
 export default function ActivityMap({ items }) {
   const [hovered, setHovered] = useState(null)
 
+  if (items.length === 0) return null
+
   // ── bucket by day (skip invalid dates — JS would silently roll them over) ──
   const byDay = {}
   items.forEach(p => {
@@ -24,7 +25,6 @@ export default function ActivityMap({ items }) {
   const days = Object.keys(byDay).sort()
   const first = days[0]
   const last = days[days.length - 1]
-  const busiest = days.reduce((a, b) => (byDay[b].length > byDay[a].length ? b : a), days[0])
 
   // ── scoped day range (first activity → last activity, no blank wall) ──
   const dayRange = []
@@ -46,13 +46,14 @@ export default function ActivityMap({ items }) {
   const activeTags = [...new Set(items.flatMap(p => p.tags))]
 
   return (
-    <div className="activity-map">
-      <p className="discover-prompt activity-command">
+    <section className="activity-map" aria-labelledby="activity-heading">
+      <h2 id="activity-heading" className="discover-prompt activity-command">
         <span className="prompt-cv">❯</span>
-        <span className="activity-cmd">activity --timeline</span>
-      </p>
+        <span className="activity-cmd">activity</span>
+      </h2>
+      <p className="sr-only">{stats}</p>
 
-      <div className="activity-timeline">
+      <div className="activity-timeline" aria-hidden="true">
         <div className="activity-cols">
           {dayRange.map(date => {
             const arts = byDay[date]
@@ -60,16 +61,13 @@ export default function ActivityMap({ items }) {
             return (
               <div key={date} className="activity-day">
                 {sorted && sorted.map(a => (
-                  <Link
+                  <span
                     key={a.slug}
-                    to={a.to}
                     className="activity-dot"
                     style={{ background: `var(--tag-${tagKey(a.tags[0])}, var(--accent-dark))` }}
-                    aria-label={`${a.name} · ${fmtDate(a.date.slice(0, 10))} · ${a.tags[0]}`}
+                    aria-hidden="true"
                     onMouseEnter={() => setHovered(a)}
                     onMouseLeave={() => setHovered(null)}
-                    onFocus={() => setHovered(a)}
-                    onBlur={() => setHovered(null)}
                   />
                 ))}
               </div>
@@ -89,7 +87,7 @@ export default function ActivityMap({ items }) {
         </div>
       </div>
 
-      <div className="activity-legend">
+      <div className="activity-legend" aria-hidden="true">
         {activeTags.map(t => (
           <span key={t} className="activity-legend-tag">
             <span className="activity-legend-swatch" style={{ background: `var(--tag-${tagKey(t)}, var(--accent-dark))` }} />
@@ -98,7 +96,8 @@ export default function ActivityMap({ items }) {
         ))}
       </div>
 
-      <p className="activity-readout">{readout}</p>
-    </div>
+      <p className="activity-readout" aria-hidden="true">{readout}</p>
+
+    </section>
   )
 }

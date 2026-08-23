@@ -78,10 +78,17 @@
 .company-line {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 6px;
+  min-width: 0;
   color: var(--accent);
   font-weight: 500;
   font-size: 0.95rem;
+}
+
+.company-line span {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .exp-desc {
@@ -106,4 +113,9 @@
   .exp-desc { font-size: 0.82rem; }
   .school-logo { width: 28px; height: 28px; }
   .company-line { font-size: 0.85rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .timeline-item::before { animation: none; }
+  .fade-item { opacity: 1; transform: none; }
 }

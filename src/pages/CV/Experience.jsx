@@ -62,8 +62,8 @@ export default function Experience() {
             <h3>
               <span className="title-line">{j.title}</span>
               <span className="company-line">
-                {j.logo && <img src={j.logo} alt="" className="school-logo" />}
-                @ {j.company}
+                {j.logo && <img src={j.logo} alt="" className="school-logo" width="32" height="32" decoding="async" />}
+                <span>@ {j.company}</span>
               </span>
             </h3>
             <p className="exp-desc">{j.description}</p>

@@ -125,7 +125,7 @@ MCP 最早是 Anthropic 在 2024 年 11 月开源的。初期只有简单的工�
 
 在旧版 MCP 里，客户端和服务端要先走一个 initialize 握手建立 session，之后所有请求都绑定在 session 上。服务端需要记住每个连接的 state，路由需要有 sticky session，Server 没法部署在无状态环境上。
 
-这对运行在服务器上的单体应用来说没问题，但 Agent 工具不只跑在服务器上。你想让 MCP server 跑在 AWS Lambda 或 Cloudflare Workers 上——它们按请求计费、不维护持久连接——就不行。而且 session 本身成了藏状态的地方，开发者经常把不该放传输层的东西塞进去，出了问题还不好查。
+这对运行在服务器上的单体应用影响不大，但 Agent 工具还可能运行在 AWS Lambda 或 Cloudflare Workers 等按请求计费、不维护持久连接的环境中，此时 session 会限制部署方式。session 也容易承载原本不属于传输层的状态，增加问题定位难度。
 
 ### 改成什么样
 

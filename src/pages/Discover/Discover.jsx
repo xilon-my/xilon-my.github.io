@@ -1,18 +1,26 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import Terminal from '../../components/Terminal.jsx'
 import projects from './projects.js'
 import './Discover.css'
 
 export default function Discover() {
-  const [activeTag, setActiveTag] = useState(null)
+  const [searchParams, setSearchParams] = useSearchParams()
   const allTags = [...new Set(projects.flatMap(p => p.tags))].sort()
+  const requestedTag = searchParams.get('tag')
+  const activeTag = allTags.includes(requestedTag) ? requestedTag : null
   const filtered = activeTag ? projects.filter(p => p.tags.includes(activeTag)) : projects
+  const selectTag = tag => {
+    const next = new URLSearchParams(searchParams)
+    if (tag) next.set('tag', tag)
+    else next.delete('tag')
+    setSearchParams(next, { replace: true })
+  }
 
   return (
     <div className="discover-page">
       <div className="container">
         <Terminal title="shannon@shannon.zone ~/discover %">
+          <h1 className="sr-only" tabIndex="-1">Discover</h1>
           <div className="discover-header">
             <p className="discover-prompt">
               <span className="prompt-cv">❯</span> <span className="typewriter">cat projects-i-like.md</span>
@@ -23,23 +31,30 @@ export default function Discover() {
             <div className="discover-tag-filter">
               <p className="discover-prompt">
                 <span className="prompt-cv">❯</span>
-                <span className="filter-cmd">cat projects-i-like.md</span>
-                {activeTag && <span className="filter-pipe">|</span>}
-                {activeTag && <span className="filter-grep">grep</span>}
-                <span className={`filter-tag ${activeTag === null ? 'active' : ''}`} onClick={() => setActiveTag(null)}>
+                <span className="filter-cmd">filter --tag</span>
+              </p>
+              <div className="filter-options" role="group" aria-label="按标签筛选项目">
+                <button
+                  type="button"
+                  className={`filter-tag ${activeTag === null ? 'active' : ''}`}
+                  onClick={() => selectTag(null)}
+                  aria-pressed={activeTag === null}
+                >
                   --all
-                </span>
+                </button>
                 {allTags.map(t => (
-                  <span
+                  <button
+                    type="button"
                     key={t}
                     className={`filter-tag ${activeTag === t ? 'active' : ''}`}
-                    onClick={() => setActiveTag(t)}
+                    onClick={() => selectTag(t)}
+                    aria-pressed={activeTag === t}
                   >
                     --{t.toLowerCase()}
-                  </span>
+                  </button>
                 ))}
-              </p>
-              <p className="discover-count">{filtered.length} items</p>
+              </div>
+              <p className="discover-count" aria-live="polite">{filtered.length} items</p>
             </div>
           </div>
 
@@ -50,7 +65,13 @@ export default function Discover() {
           ) : (
             <div className="discover-list" key={activeTag || 'all'}>
               {filtered.map(p => (
-                <Link key={p.slug} to={`/discover/${p.slug}`} className="discover-row">
+                <Link
+                  key={p.slug}
+                  id={`discover-entry-${p.slug}`}
+                  to={`/discover/${p.slug}`}
+                  state={{ fromDiscover: true }}
+                  className="discover-row"
+                >
                   <div className="discover-row-line">
                     <span className="discover-row-index">❯ {String(projects.indexOf(p) + 1).padStart(2, '0')}</span>
                     <span className="discover-row-name">{p.name}</span>

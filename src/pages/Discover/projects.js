@@ -1,14 +1,15 @@
-import multica from './projects/multica.js'
-import symphony from './projects/symphony.js'
-import okf from './projects/okf.js'
-import openaiAgentsPython from './projects/openai-agents-python.js'
-import pi from './projects/pi-agent.js'
-import superpowersOpenspec from './projects/superpowers-openspec.js'
-import langgraph from './projects/langgraph.js'
-import findingCodeToChange from './projects/finding-code-to-change.js'
-import mineru from './projects/mineru.js'
-import llamaCpp from './projects/llama-cpp.js'
-
-const projects = [multica, symphony, okf, openaiAgentsPython, pi, superpowersOpenspec, langgraph, findingCodeToChange, mineru, llamaCpp].sort((a, b) => b.date.localeCompare(a.date))
+// Lightweight metadata only. Project bodies are loaded on demand by DiscoverDetail.
+const projects = [
+  { slug: 'llama-cpp', date: '2026-08-18 16:31', name: 'llama.cpp: A 7B Model on a 4GB Raspberry Pi', description: 'llama.cpp 是一个 C/C++ 本地推理库,可以把 7B 模型量化到约 4.5GB,并在笔记本、树莓派和手机等设备上运行。本文说明量化、GGUF、KV cache、内存带宽限制、CPU/GPU 分工以及同类工具的适用场景。', tags: ['Inference'], url: 'https://github.com/ggml-org/llama.cpp', url2: 'https://github.com/ggml-org/ggml', stars: '124k+', author: 'Shannon' },
+  { slug: 'mineru', date: '2026-08-17 16:20', name: 'MinerU: Inside the PDF-to-Markdown Pipeline', description: 'MinerU 通过八道工序把 PDF 转换为 Markdown,OCR 只是其中一道。本文先区分数字生成的 PDF 和扫描件,再说明版面检测、公式识别、表格重建与阅读顺序。OCR 由检测和识别两步组成,引擎采用 PaddleOCR 的 PyTorch 移植版。最后比较 Marker、Docling、PaddleOCR、PyMuPDF、Nougat、Zerox 与云服务的适用场景。', tags: ['RAG'], url: 'https://github.com/opendatalab/MinerU', url2: 'https://github.com/opendatalab/PDF-Extract-Kit', stars: '77.8k', author: 'Shannon' },
+  { slug: 'superpowers-openspec', date: '2026-08-14 16:30', name: 'Superpowers + OpenSpec', description: 'Superpowers 为 AI 编程代理提供结构化工程流程,OpenSpec 提供 spec 驱动的行为契约。本文按契约、隔离、拆解、验证和上线五个阶段,说明两者在存量系统中的分工与边界。', tags: ['agent'], url: 'https://github.com/obra/superpowers', url2: 'https://github.com/Fission-AI/OpenSpec', stars: '237k+ / 56k+', author: 'Obra (Prime Radiant) / Fission AI' },
+  { slug: 'finding-code-to-change', date: '2026-08-13 14:00', name: 'Finding the Code to Change: From Grep to Agentic RAG in a Large Codebase', description: '本文以修改支付重试逻辑为例,说明编码 Agent 如何在大型存量代码仓中定位待修改代码。检索分为三层:词法检索用 grep 查找名称,结构检索用调用图查找关系,语义检索用嵌入匹配意图。最后使用 OpenAI Agents SDK 实现一个按成本依次调用三层检索的 Agent。', tags: ['RAG'], url: 'https://github.com/xilon-my/agentic-code-rag', author: 'Shannon' },
+  { slug: 'langgraph', date: '2026-07-31 20:30', name: 'LangGraph', description: '用图定义 Agent 行为的框架。节点就是函数，边就是逻辑，编译后是确定性的执行拓扑——不是"建议"Agent 怎么走，是它只能这么走。', tags: ['agent'], url: 'https://github.com/langchain-ai/langgraph', stars: '60k+', author: 'LangChain' },
+  { slug: 'multica', date: '2026-07-30 11:30', name: 'Multica', description: '一个开源的多智能体管理平台,用于向 AI 编程代理分配 Issue,并记录代理的代码修改、阻塞状态和执行进度。', tags: ['agent'], url: 'https://github.com/multica-ai/multica', stars: '42k+', author: 'multica-ai' },
+  { slug: 'pi', date: '2026-07-29 10:08', name: 'Pi Agent Harness', description: '一个保持较小核心功能集的 AI Agent 工具包，提供统一的多供应商 LLM 接口、带差分渲染的 TUI、可扩展的 Agent 运行时和编码 Agent CLI。', tags: ['agent'], url: 'https://github.com/earendil-works/pi', stars: '79.5k+', author: 'earendil-works' },
+  { slug: 'openai-agents-python', date: '2026-07-29 00:21', name: 'OpenAI Agents SDK', description: 'OpenAI 官方发布的 Python SDK，用于构建多智能体工作流。支持 100+ 大语言模型，提供 Agent 编排、沙箱、护栏、追踪等基础设施。', tags: ['agent'], url: 'https://github.com/openai/openai-agents-python', stars: '28k+', author: 'OpenAI' },
+  { slug: 'symphony', date: '2026-07-27 20:42', name: 'Symphony', description: 'OpenAI 的自主编码自动化参考实现。监控 Linear 面板，自动派发 AI 代理实现任务，要求提供工作量证明后才能合入代码。', tags: ['agent'], url: 'https://github.com/openai/symphony', stars: '26k+', author: 'OpenAI' },
+  { slug: 'okf', date: '2026-07-27 16:24', name: 'Open Knowledge Format (OKF)', description: '开放知识格式，用 Markdown 文件加 YAML 前置元数据来表示知识。设计为人可读、AI 代理也可消费。', tags: ['RAG'], url: 'https://github.com/GoogleCloudPlatform/knowledge-catalog', stars: '7.8k+', author: 'Google Cloud' },
+].sort((a, b) => b.date.localeCompare(a.date))
 
 export default projects

@@ -8,15 +8,15 @@ const project = {
   stars: '28k+',
   author: 'OpenAI',
   detail:
-`编码助手越来越强，但它们是产品，不是基础设施。如果你想自己搭一个 Agent 系统——不是聊天机器人，是真的能调用工具、读写文件、跑代码的那种——你能用什么？
+`编码助手通常以完整产品形式提供。如果要自行构建能够调用工具、读写文件和运行代码的 Agent 系统，则需要选择更底层的 SDK 或框架。
 
-OpenAI Agents SDK 就是 OpenAI 给的答案。
+OpenAI Agents SDK 提供了这一层能力。
 
-它跟 Pi 是一个赛道的，但思路完全不同。Pi 砍功能做扩展，这个 SDK 把你能想到的 Agent 基础设施都塞进去了——Agent 运行时、Tool calling、Handoff、Guardrails、Session、Tracing、沙箱，还包括语音。
+它与 Pi 的定位相近,但设计方向不同。Pi 保留较小的核心并依赖扩展,OpenAI Agents SDK 则内置 Agent 运行时、Tool calling、Handoff、Guardrails、Session、Tracing、沙箱和语音等基础设施。
 
 ## 跟 Claude Code 和 Codex 不是一回事
 
-首先要搞清楚定位。Claude Code 和 Codex 是**终端产品**——你装好就能直接对话，帮你写代码。OpenAI Agents SDK 是**框架**——你拿它搭自己的 Agent 系统。
+Claude Code 和 Codex 是可以直接使用的**终端产品**,OpenAI Agents SDK 则是用于构建 Agent 系统的**框架**。
 
 ## 核心概念的用法
 
@@ -48,7 +48,7 @@ agent = Agent(
 )
 \`\`\`
 
-一个 Agent 搞不定的可以用 Handoff 转交给专门的 Agent。还有 Guardrails 做输入输出校验、流式输出用 \`run_streamed()\` 逐步拿结果。每一样都是 function call，SDK 不预置任何"读文件"或"git commit"的工具——那是产品层的事情，框架只给你搭 tool 的能力。
+一个 Agent 无法完成的任务可以通过 Handoff 转交给专门的 Agent。Guardrails 用于输入输出校验,\`run_streamed()\` 用于流式返回结果。这些能力都以 function call 为基础。SDK 不预置读取文件或执行 git commit 的工具,这些属于产品层;框架只提供定义和调用 tool 的能力。
 
 ## 三种运行模式
 
@@ -78,11 +78,11 @@ Manifest(entries={
 })
 \`\`\`
 
-Agent 在工作区里跑完，可以用 **Snapshot** 把状态存下来（本地存 tar，远程可以存 S3、GCS、Azure Blob、R2），下次恢复回来原封不动。
+Agent 完成运行后,可以使用 **Snapshot** 保存工作区状态(本地存为 tar,远程可以存入 S3、GCS、Azure Blob 或 R2),供后续恢复。
 
 ## Realtime Agent：原生全双工语音
 
-这个值得一提。它用的是 OpenAI 的 **gpt-realtime-2.1**，走 WebSocket 长连接，原生理解音频输入输出。
+Realtime Agent 使用 OpenAI 的 **gpt-realtime-2.1**,通过 WebSocket 长连接处理音频输入输出。
 
 \`\`\`python
 from agents.realtime import RealtimeAgent, RealtimeRunner
@@ -101,20 +101,20 @@ session = await runner.run()
 
 字节跳动的豆包走的是同一个技术路线，4 月发布的 Seeduplex 也是原生全双工方案，现在豆包 App 的"打电话"功能里全量上线了，2025 年 6 月开放了 API。
 
-## 2026 年的 Agent 框架格局
+## 2026 年 Agent 框架的定位
 
-对当前框架们的位置大概有了个判断：
+这些框架可以按主要适用场景区分：
 
-- **OpenAI Agents SDK** —— 如果你用 OpenAI 模型，从零到能跑的 Agent 最快路径
-- **Pi** —— 极简 + 扩展驱动，适合想自己定制一切的人
-- **LangChain / LangGraph** —— 生态最大，状态机 + 持久化 + 时间旅行调试，生产最成熟
+- **OpenAI Agents SDK** —— 集成 OpenAI 模型并快速构建基础 Agent
+- **Pi** —— 小核心 + 扩展驱动,适合需要自行组合功能的场景
+- **LangChain / LangGraph** —— 提供状态机、持久化和时间旅行调试,相关集成较多
 - **Mastra** —— TypeScript 团队的一体化方案
-- **Pydantic AI** —— Python 类型安全最强，最轻量
+- **Pydantic AI** —— 侧重 Python 类型安全和较小的框架开销
 
-所有框架都能调用 tool 了，2026 年这已经不是区分点。真正拉开差距的是持久化执行、可观测性、人机协同。
+到 2026 年,tool calling 已经是常见能力。框架之间的主要差异在于持久化执行、可观测性和人机协同。
 
-OpenAI Agents SDK 在"从决定到第一个能跑的 Agent"这段路上是最短的。但你要搭的是一个完整的编码助手——要有 UI、有文件编辑、有 git 工作流——那 SDK 只给了你 40%，剩下 60% 是搭 UI、写 tool 和配流程。它不是 Codex，它是造 Codex 的积木。`,
-  takeaway: 'OpenAI Agents SDK 是 OpenAI 在"Agent 基础设施"层的布局。它不是 Claude Code 也不是 Codex——它是造那些东西的积木。沙箱的双后端设计、Manifest 声明式工作区、Realtime Agent 的全双工语音，这三样是它跟 Pi 和 LangChain 拉开差距的地方。但框架始终是框架，想搭一个好用的编码助手，剩下 60% 的工作量得自己来。',
+OpenAI Agents SDK 可以较快建立基础 Agent。如果目标是完整的编码助手,还需要实现 UI、文件编辑和 git 工作流。SDK 提供 Agent 基础设施,不提供 Codex 这类完整产品的全部功能。`,
+  takeaway: 'OpenAI Agents SDK 提供 Agent 基础设施,不是 Claude Code 或 Codex 这类完整产品。它包含双后端沙箱、Manifest 声明式工作区和 Realtime Agent 全双工语音。构建完整编码助手时,仍需自行实现 UI、文件编辑、工具和 git 工作流。',
 }
 
 export default project

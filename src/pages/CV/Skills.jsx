@@ -1,10 +1,10 @@
 import './Skills.css'
 
 const skillGroups = [
-  { label: 'Languages', items: ['Python', 'TypeScript', 'Node.js', 'C/C++'] },
-  { label: 'AI/ML', items: ['PyTorch', 'Transformer', 'LLM', 'RAG', 'Embedding'] },
-  { label: 'Engineering', items: ['Altium Designer', 'Linux', 'Git', 'Docker'] },
-  { label: 'Tools', items: ['Origin', 'Visio', 'Adobe Illustrator', 'React'] },
+  { label: 'programming', items: ['Python', 'TypeScript', 'C/C++', 'Node.js'] },
+  { label: 'ai / ml', items: ['PyTorch', 'Transformers', 'RAG', 'agent systems', 'RL post-training'] },
+  { label: 'software', items: ['Linux', 'Git', 'Docker', 'React'] },
+  { label: 'hardware', items: ['Altium Designer', 'circuit design', 'signal acquisition', 'sensor systems'] },
 ]
 
 export default function Skills() {
@@ -13,9 +13,9 @@ export default function Skills() {
       {skillGroups.map(g => (
         <div key={g.label} className="skill-group">
           <h3>{g.label}</h3>
-          <div className="skill-tags">
-            {g.items.map(s => <span key={s}>{s}</span>)}
-          </div>
+          <ul className="skill-list">
+            {g.items.map(s => <li key={s}>{s}</li>)}
+          </ul>
         </div>
       ))}
     </div>
