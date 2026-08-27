@@ -31,6 +31,7 @@ const IMAGE_DIMENSIONS = {
   '/images/diffusion-policy-arch-8bit.png': [830, 227],
   '/images/diffusion-policy-blockpush-kitchen-8bit.png': [747, 329],
   '/images/diffusion-policy-pusht-8bit.png': [830, 393],
+  '/images/gpt2-moe/gelu-swiglu-figure-1.png': [875, 600],
   '/images/gpt2-moe/gqa-figure-2.png': [1185, 555],
   '/images/gpt2-moe/mixtral-figure-1.png': [1020, 430],
   '/images/gpt2-moe/transformer-figure-1.png': [1085, 1010],
