@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="650" viewBox="0 0 1200 650" role="img" aria-labelledby="title desc">
+  <title id="title">RAGSelfTrain 五组消融实验结果</title>
+  <desc id="desc">比较 BM25、冻结检索栈、自训检索器和自训重排器在 99 条查询上的 Recall@10、nDCG@10 与 MRR@10。</desc>
+  <rect width="1200" height="650" rx="22" fill="#10151d"/>
+  <text x="80" y="62" fill="#e6edf3" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="28" font-weight="700">99 条查询上的五组消融</text>
+  <text x="80" y="94" fill="#8b949e" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="17">纵轴从 0.65 起，只用于比较配置之间的差异</text>
+
+  <g stroke="#30363d" stroke-width="1">
+    <line x1="110" y1="500" x2="1130" y2="500"/>
+    <line x1="110" y1="438" x2="1130" y2="438"/>
+    <line x1="110" y1="377" x2="1130" y2="377"/>
+    <line x1="110" y1="315" x2="1130" y2="315"/>
+    <line x1="110" y1="253" x2="1130" y2="253"/>
+    <line x1="110" y1="192" x2="1130" y2="192"/>
+    <line x1="110" y1="130" x2="1130" y2="130"/>
+  </g>
+  <g fill="#8b949e" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" text-anchor="end">
+    <text x="96" y="505">0.65</text>
+    <text x="96" y="443">0.70</text>
+    <text x="96" y="382">0.75</text>
+    <text x="96" y="320">0.80</text>
+    <text x="96" y="258">0.85</text>
+    <text x="96" y="197">0.90</text>
+    <text x="96" y="135">0.95</text>
+  </g>
+
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="4">
+    <polyline points="170,193 400,218 630,181 860,181 1090,181" stroke="#58a6ff"/>
+    <polyline points="170,389 400,411 630,372 860,373 1090,319" stroke="#3fb950"/>
+    <polyline points="170,453 400,472 630,436 860,436 1090,363" stroke="#d2a8ff"/>
+  </g>
+
+  <g fill="#58a6ff" stroke="#10151d" stroke-width="3">
+    <circle cx="170" cy="193" r="8"/><circle cx="400" cy="218" r="8"/><circle cx="630" cy="181" r="8"/><circle cx="860" cy="181" r="8"/><circle cx="1090" cy="181" r="8"/>
+  </g>
+  <g fill="#3fb950" stroke="#10151d" stroke-width="3">
+    <circle cx="170" cy="389" r="8"/><circle cx="400" cy="411" r="8"/><circle cx="630" cy="372" r="8"/><circle cx="860" cy="373" r="8"/><circle cx="1090" cy="319" r="8"/>
+  </g>
+  <g fill="#d2a8ff" stroke="#10151d" stroke-width="3">
+    <circle cx="170" cy="453" r="8"/><circle cx="400" cy="472" r="8"/><circle cx="630" cy="436" r="8"/><circle cx="860" cy="436" r="8"/><circle cx="1090" cy="363" r="8"/>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="14" text-anchor="middle">
+    <g fill="#58a6ff"><text x="170" y="178">.899</text><text x="400" y="203">.879</text><text x="630" y="166">.909</text><text x="860" y="166">.909</text><text x="1090" y="166">.909</text></g>
+    <g fill="#3fb950"><text x="170" y="374">.740</text><text x="400" y="396">.722</text><text x="630" y="357">.754</text><text x="860" y="358">.753</text><text x="1090" y="304">.797</text></g>
+    <g fill="#d2a8ff"><text x="170" y="476">.688</text><text x="400" y="495">.673</text><text x="630" y="459">.702</text><text x="860" y="459">.702</text><text x="1090" y="386">.761</text></g>
+  </g>
+
+  <g fill="#c9d1d9" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15" text-anchor="middle">
+    <text x="170" y="540"><tspan x="170">BM25</tspan></text>
+    <text x="400" y="540"><tspan x="400">冻结 dense</tspan><tspan x="400" dy="22">+ RRF</tspan></text>
+    <text x="630" y="540"><tspan x="630">冻结 dense</tspan><tspan x="630" dy="22">+ 冻结 reranker</tspan></text>
+    <text x="860" y="540"><tspan x="860">自训 dense</tspan><tspan x="860" dy="22">+ RRF</tspan></text>
+    <text x="1090" y="540"><tspan x="1090">自训 dense</tspan><tspan x="1090" dy="22">+ 自训 reranker</tspan></text>
+  </g>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, monospace" font-size="15">
+    <circle cx="365" cy="616" r="6" fill="#58a6ff"/><text x="378" y="621" fill="#c9d1d9">Recall@10</text>
+    <circle cx="555" cy="616" r="6" fill="#3fb950"/><text x="568" y="621" fill="#c9d1d9">nDCG@10</text>
+    <circle cx="735" cy="616" r="6" fill="#d2a8ff"/><text x="748" y="621" fill="#c9d1d9">MRR@10</text>
+  </g>
+</svg>
