@@ -1,7 +1,7 @@
 const article = {
   slug: 'policy-gradient-gridworld',
   date: '2026-08-20 18:00',
-  name: 'Policy Gradient Methods in a 3×3 Grid World',
+  name: '3×3 Grid World 中的 Policy Gradient',
   description: '第 9 课:策略梯度。前面都从价值推策略(argmax);这一篇把策略本身当函数 π(a|s,θ) 学,对一个标量指标做梯度上升。策略梯度定理给出 ∇J=E[∇lnπ(A|S)q(S,A)],REINFORCE 用一条 episode 的回报估 q。3×3 上从 θ=0(均匀 π0)出发,π(s1) 收敛到 down≈0.996。',
   tags: ['RL'],
   category: 'Course Review',

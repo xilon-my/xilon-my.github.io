@@ -4,7 +4,7 @@ const project = {
   name: 'Pi Agent Harness',
   url: 'https://github.com/earendil-works/pi',
   description: '一个保持较小核心功能集的 AI Agent 工具包，提供统一的多供应商 LLM 接口、带差分渲染的 TUI、可扩展的 Agent 运行时和编码 Agent CLI。',
-  tags: ['agent'],
+  tags: ['Agent'],
   stars: '79.5k+',
   author: 'earendil-works',
   detail:

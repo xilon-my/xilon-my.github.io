@@ -4,7 +4,7 @@ const project = {
   name: 'Multica',
   url: 'https://github.com/multica-ai/multica',
   description: '一个开源的多智能体管理平台,用于向 AI 编程代理分配 Issue,并记录代理的代码修改、阻塞状态和执行进度。',
-  tags: ['agent'],
+  tags: ['Agent'],
   stars: '42k+',
   author: 'multica-ai',
   detail:

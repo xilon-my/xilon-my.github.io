@@ -1,9 +1,9 @@
 const article = {
   slug: 'mcp',
   date: '2026-07-28 10:59',
-  name: 'Model Context Protocol (MCP)',
+  name: 'Model Context Protocol（MCP）：模型连接外部工具的协议',
   description: 'AI Agent 与外部工具之间的开放标准协议。由 Anthropic 创建，现由 Linux 基金会旗下的 AAIF 管理，让模型以统一的方式调用工具、读取数据、执行操作。',
-  tags: ['agent'],
+  tags: ['Agent'],
   category: 'Project',
   author: 'Anthropic / AAIF',
   detail:

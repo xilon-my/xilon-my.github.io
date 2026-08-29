@@ -1,11 +1,11 @@
-const project = {
+const article = {
   slug: 'finding-code-to-change',
   date: '2026-08-13 14:00',
-  name: 'Finding the Code to Change: From Grep to Agentic RAG in a Large Codebase',
-  url: 'https://github.com/xilon-my/agentic-code-rag',
+  name: '在大型代码库中定位待修改代码：从 Grep 到 Agentic RAG',
   description: '本文以修改支付重试逻辑为例,说明编码 Agent 如何在大型存量代码仓中定位待修改代码。检索分为三层:词法检索用 grep 查找名称,结构检索用调用图查找关系,语义检索用嵌入匹配意图。最后使用 OpenAI Agents SDK 实现一个按成本依次调用三层检索的 Agent。',
   tags: ['RAG'],
-  author: 'Shannon',
+  category: 'Project',
+  author: 'shannon',
   takeaway: 'Agent 修改代码前需要先定位待修改位置。grep 适合查找名称,因为代码标识符通常具有较高区分度;调用图用于分析修改影响;嵌入用于匹配与代码字面不重叠的意图。三者按成本组成一条检索漏斗:先查名称,再分析关系,最后匹配意图。词法检索的假阳性可以通过阅读结果排除,语义检索的假阴性则不易被 Agent 发现,因此优先使用成本较低的词法层。Claude Code 和 Codex 默认不建立向量库,是因为多数任务可以由词法检索完成;当仓库规模增大、意图与代码字面不重叠或需要跨文件分析影响时,再加入结构与语义检索。',
   detail: `修改代码前,Agent 需要先确定:**待修改代码位于哪个文件和哪一行。**
 
@@ -231,4 +231,4 @@ Agent 修改代码前,需要先定位待修改位置。grep 用于查找具有�
 而这条漏斗的下一步,是把"怎么搜"本身也交给训练——从"会调工具"到"会检索"。`,
 }
 
-export default project
+export default article

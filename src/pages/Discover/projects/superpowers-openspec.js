@@ -5,7 +5,7 @@ const project = {
   url: 'https://github.com/obra/superpowers',
   url2: 'https://github.com/Fission-AI/OpenSpec',
   description: 'Superpowers 为 AI 编程代理提供结构化工程流程,OpenSpec 提供 spec 驱动的行为契约。本文按契约、隔离、拆解、验证和上线五个阶段,说明两者在存量系统中的分工与边界。',
-  tags: ['agent'],
+  tags: ['Agent'],
   stars: '237k+ / 56k+',
   author: 'Obra (Prime Radiant) / Fission AI',
   detail:

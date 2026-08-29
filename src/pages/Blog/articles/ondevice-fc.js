@@ -3,7 +3,7 @@ const article = {
   date: '2026-08-18',
   name: '面向手机端的函数调用模型：SFT、规则奖励与 GRPO',
   description: '以 DroidCall 的闹钟调用为例，说明如何用 SFT 建立输出格式，再用规则奖励和 GRPO 优化函数选择与参数填写。Qwen2.5-3B-Instruct 在 200 条测试样本上的满分率由 21.0% 提高到 51.0%。',
-  tags: ['RL'],
+  tags: ['Post-training'],
   category: 'Project',
   author: 'shannon',
   takeaway: '这组实验得到的是评分器口径下的函数调用满分率，不是手机上的执行成功率。SFT 先把模型带入可解析的输出分布，规则奖励再区分函数名和参数是否正确；GRPO 利用同一请求下 8 个回答的相对奖励更新 LoRA。当前结果有效，但还需要严格评分器、独立奖励实现和真机测试。',

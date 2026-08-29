@@ -1,7 +1,7 @@
 const article = {
   slug: 'embeddings-rerankers',
   date: '2026-08-05 10:00',
-  name: 'Embeddings and Rerankers from Scratch: When and How to Judge Relevance',
+  name: '从零理解 Embedding 与 Reranker：何时以及如何判断相关性',
   description: '嵌入模型(embedding)和重排模型(reranker)的深度拆解:为什么一个把判断提前到入库、一个留到查询时,它们分别怎么被训出来,近三年又怎么被蒸馏成同一份判断力。',
   tags: ['RAG'],
   category: 'Project',

@@ -54,17 +54,16 @@ export default function Home() {
             <p className="desc">
               M.S. in Electronic Information @ Tsinghua University · B.S. @ Xiamen University
             </p>
-            <div className="rotating-tags">
-              <span className="prompt-sign">❯</span>
-              <span className="focus-copy">
-                <span className="focus-label">Currently working on</span>
-                <span className="tag-rotator">{taglines[tagIndex]}</span>
-              </span>
+            <div className="working-section">
+              <p className="prompt">
+                <span className="prompt-sign">❯</span> cat working-on.md
+              </p>
+              <p className="tag-rotator">{taglines[tagIndex]}</p>
             </div>
           </div>
 
           {/* ─── Contact ─── */}
-          <div className="about-section">
+          <div className="about-section contact-section">
             <p className="prompt">
               <span className="prompt-sign">❯</span> cat contact.md
             </p>

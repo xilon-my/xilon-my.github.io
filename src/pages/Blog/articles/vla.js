@@ -1,9 +1,9 @@
 const article = {
   slug: 'vla',
   date: '2026-08-03 23:15',
-  name: 'VLA: Vision-Language-Action, When Robots Follow Instructions',
+  name: 'VLA：机器人如何遵循指令',
   description: '具身智能的第三代范式:VLA 一个模型同时接收"画面 + 指令 + 状态",直接输出动作——从"学会一个任务"变成"根据指令执行任务"。用 4.5 亿参数的 smolvla 在 LIBERO 仿真中完成了把碗放到盘子上的任务。',
-  tags: ['RL'],
+  tags: ['Robotics'],
   category: 'Project',
   author: 'Shannon',
   takeaway: 'VLA 是具身智能的第三代范式:一个模型同时接收"画面 + 指令 + 状态",直接输出动作,使机器人能够根据不同指令执行不同任务。它的骨架是"VLM 骨干 + flow-matching 动作专家":前者提取视觉与语言上下文,后者生成连续动作。π0(2024)用大模型和 10,000+ 小时真机数据验证了这套方法;smolvla(2025)则把规模降到 4.5 亿参数和不到 3 万个社区 episode。实测 smolvla_libero 在 LIBERO 仿真中根据英文指令把碗放到了盘子上(check_success=True)。仿真不依赖实体硬件,适合观察语言指令到动作执行的完整过程。',

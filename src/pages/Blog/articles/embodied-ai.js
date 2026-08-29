@@ -1,9 +1,9 @@
 const article = {
   slug: 'embodied-ai',
   date: '2026-08-03 00:30',
-  name: 'Embodied AI from Scratch: RL to Diffusion Policy',
+  name: '从零理解 Embodied AI：从 RL 到 Diffusion Policy',
   description: '具身智能主流方法论的两次范式切换：从 RL 奖励试错（REINFORCE → PPO）到模仿学习 + 扩散模型（Diffusion Policy）。两代方法怎么解决同一个问题，以及为什么后者成了主流。',
-  tags: ['RL'],
+  tags: ['Robotics'],
   category: 'Project',
   author: 'Shannon',
   detail:

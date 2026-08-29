@@ -1,7 +1,7 @@
 const article = {
   slug: 'value-function-approximation-gridworld',
   date: '2026-08-20 15:06',
-  name: 'Value Function Methods in a 3×3 Grid World',
+  name: '3×3 Grid World 中的 Value Function Approximation',
   description: '第 8 课:值函数方法。任务和 MC/TD 一样——估 π0 的价值;差别在表示:价值从"查表"换成"函数 v̂(s,w)"。表版 TD 更新式里的"格子"换成"参数 w"就是 TD-Linear,一步样本更新一次 w,连带所有状态。收敛后 RMSE 停在函数类地板,恰好等于最小二乘最优拟合。动作值版完成"评估→改进";DQN 是它加神经网络。',
   tags: ['RL'],
   category: 'Course Review',

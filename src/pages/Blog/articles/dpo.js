@@ -1,7 +1,7 @@
 const article = {
-  slug: 'dpo', date: '2026-08-22 12:00', name: 'Direct Preference Optimization: DPO',
+  slug: 'dpo', date: '2026-08-22 12:00', name: 'DPO：从偏好数据直接更新策略',
   description: 'DPO 直接用离线偏好对训练语言模型。它从带 KL 的奖励最大化目标出发,把未知奖励改写成当前策略与参考模型的 log 概率差,再代入偏好概率,得到一个二分类损失。文章按真实训练流程,用一条 2-token 偏好对算完回答概率、DPO loss 和 softmax 梯度。',
-  tags: ['RL'], category: 'Course Review', folder: 'rl-math', author: 'shannon',
+  tags: ['Post-training'], category: 'Course Review', folder: 'rl-math', author: 'shannon',
   takeaway: 'DPO 的输入是一份 (prompt,偏好回答,被拒回答) 数据集和一个固定参考模型。当前模型与参考模型分别计算两条回答的 log 概率;四个数构成隐式奖励差,再进入 −log σ 损失。梯度提高偏好回答的概率、降低被拒回答的概率。训练中没有独立奖励模型、critic、在线采样和新旧策略比。',
   detail: String.raw`
 ## 1. DPO 的输入与输出

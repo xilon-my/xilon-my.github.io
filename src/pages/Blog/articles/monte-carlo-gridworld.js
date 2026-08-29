@@ -1,7 +1,7 @@
 const article = {
   slug: 'monte-carlo-gridworld',
   date: '2026-08-19 15:00',
-  name: 'Model-Free Monte Carlo in a Stochastic 3×3 Grid World',
+  name: '随机 3×3 Grid World 中的 Model-Free Monte Carlo',
   description: '第 5 课:无模型的蒙特卡洛。上一篇都要用 P、R 算期望;这篇没有模型,价值靠 episode 数据的样本平均来估。即使环境确定、策略随机,同一条 (s,a) 每次回报也不同。沿 MC Basic → 回合长度/稀疏奖励 → Exploring Starts → ε-Greedy 走一遍。',
   tags: ['RL'],
   category: 'Course Review',

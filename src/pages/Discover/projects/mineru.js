@@ -1,7 +1,7 @@
 const project = {
   slug: 'mineru',
   date: '2026-08-17 16:20',
-  name: 'MinerU: Inside the PDF-to-Markdown Pipeline',
+  name: 'MinerU',
   url: 'https://github.com/opendatalab/MinerU',
   url2: 'https://github.com/opendatalab/PDF-Extract-Kit',
   description: 'MinerU 通过八道工序把 PDF 转换为 Markdown,OCR 只是其中一道。本文先区分数字生成的 PDF 和扫描件,再说明版面检测、公式识别、表格重建与阅读顺序。OCR 由检测和识别两步组成,引擎采用 PaddleOCR 的 PyTorch 移植版。最后比较 Marker、Docling、PaddleOCR、PyMuPDF、Nougat、Zerox 与云服务的适用场景。',

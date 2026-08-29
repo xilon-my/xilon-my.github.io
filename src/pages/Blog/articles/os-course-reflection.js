@@ -1,9 +1,9 @@
 const article = {
   slug: 'os-course-reflection',
   date: '2026-07-26 04:03',
-  name: 'NJU OS by Jyy',
+  name: 'Jyy 的 NJU OS 课程笔记',
   description: '我完全可以理解，\'分数就是一切\'的那种感觉。但忽然有一天分数不作为评价标准的时候，人生是否就失去动力？',
-  tags: ['Course'],
+  tags: ['Systems'],
   category: 'Course Review',
   author: 'shannon',
   detail: `一张保研/大厂/公务员的船票只是起点。

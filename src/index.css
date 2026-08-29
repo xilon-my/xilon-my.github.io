@@ -48,7 +48,10 @@ html { scroll-behavior: smooth; }
   --tag-rl: #A6E3A1;
   --tag-agent: #89DCEB;
   --tag-inference: #CBA6F7;
-  --tag-course: #94E2D5;
+  --tag-posttraining: #FAB387;
+  --tag-training: #F9E2AF;
+  --tag-robotics: #F5C2E7;
+  --tag-systems: #F38BA8;
 }
 
 [data-theme="light"] {
@@ -72,7 +75,10 @@ html { scroll-behavior: smooth; }
   --tag-rl: #40A02B;
   --tag-agent: #04A5E5;
   --tag-inference: #8839EF;
-  --tag-course: #04A5E5;
+  --tag-posttraining: #FE640B;
+  --tag-training: #DF8E1D;
+  --tag-robotics: #EA76CB;
+  --tag-systems: #D20F39;
 }
 
 @media (min-width: 1400px) {

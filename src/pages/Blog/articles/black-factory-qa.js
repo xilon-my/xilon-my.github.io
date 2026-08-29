@@ -3,7 +3,7 @@ const article = {
   date: '2026-08-14 20:00',
   name: '黑灯工厂式自动化开发：从需求到代码交付',
   description: '以两条 ERPNext 采购需求的真实运行为例，说明开发运行时如何解释需求、定位代码、固定行为契约，并通过状态机、隔离执行和质量门禁完成可追踪、可恢复的存量系统修改。',
-  tags: ['agent'],
+  tags: ['Agent'],
   category: 'Project',
   author: 'shannon',
   takeaway: '自动化开发的关键不是让 Agent 从 Issue 直接生成代码，而是把需求解释、代码定位、行为规格、实施验证和人工审批连接成一条可恢复、可审查的证据链。',

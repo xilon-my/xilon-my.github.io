@@ -1,7 +1,7 @@
 const article = {
-  slug: 'rlhf-ppo', date: '2026-08-21 16:00', name: 'From Grid World to RLHF: PPO',
+  slug: 'rlhf-ppo', date: '2026-08-21 16:00', name: '从 Grid World 到 RLHF：PPO',
   description: '把 PPO 放进真实的 RLHF 管线:SFT 模型生成回答,奖励模型在结尾给分,KL 项逐 token 加进奖励,critic 估状态价值,GAE 算优势,PPO 再用新旧策略概率比和 clip 更新语言模型。最后用一条 2-token 回答把整条计算链完整算一遍。',
-  tags: ['RL'], category: 'Course Review', folder: 'rl-math', author: 'shannon',
+  tags: ['Post-training'], category: 'Course Review', folder: 'rl-math', author: 'shannon',
   takeaway: 'PPO 一轮训练的顺序是:固定采样策略 π_old → 生成回答 → 奖励模型分与 KL 项组成逐 token 奖励 → critic 估状态价值 → GAE 算逐 token 优势 → 用 π_θ/π_old 构造裁剪目标 → 更新策略。π_ref 是长期参考模型,π_old 是本批数据的采样模型;KL 约束前者,clip 限制相对后者的本批更新。',
   detail: String.raw`
 ## 1. 一条回答就是一条轨迹

@@ -38,7 +38,15 @@
 
 - **一页一个 Terminal**:每页是一个 shell 会话,只有一个 Terminal 窗口(title 形如 `shannon@shannon.zone ~/<dir> %`)。所有内容堆在同一个 Terminal 里,不要为分区再开第二个 Terminal。
 - **Blog = 文件系统**:`/blog` 是根目录(`ls` 列表),子目录是课程系列(如 `rl-math/` 在 `/blog/rl-math`);文章页 `cd ..` 按所在目录回退。文章文件在 `src/pages/Blog/articles/`。
-- **Tag 统一词汇表**:全站只有 `RL / RAG / agent / Inference / Course`,每篇文章/项目**恰好一个 tag**。新增内容先对齐这套词汇,别发明新 tag。
+- **Tag 统一词汇表**:全站只有 `RL / Post-training / Training / Inference / RAG / Agent / Robotics / Systems`,每篇文章/项目**恰好一个 tag**。标签只描述主要主题,不描述文章形式;课程笔记也按内容主题归类。新增内容先对齐这套词汇,别发明新 tag。
+  - `RL`:强化学习基础、价值方法与策略方法。
+  - `Post-training`:LLM 对齐、偏好优化、RL 后训练及其训练框架。
+  - `Training`:预训练、监督微调和训练架构;若文章主体是 RL 后训练,优先使用 `Post-training`。
+  - `Inference`:模型推理机制、推理引擎、量化与 serving。
+  - `RAG`:检索、embedding、reranker、文档解析与知识组织。
+  - `Agent`:Agent 协议、框架、运行时与工程流程。
+  - `Robotics`:具身智能、VLA 与机器人学习。
+  - `Systems`:操作系统、分布式系统及其他非模型系统主题。
 - **Discover vs Blog 的分工**:Discover 只放"有明确 GitHub 项目的工具"(有 github url + stars);论文笔记、概念讲解、无仓库的文章一律放 Blog。
 - **图片**:放 `public/images/`,路径 `/images/...`。详情页(文章和项目)统一用 DiscoverDetail 的布局和 `discover-detail-*` 样式。
 - **一页一个 shell 会话内的命令区**用 `.term-divider` 分隔;列表页的 tag 显示用 `[tag]` 括号风格。

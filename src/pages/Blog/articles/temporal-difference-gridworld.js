@@ -1,7 +1,7 @@
 const article = {
   slug: 'temporal-difference-gridworld',
   date: '2026-08-19 17:00',
-  name: 'Temporal-Difference Methods in a Stochastic 3×3 Grid World',
+  name: '随机 3×3 Grid World 中的 Temporal-Difference',
   description: '第 7 课:时序差分。MC 要等整条 episode 结束才能更新;TD 走一步更新一步,用"这一步奖励 + 下一步状态的当前估计"当目标,所以有偏、需初始猜测。沿 TD(0) → Sarsa → n-step Sarsa → Q-learning 走一遍,只有 Q-learning 解最优方程(off-policy)。',
   tags: ['RL'],
   category: 'Course Review',

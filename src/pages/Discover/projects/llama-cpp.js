@@ -1,7 +1,7 @@
 const project = {
   slug: 'llama-cpp',
   date: '2026-08-18 16:31',
-  name: 'llama.cpp: A 7B Model on a 4GB Raspberry Pi',
+  name: 'llama.cpp',
   url: 'https://github.com/ggml-org/llama.cpp',
   url2: 'https://github.com/ggml-org/ggml',
   description: 'llama.cpp 是一个 C/C++ 本地推理库,可以把 7B 模型量化到约 4.5GB,并在笔记本、树莓派和手机等设备上运行。本文说明量化、GGUF、KV cache、内存带宽限制、CPU/GPU 分工以及同类工具的适用场景。',

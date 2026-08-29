@@ -11,7 +11,7 @@
 
 /* ── Intro ── */
 .intro {
-  padding: 0 0 24px;
+  padding: 0;
 }
 
 .prompt {
@@ -42,31 +42,19 @@
   margin-bottom: 16px;
 }
 
-/* ── Rotating tags ── */
-.rotating-tags {
-  font-size: 0.95rem;
-  color: var(--text);
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  min-height: 3.8em;
-}
-
-.focus-copy {
-  min-width: 0;
-  display: grid;
-  gap: 1px;
-}
-
-.focus-label {
-  color: var(--text-secondary);
-  font-size: 0.78rem;
+/* ── Current work ── */
+.working-section .prompt {
+  margin-bottom: 6px;
 }
 
 .tag-rotator {
   display: block;
+  min-height: 1.6em;
+  margin: 0;
   color: var(--magenta);
+  font-size: 0.95rem;
   font-weight: 600;
+  line-height: 1.6;
   overflow-wrap: anywhere;
   transition: opacity 0.3s;
 }
@@ -115,6 +103,10 @@
   padding: 24px 0 0;
 }
 
+.contact-section {
+  padding-top: 16px;
+}
+
 .about-content {
   font-size: 0.92rem;
   color: var(--text);
@@ -127,7 +119,9 @@
 
 /* ── Terminal divider ── */
 .term-divider {
-  padding: 20px 0 0;
+  margin-top: 24px;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border);
 }
 
 .term-divider .prompt {
@@ -141,11 +135,12 @@
 /* ── Mobile ── */
 @media (max-width: 700px) {
   .home { padding: 16px 0 32px; min-height: auto; }
-  .intro { padding: 0 0 16px; }
+  .intro { padding: 0; }
   .name { font-size: clamp(1.5rem, 8vw, 2rem); }
   .desc { font-size: 0.85rem; }
-  .rotating-tags { min-height: 5.4em; }
+  .tag-rotator { min-height: 3.2em; font-size: 0.85rem; }
   .about-section { padding: 16px 0 0; }
+  .contact-section { padding-top: 12px; }
   .about-content { font-size: 0.85rem; }
   .contact-block { margin: 0 -16px; flex-direction: column; }
   .contact-item { border-right: none; border-bottom: 1px solid var(--border); padding: 12px 16px; }

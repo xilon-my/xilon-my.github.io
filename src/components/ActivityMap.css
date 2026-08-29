@@ -1,18 +1,17 @@
-/* ── Activity Timeline (shared: Home + Discover) ── */
+/* ── Activity ledger ── */
 .activity-map {
-  margin: 8px 0 28px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid var(--border);
+  margin: 0;
+  min-width: 0;
 }
 
-/* command line — self-contained (no dependency on page CSS) */
 .activity-command {
-  font-size: 0.85rem;
-  color: var(--green);
-  margin-bottom: 12px;
   display: flex;
   align-items: center;
   gap: 8px;
+  margin-bottom: 14px;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  font-weight: 400;
 }
 
 .activity-command .prompt-cv {
@@ -24,135 +23,222 @@
   color: var(--text);
 }
 
-.activity-timeline {
-  overflow-x: auto;
-  padding-bottom: 4px;
-}
-
-/* ── Day columns (dots stack up from the baseline) ── */
-.activity-cols {
-  display: flex;
-  gap: 4px;
-  width: max-content;
+.activity-calendar {
+  min-width: 0;
+  border-top: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
 }
 
-.activity-day {
-  width: 16px;
-  height: 52px; /* reserves up to 4 dots — no layout shift */
-  display: flex;
-  flex-direction: column-reverse;
-  justify-content: flex-start;
+.activity-weekdays,
+.activity-week {
+  display: grid;
+  grid-template-columns: minmax(48px, 64px) repeat(7, minmax(0, 1fr));
+  min-width: 0;
+}
+
+.activity-weekdays {
+  min-height: 24px;
   align-items: center;
-  gap: 3px;
-}
-
-.activity-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 2px;
-  opacity: 0.85;
-  transition: opacity 0.15s, transform 0.15s;
-}
-
-.activity-dot:hover {
-  opacity: 1;
-  transform: scale(1.15);
-}
-
-/* ── Date labels ── */
-.activity-datelabels {
-  display: flex;
-  gap: 4px;
-  width: max-content;
-  margin-top: 4px;
-  font-family: var(--mono);
-}
-
-.activity-datelabel {
-  width: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.activity-month {
-  height: 12px;
-  font-size: 9px;
-  line-height: 12px;
+  border-bottom: 1px solid var(--border);
   color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  line-height: 1;
+  text-align: center;
+  text-transform: lowercase;
+}
+
+.activity-week-axis {
+  padding-left: 8px;
+  text-align: left;
+}
+
+.activity-week + .activity-week {
+  border-top: 1px solid color-mix(in srgb, var(--border) 55%, transparent);
+}
+
+.activity-week-label {
+  display: flex;
+  align-items: center;
+  padding-left: 8px;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 
-.activity-daynum {
-  height: 16px;
-  font-size: 10px;
-  line-height: 16px;
-  color: var(--text-secondary);
-  font-variant-numeric: tabular-nums;
+.activity-cell {
+  position: relative;
+  min-width: 0;
+  min-height: 42px;
+  padding: 5px 3px 4px;
+  border-left: 1px solid color-mix(in srgb, var(--border) 45%, transparent);
+  text-align: center;
 }
 
-.activity-datelabel.has .activity-daynum {
+button.activity-cell {
+  width: 100%;
+  border-top: 0;
+  border-right: 0;
+  border-bottom: 0;
+  cursor: pointer;
+  font: inherit;
+}
+
+.activity-cell.has-activity {
+  background: color-mix(in srgb, var(--surface) 48%, transparent);
+}
+
+button.activity-cell:hover,
+.activity-cell.is-selected {
+  background: color-mix(in srgb, var(--accent-light) 58%, transparent);
+}
+
+.activity-cell.is-selected {
+  box-shadow: inset 0 0 0 1px var(--accent);
+}
+
+button.activity-cell:focus-visible {
+  z-index: 1;
+  outline-offset: -2px;
+}
+
+.activity-date {
+  display: block;
+  height: 14px;
+  color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.62rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 14px;
+}
+
+.activity-cell.has-activity .activity-date {
   color: var(--text);
   font-weight: 600;
 }
 
-/* ── Legend ── */
+.activity-cell.outside-range .activity-date {
+  opacity: 0.32;
+}
+
+.activity-marks {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3px;
+  height: 16px;
+}
+
+.activity-mark {
+  width: 8px;
+  height: 8px;
+  flex: 0 0 auto;
+  border-radius: 2px;
+  opacity: 0.82;
+  transition: opacity 0.15s ease-out, transform 0.15s ease-out;
+}
+
+.activity-mark:hover {
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+.activity-meta {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  margin-top: 12px;
+}
+
 .activity-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 12px;
-  font-family: var(--mono);
-  font-size: 0.72rem;
+  gap: 6px 12px;
   color: var(--text-secondary);
+  font-family: var(--mono);
+  font-size: 0.68rem;
 }
 
 .activity-legend-tag {
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  white-space: nowrap;
 }
 
 .activity-legend-swatch {
-  width: 9px;
-  height: 9px;
+  width: 8px;
+  height: 8px;
   border-radius: 2px;
 }
 
-/* ── Readout line (fixed height — never shifts layout) ── */
 .activity-readout {
-  margin-top: 10px;
-  height: 22px;
-  line-height: 22px;
-  font-family: var(--mono);
-  font-size: 0.78rem;
+  min-width: 0;
+  min-height: 22px;
   color: var(--text-secondary);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  transition: color 0.15s;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  line-height: 1.65;
+  text-align: left;
+  overflow-wrap: anywhere;
 }
 
 @media (max-width: 700px) {
-  .activity-legend,
-  .activity-readout {
-    display: none;
+  .activity-weekdays,
+  .activity-week {
+    grid-template-columns: 42px repeat(7, minmax(0, 1fr));
   }
 
-  .activity-day,
-  .activity-datelabel {
-    width: 14px;
+  .activity-week-axis,
+  .activity-week-label {
+    padding-left: 4px;
   }
-  .activity-dot {
-    width: 9px;
-    height: 9px;
+
+  .activity-weekdays {
+    font-size: 0.6rem;
+  }
+
+  .activity-week-label,
+  .activity-date {
+    font-size: 0.64rem;
+  }
+
+  .activity-cell {
+    min-height: 42px;
+    padding-inline: 1px;
+  }
+
+  .activity-marks {
+    gap: 2px;
+  }
+
+  .activity-mark {
+    width: 7px;
+    height: 7px;
+    border-radius: 1px;
+  }
+
+  .activity-meta {
+    gap: 6px;
+  }
+
+  .activity-legend {
+    gap: 4px 10px;
+    font-size: 0.62rem;
+  }
+
+  .activity-readout {
+    min-height: 40px;
+    font-size: 0.64rem;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .activity-dot,
-  .activity-readout {
+  .activity-mark {
     transition: none;
   }
 }

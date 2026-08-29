@@ -3,7 +3,7 @@ const article = {
   date: '2026-08-22 09:00',
   name: '从下一个 token 到稀疏专家：预训练一个 775M MoE',
   description: '从一个 prompt 如何变成下一个 token 开始，解释自回归预训练、原始 Transformer/GPT-2 到 LLaMA 范式的架构演进，再落到 8-expert/top-2 MoE 的数据、训练、评测与路由诊断。',
-  tags: ['Inference'],
+  tags: ['Training'],
   category: 'Model Pretraining',
   author: 'shannon',
   takeaway: '语言模型训练的核心任务始终是预测下一个 token；现代 LLaMA 范式改变的是完成这项任务的内部结构和效率。本项目使用 RoPE、RMSNorm、SwiGLU、GQA 与 top-2 MoE，在单张 RTX 5090 上训练 5B tokens，得到 775.0M 总参数、265.4M active parameters 的模型，最终 val loss 2.834。九项评测说明它已学到可测量能力，同时也暴露出 LAMBADA 差距和专家负载不均衡。',

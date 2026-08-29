@@ -1,7 +1,7 @@
 const article = {
   slug: 'rag',
   date: '2026-08-05 10:00',
-  name: 'RAG from Scratch: Bolt-On Memory for LLMs',
+  name: '从零理解 RAG：为 LLM 接入外部记忆',
   description: 'RAG 的完整工作逻辑、分块这个最容易被低估的细节、怎么客观评估一个 RAG 好不好(RAGAS / RAGChecker / 中文 benchmark),以及从 Naive 到 Agentic RAG 的进化。',
   tags: ['RAG'],
   category: 'Project',
