@@ -1,6 +1,6 @@
 // Lightweight metadata only. Article bodies are loaded on demand by BlogPost.
 const articles = [
-  { slug: 'edgefusion-rk', date: '2026-09-10 15:00', name: 'EdgeFusion-RK：在 RK3588 上构建端侧多模型推理与异构调度系统', description: '从“模型能运行”继续向下做：把 MiniCPM5-2B 与航拍 YOLO11n 部署到 RK3588，比较 FP16、INT8 与混合精度，设计 RKNN/RKLLM/CPU 统一 C++ 运行时，并用真实突发负载验证 EDF 调度和后处理优化。', tags: ['Inference'] },
+  { slug: 'edgefusion-rk', date: '2026-09-10 15:00', name: 'EdgeFusion-RK：从 MiniCPM5 移植到 RK3588 端侧推理系统', description: '项目从“让 MiniCPM5-2B 在 RK3588 上说出第一句话”开始，沿着真实瓶颈继续做量化评测、航拍检测、CPU 后处理和异构调度，最终形成一套可测量、可比较的端侧推理系统。', tags: ['Inference'] },
   { slug: 'grpo', date: '2026-08-22 18:00', name: 'GRPO：组内相对奖励与策略更新', description: 'GRPO 删除 PPO 的 critic。对同一个 prompt 采一组回答,将每条回答的奖励在组内标准化,得到回答级优势;再把这个优势复制给回答中的每个 token,逐 token 计算新旧策略比、clip 和 KL。文章用四条 2-token 回答完整计算一轮更新。', tags: ['Post-training'], folder: 'rl-math', seriesOrder: 9 },
   { slug: 'dpo', date: '2026-08-22 12:00', name: 'DPO：从偏好数据直接更新策略', description: 'DPO 直接用离线偏好对训练语言模型。它从带 KL 的奖励最大化目标出发,把未知奖励改写成当前策略与参考模型的 log 概率差,再代入偏好概率,得到一个二分类损失。文章按真实训练流程,用一条 2-token 偏好对算完回答概率、DPO loss 和 softmax 梯度。', tags: ['Post-training'], folder: 'rl-math', seriesOrder: 8 },
   { slug: 'gpt2-moe-pretrain', date: '2026-08-22 09:00', name: '从下一个 token 到稀疏专家：预训练一个 775M MoE', description: '从一个 prompt 如何变成下一个 token 开始，解释自回归预训练、原始 Transformer/GPT-2 到 LLaMA 范式的架构演进，再落到 8-expert/top-2 MoE 的数据、训练、评测与路由诊断。', tags: ['Training'] },
